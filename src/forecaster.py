@@ -32,11 +32,12 @@ def get_analog_years(state_fips, county_name, forecast_date,feature_df,yield_df)
         return np.mean(np.stack(group.values), axis=0)
 
     # group by year&county and only take embedding_vector and get its average
-    seasonal_signatures = filtered_df.groupby(['year', 'county'])['embedding_vector'].apply(combine_vectors).reset_index()
+    seasonal_signatures = filtered_df.groupby(['year', 'state_flip','county'])['embedding_vector'].apply(combine_vectors).reset_index()
 
     # 5. DIVIDE: 2025 vs. History
     current_sig = seasonal_signatures[
         (seasonal_signatures['year'] == 2025) & 
+        (seasonal_signatures['state_fips'] == state_fips) &
         (seasonal_signatures['county'] == county_name.upper())
     ]
     
@@ -46,9 +47,7 @@ def get_analog_years(state_fips, county_name, forecast_date,feature_df,yield_df)
     current_vector = current_sig['embedding_vector'].values[0].reshape(1, -1)
     
     history_sigs = seasonal_signatures[
-        (seasonal_signatures['year'] < 2025) & 
-        (seasonal_signatures['county'] == county_name.upper())
-    ]
+        (seasonal_signatures['year'] < 2025)].copy()
 
     # 6. COMPARE: Calculate Similarity
     history_vectors = np.stack(history_sigs['embedding_vector'].values)
@@ -56,9 +55,10 @@ def get_analog_years(state_fips, county_name, forecast_date,feature_df,yield_df)
 
     # 7. MATCH: Join with your Yield CSV
     if yield_df is None:
-        yield_df = pd.read_csv(f"Hackathon2026/data/raw/corn_yield_{state_fips}_2005_2024.csv")
+        yield_df = pd.read_csv(f"Hackathon2026/data/raw/all_states_corn_yield_2005_2024.csv")
     
     result = history_sigs.sort_values('similarity', ascending=False).head(5)
-    final_output = result.merge(yield_df[['year', 'yield_bu_acre']], on='year')
+    final_output = result.merge(yield_df[['year', 'state_fips', 'county', 'yield_bu_acre']], 
+                               on=['year', 'state_fips', 'county'])
 
     return final_output[['year', 'similarity', 'yield_bu_acre']]
