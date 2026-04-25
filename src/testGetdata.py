@@ -1,3 +1,5 @@
+import pandas as pd
+
 all_features = pd.read_parquet("Hackathon2026/data/processed/master_features.parquet")
 all_yields = pd.read_csv("Hackathon2026/data/raw/all_states_corn_yield_2005_2024.csv")
 
