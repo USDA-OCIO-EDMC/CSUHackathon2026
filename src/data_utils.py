@@ -39,3 +39,35 @@ def load_yields_from_s3(bucket, state_fips):
     key = f"processed/yields/state_{state_fips}.csv"
     obj = s3.get_object(Bucket=bucket, Key=key)
     return pd.read_csv(io.BytesIO(obj['Body'].read()))
+
+
+def fetch_all_states(bucket, year_start=2005, year_end=2024):
+    """
+    Fetch NASS county-level corn yields for all 5 target states,
+    cache each to S3, and return a combined DataFrame with a 'state' column.
+    """
+    all_dfs = []
+    for abbr, fips in STATES.items():
+        print(f"Fetching {abbr} (FIPS {fips})...")
+        df = get_nass_yields(fips, year_start=year_start, year_end=year_end)
+        if df.empty:
+            print(f"  WARNING: no data returned for {abbr}")
+            continue
+        df["state"] = abbr
+        df["state_fips"] = fips
+        save_yields_to_s3(df, bucket, fips)
+        print(f"  {len(df)} rows saved to s3://{bucket}/processed/yields/state_{fips}.csv")
+        all_dfs.append(df)
+    combined = pd.concat(all_dfs, ignore_index=True)
+    return combined
+
+
+def load_all_states(bucket):
+    """Load all 5 states' cached yield CSVs from S3 into a combined DataFrame."""
+    all_dfs = []
+    for abbr, fips in STATES.items():
+        df = load_yields_from_s3(bucket, fips)
+        df["state"] = abbr
+        df["state_fips"] = fips
+        all_dfs.append(df)
+    return pd.concat(all_dfs, ignore_index=True)
