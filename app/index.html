@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fruit Fly Pathway Risk Dashboard | USDA APHIS</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="data/app_data.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#1c2128;--border:#30363d;
+  --text:#e6edf3;--muted:#8b949e;--link:#58a6ff;
+  --certca:#ff6b6b;--dacudo:#ffd166;--anstlu:#4ecca3;
+  --risk0:#21262d;--risk1:#1358a5;--risk2:#d97706;--risk3:#dc2626;
+  --green:#3fb950;--yellow:#d29922;--red:#f85149;
+  --r:6px;--sidebar-w:400px;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:13px}
+
+/* Loading */
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
+#loading h2{color:var(--link);font-size:1.4rem}
+#loading p{color:var(--muted)}
+.spinner{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--link);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Header */
+header{height:52px;background:linear-gradient(90deg,#0b0f1a 0%,#11182e 100%);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex-shrink:0;z-index:200;position:relative;gap:12px}
+.header-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.header-brand .badge{background:#1a3a1e;color:#56d364;border:1px solid #2d6a32;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:0.5px;text-transform:uppercase;white-space:nowrap}
+.header-brand h1{font-size:.95rem;font-weight:700;color:var(--text);white-space:nowrap}
+.header-brand p{font-size:10px;color:var(--muted);margin-top:1px;white-space:nowrap}
+.species-tabs{display:flex;gap:3px;align-items:center}
+.sp-btn{padding:4px 11px;border-radius:var(--r);border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:11px;font-weight:600;transition:all 0.15s;white-space:nowrap}
+.sp-btn:hover{border-color:var(--link);color:var(--link)}
+.sp-btn.active{color:#000;border-color:transparent}
+.sp-btn[data-sp="all"].active{background:var(--link)}
+.sp-btn[data-sp="certca"].active{background:var(--certca)}
+.sp-btn[data-sp="dacudo"].active{background:var(--dacudo)}
+.sp-btn[data-sp="anstlu"].active{background:var(--anstlu)}
+.header-right{font-size:11px;color:var(--muted);text-align:right;line-height:1.6;flex-shrink:0}
+.header-right strong{color:var(--text)}
+
+/* App body */
+#app{display:flex;height:calc(100vh - 52px);overflow:hidden}
+
+/* Map wrap */
+#map-wrap{flex:1;position:relative;overflow:hidden;transition:flex 0.3s}
+#map{position:absolute;inset:0}
+
+/* Overlay controls */
+#controls-overlay{position:absolute;top:10px;left:10px;z-index:1000;display:flex;flex-direction:column;gap:7px;pointer-events:none;max-width:220px}
+.ctrl-card{background:rgba(11,15,26,0.93);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;pointer-events:all;backdrop-filter:blur(6px)}
+.ctrl-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.ctrl-title button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0;line-height:1;transition:color 0.15s}
+.ctrl-title button:hover{color:var(--text)}
+.month-display{font-size:20px;font-weight:800;color:var(--text);margin-bottom:2px}
+.month-sub{font-size:10px;color:var(--muted);margin-bottom:8px}
+.slider-row{display:flex;align-items:center;gap:7px}
+#play-btn{width:26px;height:26px;border-radius:50%;background:var(--link);border:none;color:#000;cursor:pointer;font-size:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+#play-btn:hover{background:#79b9ff}
+#month-slider{flex:1;accent-color:var(--link);cursor:pointer}
+.month-labels{display:flex;justify-content:space-between;margin-top:3px;font-size:9px;color:var(--muted);padding-left:33px}
+.layer-checks{display:flex;flex-direction:column;gap:5px}
+.layer-check{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);cursor:pointer;user-select:none}
+.layer-check input[type=checkbox]{accent-color:var(--link);cursor:pointer;flex-shrink:0}
+.layer-check:hover{color:var(--text)}
+.layer-divider{border:none;border-top:1px solid var(--border);margin:6px 0}
+.layer-select{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:11px;border-radius:4px;padding:3px 6px;cursor:pointer;width:100%}
+.layer-select:focus{outline:none;border-color:var(--link)}
+.zoom-btns{display:flex;gap:4px;margin-top:6px}
+.zoom-btn{flex:1;padding:4px 0;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:4px;cursor:pointer;font-size:10px;font-weight:600;transition:all 0.15s;white-space:nowrap}
+.zoom-btn:hover{background:var(--border);color:var(--text)}
+.choropleth-modes{display:flex;gap:4px;margin-bottom:6px}
+.cmode-btn{flex:1;padding:4px 0;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:4px;cursor:pointer;font-size:10px;font-weight:600;transition:all 0.15s;text-align:center}
+.cmode-btn:hover{color:var(--text)}
+.cmode-btn.active{background:#1f2d40;border-color:var(--link);color:var(--link)}
+
+/* Map legend */
+#map-legend{position:absolute;bottom:28px;left:10px;z-index:1000;background:rgba(11,15,26,0.93);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;backdrop-filter:blur(6px)}
+.legend-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px}
+.legend-items{display:flex;flex-direction:column;gap:4px}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--muted)}
+.legend-swatch{width:14px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* Sidebar toggle strip */
+#sidebar-toggle-btn{position:absolute;left:-14px;top:50%;transform:translateY(-50%);z-index:10;width:14px;height:48px;background:var(--surface);border:1px solid var(--border);border-right:none;border-radius:6px 0 0 6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;transition:color 0.15s}
+#sidebar-toggle-btn:hover{color:var(--text)}
+
+/* Sidebar */
+#sidebar{width:var(--sidebar-w);flex-shrink:0;overflow-y:auto;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;position:relative;transition:width 0.3s ease}
+#sidebar.collapsed{width:0;overflow:hidden}
+#sidebar::-webkit-scrollbar{width:4px}
+#sidebar::-webkit-scrollbar-track{background:var(--bg)}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* Panel structure */
+.panel{border-bottom:1px solid var(--border);overflow:hidden}
+.panel-header{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;background:var(--surface)}
+.panel-header:hover{background:var(--surface2)}
+.panel-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px}
+.panel-meta{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.panel-arrow{font-size:10px;color:var(--muted);transition:transform 0.2s;flex-shrink:0}
+.panel.collapsed .panel-arrow{transform:rotate(-90deg)}
+.panel-body{padding:10px 12px;overflow:hidden;transition:max-height 0.25s ease,padding 0.25s ease}
+.panel.collapsed .panel-body{max-height:0 !important;padding-top:0;padding-bottom:0}
+
+/* Stats cards */
+.stats-row{display:flex;gap:6px}
+.stat-card{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:8px;text-align:center;min-width:0}
+.stat-val{font-size:18px;font-weight:800;color:var(--text);line-height:1.1}
+.stat-label{font-size:9px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.4px}
+.stat-sub{font-size:10px;color:var(--link);margin-top:2px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Routes ranking */
+.route-item{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid var(--border)}
+.route-item:last-child{border-bottom:none}
+.route-rank{width:16px;font-size:10px;color:var(--muted);text-align:right;flex-shrink:0}
+.route-flag{font-size:15px;flex-shrink:0}
+.route-info{flex:1;min-width:0}
+.route-name{font-size:11px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.route-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.route-bar-wrap{width:56px;flex-shrink:0}
+.route-bar-bg{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.route-bar{height:100%;border-radius:3px;transition:width 0.3s}
+.route-score{font-size:9px;color:var(--muted);margin-top:2px;text-align:right}
+
+/* Species badges */
+.sp-badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-right:2px}
+.sp-badge.certca{background:rgba(255,107,107,0.2);color:var(--certca)}
+.sp-badge.dacudo{background:rgba(255,209,102,0.2);color:var(--dacudo)}
+.sp-badge.anstlu{background:rgba(78,204,163,0.2);color:var(--anstlu)}
+
+/* US port rows */
+.us-port-row{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--border)}
+.us-port-row:last-child{border-bottom:none}
+.us-port-rank{width:16px;font-size:10px;color:var(--muted);text-align:right;flex-shrink:0}
+.us-port-info{flex:1;min-width:0}
+.us-port-name{font-size:11px;font-weight:600;color:var(--text)}
+.us-port-sub{font-size:10px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.us-port-bar-wrap{width:64px;flex-shrink:0}
+.us-port-bar-bg{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.us-port-bar-inner{height:100%;border-radius:3px;transition:width 0.3s}
+.us-port-score{font-size:9px;color:var(--muted);margin-top:2px;text-align:right}
+
+/* Detection grid */
+.detect-grid{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.detect-state{padding:3px 6px;border-radius:4px;font-size:10px;font-weight:700;cursor:default;transition:opacity 0.15s}
+.detect-state:hover{opacity:0.7}
+
+/* Charts */
+.chart-wrap{position:relative}
+
+/* Alerts */
+.alert-item{padding:6px 0;border-bottom:1px solid var(--border)}
+.alert-item:last-child{border-bottom:none}
+.alert-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.alert-species{font-size:11px;font-weight:700}
+.alert-species.certca{color:var(--certca)}
+.alert-species.dacudo{color:var(--dacudo)}
+.alert-species.anstlu{color:var(--anstlu)}
+.alert-species.other{color:var(--muted)}
+.alert-date{font-size:10px;color:var(--muted);white-space:nowrap}
+.alert-location{font-size:10px;color:var(--muted);margin-top:2px}
+.alert-desc{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
+
+/* Leaflet overrides */
+.leaflet-container{background:#0a1020}
+.leaflet-popup-content-wrapper{background:var(--surface);color:var(--text);border:1px solid var(--border);box-shadow:0 4px 24px rgba(0,0,0,0.6);border-radius:var(--r)}
+.leaflet-popup-content{margin:12px 14px;min-width:200px}
+.leaflet-popup-tip{background:var(--surface)}
+.popup-title{font-weight:700;font-size:13px;margin-bottom:8px;color:var(--text);display:flex;align-items:center;gap:6px}
+.popup-row{display:flex;justify-content:space-between;gap:14px;font-size:11px;margin:3px 0}
+.popup-label{color:var(--muted)}
+.popup-val{color:var(--text);font-weight:600}
+.popup-section{margin-top:8px;padding-top:7px;border-top:1px solid var(--border)}
+.popup-section-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:5px}
+.popup-route-row{font-size:10px;color:var(--muted);padding:2px 0;display:flex;justify-content:space-between}
+.popup-route-row span{color:var(--text);font-weight:600}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <h2>Fruit Fly Risk Dashboard</h2>
+  <p>Processing pathway &amp; pest data...</p>
+</div>
+
+<header>
+  <div class="header-brand">
+    <div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <h1>Fruit Fly Pathway Risk Dashboard</h1>
+        <span class="badge">USDA APHIS</span>
+      </div>
+      <p>Foreign air pathway analysis — introduction risk by port of entry &amp; month</p>
+    </div>
+  </div>
+  <div class="species-tabs">
+    <button class="sp-btn active" data-sp="all">All Species</button>
+    <button class="sp-btn" data-sp="certca" title="Ceratitis capitata — Mediterranean Fruit Fly">Medfly</button>
+    <button class="sp-btn" data-sp="dacudo" title="Bactrocera dorsalis — Oriental Fruit Fly">Oriental FF</button>
+    <button class="sp-btn" data-sp="anstlu" title="Anastrepha ludens — Mexican Fruit Fly">Mexican FF</button>
+  </div>
+  <div class="header-right">
+    <strong id="hdr-year">2022–2025</strong> T-100 Avg<br>
+    <span id="hdr-routes">—</span> active risk routes
+  </div>
+</header>
+
+<div id="app">
+  <div id="map-wrap">
+    <div id="map"></div>
+
+    <!-- Overlay controls -->
+    <div id="controls-overlay">
+
+      <!-- Month/Time control -->
+      <div class="ctrl-card">
+        <div class="ctrl-title">Time Period</div>
+        <div class="month-display" id="month-name">April</div>
+        <div class="month-sub">Seasonal filter for risk &amp; flow</div>
+        <div class="slider-row">
+          <button id="play-btn" title="Animate through months">&#9654;</button>
+          <input type="range" id="month-slider" min="1" max="12" value="4">
+        </div>
+        <div class="month-labels">
+          <span>J</span><span>F</span><span>M</span><span>A</span>
+          <span>M</span><span>J</span><span>J</span><span>A</span>
+          <span>S</span><span>O</span><span>N</span><span>D</span>
+        </div>
+      </div>
+
+      <!-- Map Layers control -->
+      <div class="ctrl-card">
+        <div class="ctrl-title">Map Layers
+          <button id="layers-collapse-btn" title="Collapse">▲</button>
+        </div>
+        <div id="layers-body">
+          <!-- Choropleth mode -->
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px">Choropleth</div>
+          <div class="choropleth-modes">
+            <button class="cmode-btn active" data-mode="pest">Pest Presence</button>
+            <button class="cmode-btn" data-mode="risk">Pathway Risk</button>
+          </div>
+          <div class="layer-checks">
+            <label class="layer-check"><input type="checkbox" id="lyr-pest" checked> Country Choropleth</label>
+            <label class="layer-check"><input type="checkbox" id="lyr-arcs" checked> Flight Risk Arcs</label>
+            <label class="layer-check"><input type="checkbox" id="lyr-ports" checked> Port Risk Bubbles</label>
+            <label class="layer-check"><input type="checkbox" id="lyr-labels"> Port Labels</label>
+            <label class="layer-check"><input type="checkbox" id="lyr-cargo" checked> Include Cargo Risk</label>
+          </div>
+          <hr class="layer-divider">
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px">Arc Count</div>
+          <select id="arc-count" class="layer-select">
+            <option value="15">Top 15 routes</option>
+            <option value="30" selected>Top 30 routes</option>
+            <option value="50">Top 50 routes</option>
+          </select>
+          <div class="zoom-btns">
+            <button class="zoom-btn" id="zoom-us">🗺 Focus CONUS</button>
+            <button class="zoom-btn" id="zoom-world">🌍 World View</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Legend -->
+    <div id="map-legend">
+      <div class="legend-title" id="legend-mode-title">Pest Origin Risk</div>
+      <div class="legend-items" id="legend-pest-items">
+        <div class="legend-item"><div class="legend-swatch" style="background:#dc2626"></div>High — widespread presence</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#d97706"></div>Medium — restricted distribution</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#1358a5"></div>Low — transient / few records</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#1a2035"></div>Absent / not recorded</div>
+      </div>
+      <div class="legend-items" id="legend-risk-items" style="display:none">
+        <div class="legend-item"><div class="legend-swatch" style="background:linear-gradient(90deg,#1a2035,#1358a5,#d97706,#dc2626)"></div>Risk: low → high</div>
+      </div>
+      <div style="margin-top:7px;padding-top:6px;border-top:1px solid var(--border)">
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(88,166,255,0.55);border-radius:50%"></div>U.S. port inbound risk</div>
+        <div class="legend-item" style="margin-top:3px"><div style="width:20px;height:2px;background:linear-gradient(90deg,rgba(220,38,38,0.3),#dc2626);border-radius:1px;flex-shrink:0"></div>High-risk flight arc</div>
+        <div class="legend-item" style="margin-top:3px"><div style="width:20px;height:2px;background:linear-gradient(90deg,rgba(19,88,165,0.3),#1358a5);border-radius:1px;flex-shrink:0"></div>Low-risk flight arc</div>
+      </div>
+    </div>
+  </div><!-- end map-wrap -->
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <button id="sidebar-toggle-btn" title="Collapse sidebar">&#8250;</button>
+
+    <!-- ── 1. Summary Stats ── -->
+    <div class="panel" id="panel-stats">
+      <div class="panel-header" onclick="togglePanel('panel-stats')">
+        <span class="panel-label">Risk Summary <span id="stats-month-label" style="font-weight:400;text-transform:none;color:var(--link)"></span></span>
+        <div class="panel-meta"><span class="panel-arrow">▼</span></div>
+      </div>
+      <div class="panel-body" style="max-height:200px">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-val" id="stat-countries">—</div>
+            <div class="stat-label">Infested Origins</div>
+            <div class="stat-sub" id="stat-top-country">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="stat-pax">—</div>
+            <div class="stat-label">Risk-Route Pax</div>
+            <div class="stat-sub">avg monthly total</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="stat-cargo">—</div>
+            <div class="stat-label">Cargo (tons)</div>
+            <div class="stat-sub">from infested origins</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="stat-ports">—</div>
+            <div class="stat-label">US Ports at Risk</div>
+            <div class="stat-sub" id="stat-top-port">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 2. Top Risk Pathways ── -->
+    <div class="panel" id="panel-routes">
+      <div class="panel-header" onclick="togglePanel('panel-routes')">
+        <span class="panel-label">Top Risk Pathways</span>
+        <div class="panel-meta"><span id="routes-month-label" style="color:var(--link)"></span><span class="panel-arrow">▼</span></div>
+      </div>
+      <div class="panel-body" style="max-height:320px">
+        <div id="routes-list"></div>
+      </div>
+    </div>
+
+    <!-- ── 3. U.S. Port Exposure ── -->
+    <div class="panel" id="panel-us">
+      <div class="panel-header" onclick="togglePanel('panel-us')">
+        <span class="panel-label">U.S. Port Exposure</span>
+        <div class="panel-meta"><span id="us-month-label" style="color:var(--link)"></span><span class="panel-arrow">▼</span></div>
+      </div>
+      <div class="panel-body" style="max-height:600px">
+        <div id="us-ports-list"></div>
+        <div style="margin-top:10px;margin-bottom:6px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px">Species Risk Mix at Top Ports</div>
+        <div class="chart-wrap" style="height:130px"><canvas id="us-species-chart"></canvas></div>
+        <div style="margin-top:10px;margin-bottom:6px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px">APHIS Detections by State</div>
+        <div id="detect-grid" class="detect-grid"></div>
+      </div>
+    </div>
+
+    <!-- ── 4. Monthly Trend ── -->
+    <div class="panel" id="panel-trend">
+      <div class="panel-header" onclick="togglePanel('panel-trend')">
+        <span class="panel-label">Monthly Passenger Flow — Infested Origins</span>
+        <div class="panel-meta"><span class="panel-arrow">▼</span></div>
+      </div>
+      <div class="panel-body" style="max-height:200px">
+        <div class="chart-wrap" style="height:160px"><canvas id="trend-chart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ── 5. Host Commodity Imports ── -->
+    <div class="panel" id="panel-imports">
+      <div class="panel-header" onclick="togglePanel('panel-imports')">
+        <span class="panel-label">Host Commodity Imports (kg)</span>
+        <div class="panel-meta"><span style="color:var(--muted);font-size:10px">2023–2025</span><span class="panel-arrow">▼</span></div>
+      </div>
+      <div class="panel-body" style="max-height:200px">
+        <div class="chart-wrap" style="height:160px"><canvas id="imports-chart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ── 6. Recent Detections ── -->
+    <div class="panel" id="panel-alerts">
+      <div class="panel-header" onclick="togglePanel('panel-alerts')">
+        <span class="panel-label">Recent Detections &amp; IPPC Alerts</span>
+        <div class="panel-meta"><span class="panel-arrow">▼</span></div>
+      </div>
+      <div class="panel-body" style="max-height:360px">
+        <div id="alerts-list"></div>
+      </div>
+    </div>
+
+    <!-- ── 7. Methodology ── -->
+    <div class="panel" id="panel-method">
+      <div class="panel-header" onclick="togglePanel('panel-method')">
+        <span class="panel-label">Risk Model &amp; Methodology</span>
+        <div class="panel-meta"><span class="panel-arrow">▼</span></div>
+      </div>
+      <div class="panel-body" style="max-height:300px">
+        <div style="font-size:11px;color:var(--muted);line-height:1.8">
+          <strong style="color:var(--text)">Composite Risk</strong> = Pathway Volume × Pest Origin Risk<br>
+          <strong style="color:var(--text)">Pathway Volume</strong>: BTS T-100 air passengers + freight (2022–2025 avg, monthly)<br>
+          <strong style="color:var(--text)">Pest Origin Risk</strong>: EPPO Global Database — 3 tiers:<br>
+          &nbsp;&nbsp;<span style="color:var(--risk3)">3</span> = widespread&nbsp;&nbsp;<span style="color:var(--risk2)">2</span> = restricted&nbsp;&nbsp;<span style="color:var(--risk1)">1</span> = few/transient<br>
+          <strong style="color:var(--text)">Cargo Scaling</strong>: freight (lbs) ÷ 5,000 before combining with pax<br>
+          <strong style="color:var(--text)">Validation</strong>: APHIS PPQ interception records + IPPC phytosanitary reports<br>
+          <strong style="color:var(--text)">Host data</strong>: USDA FAS GATS fresh fruit &amp; vegetable imports<br>
+          <hr style="border:none;border-top:1px solid var(--border);margin:8px 0">
+          <strong style="color:var(--text)">Target Species</strong><br>
+          <span style="color:var(--certca)">●</span> <em>Ceratitis capitata</em> — Mediterranean Fruit Fly (Medfly)<br>
+          <span style="color:var(--dacudo)">●</span> <em>Bactrocera dorsalis</em> — Oriental Fruit Fly<br>
+          <span style="color:var(--anstlu)">●</span> <em>Anastrepha ludens</em> — Mexican Fruit Fly
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end sidebar -->
+</div><!-- end app -->
+
+<script>
+// ─── Constants ────────────────────────────────────────────────────────────────
+const MONTH_NAMES = ["January","February","March","April","May","June",
+                     "July","August","September","October","November","December"];
+const MONTH_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const SPECIES_COLORS = {all:"#58a6ff", certca:"#ff6b6b", dacudo:"#ffd166", anstlu:"#4ecca3"};
+const SPECIES_DISPLAY = {
+  all:"All Species",
+  certca:"Medfly (C. capitata)",
+  dacudo:"Oriental FF (B. dorsalis)",
+  anstlu:"Mexican FF (A. ludens)"
+};
+
+// ─── App State ────────────────────────────────────────────────────────────────
+let state = {
+  month: new Date().getMonth() + 1,
+  species: "all",
+  choroplethMode: "pest",   // "pest" | "risk"
+  arcCount: 30,
+  includeCargo: true,
+  showLabels: false,
+};
+let isPlaying = false, playTimer = null, sidebarCollapsed = false;
+
+// Pre-computed
+let routesByMonth = {};
+let countryRiskPrecomp = {all:{},certca:{},dacudo:{},anstlu:{}};
+let portRiskPrecomp   = {all:{},certca:{},dacudo:{},anstlu:{}};
+let portCargoPrecomp  = {all:{},certca:{},dacudo:{},anstlu:{}};
+let maxRisk = 1;
+
+// Chart instances
+let trendChartInst=null, importsChartInst=null, usSpeciesChartInst=null;
+
+// Map layers
+let map, countryLayer, arcLayerGroup, portLayerGroup, portLabelsGroup;
+
+// ─── Utilities ────────────────────────────────────────────────────────────────
+const fmt = n => n>=1e6?(n/1e6).toFixed(1)+"M":n>=1e3?(n/1e3).toFixed(0)+"K":String(Math.round(n));
+
+function flag(iso2){
+  if(!iso2||iso2.length!==2)return"🌐";
+  try{return String.fromCodePoint(...iso2.toUpperCase().split("").map(c=>0x1F1E6+c.charCodeAt(0)-65))}
+  catch{return"🌐"}
+}
+
+const pestColor = s => s>=3?"#dc2626":s>=2?"#d97706":s>=0.5?"#1358a5":null;
+
+function riskGradientColor(norm){
+  // 0=dark→0.33=blue→0.66=orange→1=red
+  if(norm<0.33){const t=norm/0.33;return`rgb(${Math.round(19+t*0)},${Math.round(88+t*0)},${Math.round(165+t*0)})`}
+  if(norm<0.66){const t=(norm-0.33)/0.33;return`rgb(${Math.round(19+t*(217-19))},${Math.round(88+t*(119-88))},${Math.round(165+t*(6-165))})`}
+  const t=(norm-0.66)/0.34;return`rgb(${Math.round(217+t*(220-217))},${Math.round(119+t*(38-119))},${Math.round(6+t*(38-6))})`;
+}
+
+function riskOpacity(rs,max){return rs<=0?0.2:0.2+0.72*Math.min(1,Math.log(rs+1)/Math.log(max+1))}
+
+// Great-circle arc segments (antimeridian-safe)
+function gcArcSegments(lat1,lon1,lat2,lon2,n=40){
+  const R=d=>d*Math.PI/180, D=r=>r*180/Math.PI;
+  const φ1=R(lat1),λ1=R(lon1),φ2=R(lat2);
+  let dlon=lon2-lon1; if(dlon>180)dlon-=360; if(dlon<-180)dlon+=360;
+  const λ2adj=R(lon1+dlon);
+  const cosD=Math.max(-1,Math.min(1,Math.sin(φ1)*Math.sin(φ2)+Math.cos(φ1)*Math.cos(φ2)*Math.cos(λ2adj-λ1)));
+  const d=Math.acos(cosD);
+  if(d<1e-6)return[[[lat1,lon1],[lat2,lon2]]];
+  const pts=[];
+  for(let i=0;i<=n;i++){
+    const f=i/n,A=Math.sin((1-f)*d)/Math.sin(d),B=Math.sin(f*d)/Math.sin(d);
+    const x=A*Math.cos(φ1)*Math.cos(λ1)+B*Math.cos(φ2)*Math.cos(λ2adj);
+    const y=A*Math.cos(φ1)*Math.sin(λ1)+B*Math.cos(φ2)*Math.sin(λ2adj);
+    const z=A*Math.sin(φ1)+B*Math.sin(φ2);
+    pts.push([D(Math.atan2(z,Math.sqrt(x*x+y*y))),D(Math.atan2(y,x))]);
+  }
+  const segs=[[]];
+  for(const pt of pts){
+    const pL=segs[segs.length-1];
+    if(pL.length>0&&Math.abs(pt[1]-pL[pL.length-1][1])>150)segs.push([]);
+    segs[segs.length-1].push(pt);
+  }
+  return segs.filter(s=>s.length>=2);
+}
+
+// ─── Pre-computation ──────────────────────────────────────────────────────────
+function precompute(){
+  for(let m=1;m<=12;m++){
+    routesByMonth[m]=RISK_ROUTES.filter(r=>r.month===m);
+    for(const sp of["all","certca","dacudo","anstlu"]){
+      countryRiskPrecomp[sp][m]={};
+      portRiskPrecomp[sp][m]={};
+      portCargoPrecomp[sp][m]={};
+    }
+  }
+  for(const r of RISK_ROUTES){
+    const m=r.month, pax=r.passengers, frt=r.freight;
+    const scores={all:r.max_pest_score,certca:r.certca||0,dacudo:r.dacudo||0,anstlu:r.anstlu||0};
+    for(const sp of["all","certca","dacudo","anstlu"]){
+      const sc=scores[sp]; if(sc<=0)continue;
+      const vol=(state.includeCargo?pax+frt/5000:pax)*sc;
+      countryRiskPrecomp[sp][m][r.origin_iso2]=(countryRiskPrecomp[sp][m][r.origin_iso2]||0)+vol;
+      portRiskPrecomp[sp][m][r.dest_iata]=(portRiskPrecomp[sp][m][r.dest_iata]||0)+vol;
+      portCargoPrecomp[sp][m][r.dest_iata]=(portCargoPrecomp[sp][m][r.dest_iata]||0)+frt;
+    }
+  }
+  maxRisk=1;
+  for(const m of Object.values(countryRiskPrecomp.all))
+    for(const v of Object.values(m))maxRisk=Math.max(maxRisk,v);
+}
+
+// ─── Panel collapse ───────────────────────────────────────────────────────────
+function togglePanel(id){
+  const panel=document.getElementById(id);
+  panel.classList.toggle("collapsed");
+}
+
+// ─── Sidebar collapse ─────────────────────────────────────────────────────────
+function toggleSidebar(){
+  sidebarCollapsed=!sidebarCollapsed;
+  const sidebar=document.getElementById("sidebar");
+  const btn=document.getElementById("sidebar-toggle-btn");
+  sidebar.classList.toggle("collapsed",sidebarCollapsed);
+  btn.innerHTML=sidebarCollapsed?"&#8249;":"&#8250;";
+  btn.title=sidebarCollapsed?"Expand sidebar":"Collapse sidebar";
+  setTimeout(()=>map.invalidateSize(),320);
+}
+
+// ─── Map init ─────────────────────────────────────────────────────────────────
+function initMap(){
+  map=L.map("map",{center:[20,0],zoom:2,minZoom:2,maxZoom:10,
+    zoomControl:false,attributionControl:false,worldCopyJump:true});
+  L.control.zoom({position:"bottomright"}).addTo(map);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+    {attribution:'&copy;<a href="https://carto.com">CARTO</a>',maxZoom:19}).addTo(map);
+  countryLayer=L.geoJSON(COUNTRIES_GJ,{style:f=>countryStyle(f),onEachFeature:bindCountryPopup}).addTo(map);
+  arcLayerGroup=L.layerGroup().addTo(map);
+  portLayerGroup=L.layerGroup().addTo(map);
+  portLabelsGroup=L.layerGroup().addTo(map);
+}
+
+function countryStyle(feature){
+  const iso2=feature.properties.ISO_A2;
+  const pest=PEST_PRESENCE[iso2]||{};
+  const spScore=state.species==="all"?(pest.max_score||0):(pest[state.species]?.score||0);
+  const riskVal=(countryRiskPrecomp[state.species][state.month]||{})[iso2]||0;
+  if(state.choroplethMode==="risk"){
+    if(riskVal<=0)return{fillColor:"#1a2035",fillOpacity:0.18,color:"#30363d",weight:0.5,opacity:0.5};
+    const norm=Math.log(riskVal+1)/Math.log(maxRisk+1);
+    return{fillColor:riskGradientColor(norm),fillOpacity:0.2+0.65*norm,color:"#30363d",weight:0.5,opacity:0.7};
+  }
+  const fill=pestColor(spScore);
+  if(!fill)return{fillColor:"#1a2035",fillOpacity:0.15,color:"#2a3040",weight:0.4,opacity:0.5};
+  const op=riskVal>0?riskOpacity(riskVal,maxRisk):0.38;
+  return{fillColor:fill,fillOpacity:op,color:"#30363d",weight:0.5,opacity:0.7};
+}
+
+function bindCountryPopup(feature,layer){
+  const iso2=feature.properties.ISO_A2;
+  const name=feature.properties.NAME;
+  layer.on("click",e=>{
+    const pest=PEST_PRESENCE[iso2]||{};
+    const risk=(countryRiskPrecomp[state.species][state.month]||{})[iso2]||0;
+    const routes=(routesByMonth[state.month]||[]).filter(r=>r.origin_iso2===iso2)
+      .sort((a,b)=>b.risk_score-a.risk_score);
+    const totalPax=routes.reduce((s,r)=>s+r.passengers,0);
+    const totalFrt=routes.reduce((s,r)=>s+r.freight,0);
+    const badges=["certca","dacudo","anstlu"]
+      .filter(sp=>pest[sp]?.score>0)
+      .map(sp=>`<span class="sp-badge ${sp}">${SPECIES_DISPLAY[sp]}</span>`).join("");
+    // Build route list (top 5)
+    const routeRows=routes.slice(0,5).map(r=>`
+      <div class="popup-route-row">
+        <span>→ ${r.dest_city||r.dest_iata} (${r.dest_iata})</span>
+        <span>${fmt(r.passengers)} pax · risk <span>${fmt(Math.round(r.risk_score))}</span></span>
+      </div>`).join("");
+    const content=`
+      <div class="popup-title">${flag(iso2)} ${name}</div>
+      <div style="margin-bottom:8px">${badges||'<span style="color:var(--muted);font-size:11px">No target pest records</span>'}</div>
+      <div class="popup-row"><span class="popup-label">Risk Score (${MONTH_SHORT[state.month-1]})</span><span class="popup-val">${fmt(Math.round(risk))}</span></div>
+      <div class="popup-row"><span class="popup-label">Avg Monthly Pax → US</span><span class="popup-val">${fmt(totalPax)}</span></div>
+      <div class="popup-row"><span class="popup-label">Avg Monthly Cargo → US</span><span class="popup-val">${fmt(Math.round(totalFrt/2000))} tons</span></div>
+      <div class="popup-row"><span class="popup-label">Active US Routes</span><span class="popup-val">${routes.length}</span></div>
+      ${routes.length>0?`
+      <div class="popup-section">
+        <div class="popup-section-title">Top Routes (${MONTH_SHORT[state.month-1]})</div>
+        ${routeRows}
+      </div>`:""}`;
+    L.popup({maxWidth:280}).setLatLng(e.latlng).setContent(content).openOn(map);
+  });
+  layer.on("mouseover",function(){
+    if(this.feature.properties.ISO_A2!=="US")this.setStyle({weight:1.5,color:"#58a6ff",opacity:1});
+  });
+  layer.on("mouseout",function(){countryLayer.resetStyle(this)});
+}
+
+// ─── Get filtered routes ──────────────────────────────────────────────────────
+function getFilteredRoutes(){
+  const routes=routesByMonth[state.month]||[];
+  if(state.species==="all"){
+    if(!state.includeCargo)return routes.map(r=>({...r,risk_score:r.passengers*r.max_pest_score})).sort((a,b)=>b.risk_score-a.risk_score);
+    return routes;
+  }
+  return routes
+    .filter(r=>(r[state.species]||0)>0)
+    .map(r=>{const sc=r[state.species]||0;const vol=state.includeCargo?r.passengers+r.freight/5000:r.passengers;return{...r,risk_score:vol*sc};})
+    .sort((a,b)=>b.risk_score-a.risk_score);
+}
+
+// ─── Update: choropleth ───────────────────────────────────────────────────────
+function updateChoropleth(){
+  const pestItems=document.getElementById("legend-pest-items");
+  const riskItems=document.getElementById("legend-risk-items");
+  const modeTitle=document.getElementById("legend-mode-title");
+  if(state.choroplethMode==="pest"){
+    pestItems.style.display=""; riskItems.style.display="none";
+    modeTitle.textContent="Pest Origin Risk";
+  }else{
+    pestItems.style.display="none"; riskItems.style.display="";
+    modeTitle.textContent="Pathway Risk Score";
+  }
+  if(!document.getElementById("lyr-pest").checked){
+    countryLayer.setStyle(()=>({fillColor:"#1a2035",fillOpacity:0.12,color:"#2a3040",weight:0.4,opacity:0.4}));
+    return;
+  }
+  countryLayer.setStyle(f=>countryStyle(f));
+}
+
+// ─── Update: arcs ────────────────────────────────────────────────────────────
+function updateArcs(){
+  arcLayerGroup.clearLayers();
+  if(!document.getElementById("lyr-arcs").checked)return;
+  const n=parseInt(document.getElementById("arc-count").value)||30;
+  const routes=getFilteredRoutes().slice(0,n);
+  const maxRR=routes[0]?.risk_score||1;
+  for(const r of routes){
+    const norm=Math.log(r.risk_score+1)/Math.log(maxRR+1);
+    const op=0.12+0.82*norm, wt=0.7+2.5*norm;
+    const color=r.max_pest_score>=3?"#dc2626":r.max_pest_score>=2?"#d97706":"#1358a5";
+    const segs=gcArcSegments(r.origin_lat,r.origin_lon,r.dest_lat,r.dest_lon);
+    for(const seg of segs){
+      L.polyline(seg,{color,weight:wt,opacity:op,smoothFactor:1.5})
+       .bindTooltip(
+         `<strong>${flag(r.origin_iso2)} ${r.origin_name} → ${r.dest_city||r.dest_iata} (${r.dest_iata})</strong><br>`+
+         `Passengers: ${fmt(r.passengers)} &nbsp;|&nbsp; Cargo: ${fmt(Math.round(r.freight/2000))}t<br>`+
+         `Risk Score: ${fmt(Math.round(r.risk_score))} &nbsp;|&nbsp; `+
+         `Pest Level: ${r.max_pest_score>=3?"High":r.max_pest_score>=2?"Medium":"Low"}`,
+         {sticky:true,direction:"top"})
+       .addTo(arcLayerGroup);
+    }
+  }
+}
+
+// ─── Update: port bubbles + labels ───────────────────────────────────────────
+function updatePortBubbles(){
+  portLayerGroup.clearLayers();
+  portLabelsGroup.clearLayers();
+  const showBubbles=document.getElementById("lyr-ports").checked;
+  const showLabels=document.getElementById("lyr-labels").checked;
+  if(!showBubbles&&!showLabels)return;
+  const portRisks=portRiskPrecomp[state.species][state.month]||{};
+  const sorted=Object.entries(portRisks).sort((a,b)=>b[1]-a[1]).slice(0,40);
+  const maxPR=sorted[0]?.[1]||1;
+  for(const[iata,risk]of sorted){
+    const ap=US_AIRPORTS[iata];
+    if(!ap)continue;
+    if(showBubbles){
+      const rad=4+22*Math.pow(Math.log(risk+1)/Math.log(maxPR+1),1.4);
+      const op=0.25+0.55*(risk/maxPR);
+      const topOrigins=getTopOriginsForPort(iata,3);
+      L.circleMarker([ap.lat,ap.lon],{
+        radius:rad,fillColor:"#58a6ff",color:"#79b9ff",fillOpacity:op,weight:1,opacity:0.8
+      })
+      .bindTooltip(
+        `<strong>${ap.city||ap.name} (${iata})</strong><br>`+
+        `Risk Score: ${fmt(Math.round(risk))}<br>`+
+        `Top Origins: ${topOrigins.map(o=>`${flag(o.iso2)} ${o.name}`).join(", ")}<br>`+
+        `Species: ${getPortSpeciesMix(iata)}`,
+        {sticky:true,direction:"top",className:"leaflet-tooltip"})
+      .on("click",()=>openPortDetail(iata,ap,risk,portRisks,maxPR))
+      .addTo(portLayerGroup);
+    }
+    if(showLabels){
+      L.marker([ap.lat,ap.lon],{
+        icon:L.divIcon({
+          className:"",
+          html:`<div style="background:rgba(11,15,26,0.85);color:#e6edf3;font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;border:1px solid #30363d;white-space:nowrap;pointer-events:none">${iata}</div>`,
+          iconAnchor:[0,0]
+        }),
+        interactive:false
+      }).addTo(portLabelsGroup);
+    }
+  }
+}
+
+function getTopOriginsForPort(iata,n=3){
+  const routes=(routesByMonth[state.month]||[])
+    .filter(r=>r.dest_iata===iata&&(state.species==="all"||(r[state.species]||0)>0))
+    .sort((a,b)=>b.risk_score-a.risk_score).slice(0,n);
+  return routes.map(r=>({iso2:r.origin_iso2,name:r.origin_name}));
+}
+
+function getPortSpeciesMix(iata){
+  const sps=["certca","dacudo","anstlu"];
+  return sps.filter(sp=>(portRiskPrecomp[sp][state.month]||{})[iata]>0)
+    .map(sp=>`<span class="sp-badge ${sp}">${sp==="certca"?"Medfly":sp==="dacudo"?"Oriental":"Mexican"}</span>`).join("")||"—";
+}
+
+function openPortDetail(iata,ap,risk,portRisks,maxPR){
+  const topRoutes=(routesByMonth[state.month]||[])
+    .filter(r=>r.dest_iata===iata)
+    .sort((a,b)=>b.risk_score-a.risk_score).slice(0,6);
+  const totalCargo=(portCargoPrecomp[state.species][state.month]||{})[iata]||0;
+  const routeRows=topRoutes.map(r=>
+    `<div class="popup-route-row"><span>${flag(r.origin_iso2)} ${r.origin_name}</span><span>${fmt(r.passengers)} pax &nbsp; <span>${fmt(Math.round(r.risk_score))}</span></span></div>`
+  ).join("");
+  const content=`
+    <div class="popup-title">✈ ${ap.city||ap.name} <small style="color:var(--muted);font-weight:400">(${iata})</small></div>
+    <div class="popup-row"><span class="popup-label">Total Risk Score</span><span class="popup-val">${fmt(Math.round(risk))}</span></div>
+    <div class="popup-row"><span class="popup-label">Inbound Cargo (infested origins)</span><span class="popup-val">${fmt(Math.round(totalCargo/2000))} tons</span></div>
+    <div class="popup-row"><span class="popup-label">Active Origin Countries</span><span class="popup-val">${topRoutes.length}+</span></div>
+    <div class="popup-row"><span class="popup-label">Species Exposure</span><span class="popup-val">${getPortSpeciesMix(iata)}</span></div>
+    <div class="popup-section">
+      <div class="popup-section-title">Top Origin Countries (${MONTH_SHORT[state.month-1]})</div>
+      ${routeRows}
+    </div>`;
+  map.openPopup(L.popup({maxWidth:300}).setContent(content).setLatLng([ap.lat,ap.lon]));
+}
+
+// ─── Update: stats ────────────────────────────────────────────────────────────
+function updateStats(){
+  const m=state.month,sp=state.species;
+  const routes=getFilteredRoutes();
+  const cRisk=countryRiskPrecomp[sp][m]||{};
+  const pRisk=portRiskPrecomp[sp][m]||{};
+  document.getElementById("stat-countries").textContent=Object.values(cRisk).filter(v=>v>0).length;
+  const topC=Object.entries(cRisk).sort((a,b)=>b[1]-a[1])[0];
+  if(topC){const c=CENTROIDS[topC[0]]||{};document.getElementById("stat-top-country").textContent=`${flag(topC[0])} ${c.name||topC[0]}`}
+  document.getElementById("stat-pax").textContent=fmt(routes.reduce((s,r)=>s+r.passengers,0));
+  document.getElementById("stat-cargo").textContent=fmt(Math.round(routes.reduce((s,r)=>s+r.freight,0)/2000));
+  document.getElementById("stat-ports").textContent=Object.values(pRisk).filter(v=>v>0).length;
+  const topP=Object.entries(pRisk).sort((a,b)=>b[1]-a[1])[0];
+  if(topP){const ap=US_AIRPORTS[topP[0]]||{};document.getElementById("stat-top-port").textContent=`${ap.city||topP[0]} (${topP[0]})`}
+  document.getElementById("stats-month-label").textContent=MONTH_SHORT[m-1];
+}
+
+// ─── Update: route rankings ───────────────────────────────────────────────────
+function updateRouteRankings(){
+  const routes=getFilteredRoutes().slice(0,12);
+  const maxRS=routes[0]?.risk_score||1;
+  document.getElementById("routes-list").innerHTML=routes.map((r,i)=>{
+    const pct=Math.round(100*Math.log(r.risk_score+1)/Math.log(maxRS+1));
+    const col=r.max_pest_score>=3?"var(--risk3)":r.max_pest_score>=2?"var(--risk2)":"var(--risk1)";
+    const spBadges=["certca","dacudo","anstlu"].filter(sp=>r[sp]>0)
+      .map(sp=>`<span class="sp-badge ${sp}">${sp==="certca"?"M":sp==="dacudo"?"O":"X"}</span>`).join("");
+    return`<div class="route-item">
+      <div class="route-rank">${i+1}</div>
+      <div class="route-flag">${flag(r.origin_iso2)}</div>
+      <div class="route-info">
+        <div class="route-name">${r.origin_name} → ${r.dest_city||r.dest_iata} ${spBadges}</div>
+        <div class="route-sub">${fmt(r.passengers)} pax · ${fmt(Math.round(r.freight/2000))}t cargo · risk ${fmt(Math.round(r.risk_score))}</div>
+      </div>
+      <div class="route-bar-wrap">
+        <div class="route-bar-bg"><div class="route-bar" style="width:${pct}%;background:${col}"></div></div>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("routes-month-label").textContent=MONTH_SHORT[state.month-1];
+}
+
+// ─── Update: US panel ─────────────────────────────────────────────────────────
+function updateUSPanel(){
+  const m=state.month,sp=state.species;
+  const portRisks=portRiskPrecomp[sp][m]||{};
+  const sorted=Object.entries(portRisks).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const maxPR=sorted[0]?.[1]||1;
+
+  // Port rows
+  document.getElementById("us-ports-list").innerHTML=sorted.map(([iata,risk],i)=>{
+    const ap=US_AIRPORTS[iata]||{};
+    const pct=Math.round(100*Math.log(risk+1)/Math.log(maxPR+1));
+    const topOrigin=getTopOriginsForPort(iata,1)[0];
+    const spMix=["certca","dacudo","anstlu"].filter(s=>(portRiskPrecomp[s][m]||{})[iata]>0)
+      .map(s=>`<span class="sp-badge ${s}">${s==="certca"?"M":s==="dacudo"?"O":"X"}</span>`).join("");
+    return`<div class="us-port-row">
+      <div class="us-port-rank">${i+1}</div>
+      <div class="us-port-info">
+        <div class="us-port-name">${ap.city||iata} <small style="color:var(--muted)">(${iata})</small> ${spMix}</div>
+        <div class="us-port-sub">${topOrigin?`Top: ${flag(topOrigin.iso2)} ${topOrigin.name}`:"—"} · score ${fmt(Math.round(risk))}</div>
+      </div>
+      <div class="us-port-bar-wrap">
+        <div class="us-port-bar-bg"><div class="us-port-bar-inner" style="width:${pct}%;background:var(--link)"></div></div>
+        <div class="us-port-score">${fmt(Math.round(risk))}</div>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("us-month-label").textContent=MONTH_SHORT[m-1];
+
+  // Detection grid by state
+  const stateCounts={};
+  for(const d of DETECTIONS){
+    if(state.species==="all"||SPECIES_META[state.species]?.latin===d.species){
+      stateCounts[d.state]=(stateCounts[d.state]||0)+d.count;
+    }
+  }
+  const maxCount=Math.max(1,...Object.values(stateCounts));
+  document.getElementById("detect-grid").innerHTML=Object.entries(stateCounts)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([st,cnt])=>{
+      const norm=cnt/maxCount;
+      const bg=`rgba(${Math.round(220*norm+30*(1-norm))},${Math.round(38*norm+38*(1-norm))},${Math.round(38*norm+100*(1-norm))},${0.4+0.5*norm})`;
+      return`<div class="detect-state" style="background:${bg};color:#e6edf3" title="${st}: ${cnt} detection${cnt>1?"s":""}">${st} ${cnt}</div>`;
+    }).join("");
+
+  updateUSSpeciesChart(sorted.slice(0,8).map(([iata])=>iata));
+}
+
+// ─── Chart: US species mix ────────────────────────────────────────────────────
+function initUSSpeciesChart(){
+  const ctx=document.getElementById("us-species-chart").getContext("2d");
+  usSpeciesChartInst=new Chart(ctx,{
+    type:"bar",
+    data:{labels:[],datasets:[
+      {label:"Medfly",data:[],backgroundColor:"rgba(255,107,107,0.75)",borderRadius:2},
+      {label:"Oriental FF",data:[],backgroundColor:"rgba(255,209,102,0.75)",borderRadius:2},
+      {label:"Mexican FF",data:[],backgroundColor:"rgba(78,204,163,0.75)",borderRadius:2},
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:"#8b949e",font:{size:9},boxWidth:10,padding:6}},
+        tooltip:{backgroundColor:"#161b22",borderColor:"#30363d",borderWidth:1,
+          titleColor:"#e6edf3",bodyColor:"#8b949e",callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.raw)}`}}
+      },
+      scales:{
+        x:{stacked:true,grid:{display:false},ticks:{color:"#8b949e",font:{size:9}}},
+        y:{stacked:true,grid:{color:"#21262d"},ticks:{color:"#8b949e",font:{size:9},callback:v=>fmt(v)}}
+      }
+    }
+  });
+}
+
+function updateUSSpeciesChart(iatas){
+  if(!usSpeciesChartInst)return;
+  const m=state.month;
+  usSpeciesChartInst.data.labels=iatas;
+  usSpeciesChartInst.data.datasets[0].data=iatas.map(i=>(portRiskPrecomp.certca[m]||{})[i]||0);
+  usSpeciesChartInst.data.datasets[1].data=iatas.map(i=>(portRiskPrecomp.dacudo[m]||{})[i]||0);
+  usSpeciesChartInst.data.datasets[2].data=iatas.map(i=>(portRiskPrecomp.anstlu[m]||{})[i]||0);
+  usSpeciesChartInst.update("none");
+}
+
+// ─── Chart: monthly trend ─────────────────────────────────────────────────────
+function initTrendChart(){
+  const ctx=document.getElementById("trend-chart").getContext("2d");
+  const datasets=Object.entries(SPECIES_META).map(([sp,meta])=>{
+    const d=Array.from({length:12},(_,i)=>{
+      const m=i+1;
+      return(routesByMonth[m]||[]).filter(r=>(r[sp]||0)>0).reduce((s,r)=>s+r.passengers,0);
+    });
+    return{label:meta.name,data:d,borderColor:SPECIES_COLORS[sp],backgroundColor:SPECIES_COLORS[sp]+"22",
+      fill:true,tension:0.4,pointRadius:3,pointHoverRadius:5};
+  });
+  trendChartInst=new Chart(ctx,{
+    type:"line",data:{labels:MONTH_SHORT,datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+      plugins:{
+        legend:{labels:{color:"#8b949e",font:{size:9},boxWidth:10,padding:6}},
+        tooltip:{backgroundColor:"#161b22",borderColor:"#30363d",borderWidth:1,titleColor:"#e6edf3",bodyColor:"#8b949e"}
+      },
+      scales:{
+        x:{grid:{color:"#21262d"},ticks:{color:"#8b949e",font:{size:10}}},
+        y:{grid:{color:"#21262d"},ticks:{color:"#8b949e",font:{size:10},callback:v=>fmt(v)}}
+      }
+    }
+  });
+}
+
+function updateTrendChart(){
+  if(!trendChartInst)return;
+  trendChartInst.data.datasets.forEach(ds=>{
+    ds.pointRadius=ds.data.map((_,i)=>i===state.month-1?6:2.5);
+    ds.pointBackgroundColor=ds.data.map((_,i)=>i===state.month-1?ds.borderColor:"transparent");
+    ds.pointBorderColor=ds.data.map((_,i)=>i===state.month-1?"#fff":ds.borderColor);
+    ds.pointBorderWidth=ds.data.map((_,i)=>i===state.month-1?2:1);
+  });
+  trendChartInst.update("none");
+}
+
+// ─── Chart: commodity imports ─────────────────────────────────────────────────
+function initImportsChart(){
+  const byPartner={};
+  for(const rec of IMPORTS){
+    if(rec.year<2023)continue;
+    byPartner[rec.partner]=(byPartner[rec.partner]||0)+rec.qty_kg;
+  }
+  const sorted=Object.entries(byPartner).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const ctx=document.getElementById("imports-chart").getContext("2d");
+  importsChartInst=new Chart(ctx,{
+    type:"bar",
+    data:{
+      labels:sorted.map(([p])=>p),
+      datasets:[{
+        label:"Host Commodity Imports (kg)",
+        data:sorted.map(([,v])=>v),
+        backgroundColor:sorted.map((_,i)=>`hsl(${200+i*22},55%,${48-i*3}%)`),
+        borderRadius:3,
+      }]
+    },
+    options:{
+      indexAxis:"y",responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{backgroundColor:"#161b22",borderColor:"#30363d",borderWidth:1,
+          titleColor:"#e6edf3",bodyColor:"#8b949e",callbacks:{label:c=>`${fmt(c.raw)} kg`}}
+      },
+      scales:{
+        x:{grid:{color:"#21262d"},ticks:{color:"#8b949e",font:{size:9},callback:v=>fmt(v)}},
+        y:{grid:{display:false},ticks:{color:"#8b949e",font:{size:9}}}
+      }
+    }
+  });
+}
+
+// ─── Alerts ───────────────────────────────────────────────────────────────────
+function updateAlerts(){
+  const items=[];
+  for(const d of DETECTIONS.slice(0,10)){
+    const spCode=Object.entries(SPECIES_META).find(([,m])=>m.latin===d.species||m.name===d.species)?.[0];
+    items.push({
+      sort:d.year*100+d.month,
+      html:`<div class="alert-item">
+        <div class="alert-header">
+          <span class="alert-species ${spCode||"other"}">${d.species}</span>
+          <span class="alert-date">${MONTH_SHORT[d.month-1]} ${d.year}</span>
+        </div>
+        <div class="alert-location">📍 ${d.state} — APHIS Detection</div>
+        ${d.notes?`<div class="alert-desc">${d.notes}</div>`:""}
+      </div>`
+    });
+  }
+  for(const r of IPPC_REPORTS.slice(0,6)){
+    const spCode=Object.entries(SPECIES_META).find(([,m])=>m.latin===r.species||m.name===r.species)?.[0];
+    items.push({
+      sort:parseInt((r.date||"0").replace(/-/g,""))||0,
+      html:`<div class="alert-item">
+        <div class="alert-header">
+          <span class="alert-species ${spCode||"other"}">${r.species}</span>
+          <span class="alert-date">${r.date.slice(0,7)}</span>
+        </div>
+        <div class="alert-location">📍 ${r.country} — IPPC Report</div>
+        <div class="alert-desc">${r.event_type}: ${r.description.slice(0,110)}${r.description.length>110?"…":""}</div>
+      </div>`
+    });
+  }
+  items.sort((a,b)=>b.sort-a.sort);
+  document.getElementById("alerts-list").innerHTML=items.map(i=>i.html).join("");
+}
+
+// ─── Master update ────────────────────────────────────────────────────────────
+function update(){
+  document.getElementById("month-name").textContent=MONTH_NAMES[state.month-1];
+  document.getElementById("month-slider").value=state.month;
+  updateChoropleth();
+  updateArcs();
+  updatePortBubbles();
+  updateStats();
+  updateRouteRankings();
+  updateUSPanel();
+  updateTrendChart();
+  document.getElementById("hdr-routes").textContent=fmt(getFilteredRoutes().length);
+}
+
+// ─── Animation ────────────────────────────────────────────────────────────────
+function togglePlay(){
+  const btn=document.getElementById("play-btn");
+  isPlaying=!isPlaying;
+  if(isPlaying){
+    btn.innerHTML="&#9646;&#9646;";btn.style.background="#d97706";
+    playTimer=setInterval(()=>{state.month=state.month>=12?1:state.month+1;update();},900);
+  }else{
+    btn.innerHTML="&#9654;";btn.style.background="var(--link)";
+    clearInterval(playTimer);
+  }
+}
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+function init(){
+  precompute();
+  initMap();
+  initTrendChart();
+  initImportsChart();
+  initUSSpeciesChart();
+  updateAlerts();
+
+  // Month slider
+  document.getElementById("month-slider").addEventListener("input",e=>{
+    state.month=parseInt(e.target.value); update();
+  });
+
+  // Play button
+  document.getElementById("play-btn").addEventListener("click",togglePlay);
+
+  // Species buttons
+  document.querySelectorAll(".sp-btn").forEach(btn=>btn.addEventListener("click",()=>{
+    document.querySelectorAll(".sp-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    state.species=btn.dataset.sp; update();
+  }));
+
+  // Layer checkboxes
+  ["lyr-pest","lyr-arcs","lyr-ports","lyr-labels","lyr-cargo"].forEach(id=>{
+    document.getElementById(id).addEventListener("change",e=>{
+      if(id==="lyr-cargo"){state.includeCargo=e.target.checked;precompute();}
+      update();
+    });
+  });
+
+  // Arc count
+  document.getElementById("arc-count").addEventListener("change",e=>{
+    state.arcCount=parseInt(e.target.value);update();
+  });
+
+  // Choropleth mode buttons
+  document.querySelectorAll(".cmode-btn").forEach(btn=>btn.addEventListener("click",()=>{
+    document.querySelectorAll(".cmode-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    state.choroplethMode=btn.dataset.mode;update();
+  }));
+
+  // Zoom buttons
+  document.getElementById("zoom-us").addEventListener("click",()=>
+    map.flyTo([38.5,-97],4,{duration:1.2}));
+  document.getElementById("zoom-world").addEventListener("click",()=>
+    map.flyTo([20,0],2,{duration:1.2}));
+
+  // Layers collapse button
+  document.getElementById("layers-collapse-btn").addEventListener("click",e=>{
+    e.stopPropagation();
+    const body=document.getElementById("layers-body");
+    const collapsed=body.style.display==="none";
+    body.style.display=collapsed?"":"none";
+    e.target.textContent=collapsed?"▲":"▼";
+  });
+
+  // Sidebar toggle
+  document.getElementById("sidebar-toggle-btn").addEventListener("click",toggleSidebar);
+
+  // Initial render
+  update();
+
+  // Dismiss loading screen
+  setTimeout(()=>{
+    const l=document.getElementById("loading");
+    l.style.opacity="0";l.style.transition="opacity 0.4s";
+    setTimeout(()=>l.remove(),400);
+  },250);
+}
+
+window.addEventListener("load",init);
+</script>
+</body>
+</html>
