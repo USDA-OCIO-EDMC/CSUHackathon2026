@@ -1,6 +1,8 @@
 import transformers
 import torch, rasterio
 import numpy as np
+import boto3
+from io import BytesIO
 
 def load_prithvi(device="cpu"):
     model = transformers.AutoModel.from_pretrained(
@@ -21,4 +23,18 @@ def extract_features(model, naip_tile_path, device="cpu"):
     with torch.no_grad():
         out = model(pixel_values=tensor)
     # Mean-pool patch embeddings → fixed-dim feature vector
+    return out.last_hidden_state.mean(dim=1).squeeze().cpu().numpy()
+
+
+def extract_features_s3(model, bucket, key, device="cpu"):
+    """Extract Prithvi embeddings from a NAIP tile stored in S3."""
+    s3 = boto3.client('s3')
+    obj = s3.get_object(Bucket=bucket, Key=key)
+    with rasterio.open(BytesIO(obj['Body'].read())) as src:
+        img = src.read().astype(np.float32)
+    img = (img - img.mean(axis=(1,2), keepdims=True)) / \
+          (img.std(axis=(1,2), keepdims=True) + 1e-6)
+    tensor = torch.tensor(img).unsqueeze(0).to(device)
+    with torch.no_grad():
+        out = model(pixel_values=tensor)
     return out.last_hidden_state.mean(dim=1).squeeze().cpu().numpy()
