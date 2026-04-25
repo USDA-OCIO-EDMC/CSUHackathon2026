@@ -1,7 +1,7 @@
 import requests, pandas as pd
 import boto3, io
 
-NASS_KEY = "YOUR_API_KEY"  # Register at quickstats.nass.usda.gov
+NASS_KEY = os.environ.get("NASS_API_KEY", "")  # Register at quickstats.nass.usda.gov
 STATES = {"IA":"19","CO":"08","WI":"55","MO":"29","NE":"31"}
 
 def get_nass_yields(state_fips, year_start=2010, year_end=2024):
