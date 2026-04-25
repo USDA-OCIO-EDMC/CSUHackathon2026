@@ -140,13 +140,26 @@ def download_cdl_state(state_fips, year, bucket):
     return corn_pixels
 
 
-def fetch_all_cdl(bucket, year_start=2005, year_end=2024):
+def fetch_all_cdl(bucket, year_start=2010, year_end=2024, states=None):
     """
-    Download and cache CDL corn masks for all 5 states across all years.
+    Download and cache CDL corn masks for selected states/years.
     Skips files already present in S3.
+
+    Parameters
+    ----------
+    bucket     : S3 bucket name
+    year_start : default 2010 (matches yield data window; was 2005)
+    year_end   : default 2024
+    states     : optional iterable of state abbreviations (e.g. ["IA", "NE"]).
+                 If None, fetches all 5 states in STATES.
     """
     s3 = boto3.client("s3")
-    for abbr, fips in STATES.items():
+    target_states = (
+        {abbr: STATES[abbr] for abbr in states}
+        if states is not None
+        else STATES
+    )
+    for abbr, fips in target_states.items():
         for year in range(year_start, year_end + 1):
             key = f"raw/cdl/{fips}/{year}.tif"
             # Skip if already uploaded
