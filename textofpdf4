@@ -1,0 +1,48 @@
+Colorado State University — Geospatial AI Crop Yield Forecasting
+Background
+Accurate and timely crop yield forecasting is critical for food security, commodity markets,
+agricultural policy, and decision making. Traditional yield estimation methods often rely on surveybased approaches that can be slow, costly, and limited in spatial resolution. Recent advances in
+geospatial AI, satellite remote sensing, and machine learning now offer the opportunity to produce
+faster, more granular, and more accurate yield forecasts directly from Earth observation data.
+Problem Statement
+Using Prithvi, NASA's open-source geospatial AI foundation model, combined with NASA satellite
+imagery, NAIP (National Agriculture Imagery Program) aerial imagery, and historical corn yield data
+from USDA NASS (National Agricultural Statistics Service), participants are challenged to build a
+geospatial machine learning pipeline that:
+1. Models corn for grain yield estimates at four key points during the growing season:
+o August 1 — Early grain fill
+o September 1 — Late grain fill / dough stage
+o October 1 — Maturity / early harvest
+o Final (End of Season) — Post-harvest reconciliation
+2. Generates a cone of uncertainty around each yield estimate, derived from:
+o Historical seasons with analogous weather patterns
+o Similar weather and geospatial signals at the same point in the season
+o Actual USDA NASS reported outcomes from those analog years
+3. Produces growing season yield estimates for the following five states: Iowa, Colorado,
+Wisconsin, Missouri and Nebraska.
+Data Sources
+Dataset Source Purpose
+Prithvi Geospatial AI Model NASA / IBM Hugging
+Face Foundation model for geospatial feature extraction
+Dataset Source Purpose
+Multispectral Satellite
+Imagery (HLS)
+NASA Vegetation indices, crop health signals
+NAIP Aerial Imagery USDA FSA High-resolution land cover and field boundary data
+Historical Corn Yield Data USDA NASS Ground truth for model training and validation
+Weather / Climate Data NOAA / NASA Analog year identification and weather feature
+engineering
+Cropland Data Layer (CDL) USDA NASS Corn field identification and masking
+Deliverables
+1. Working model pipeline with documented code
+2. Yield forecast outputs for each of the chosen states at all four time points for the 2025
+season
+3. Cone of uncertainty for each state and each forecast date
+4. Presentation (5-7 minutes) explaining methodology, data pipeline, model architecture, and
+results
+Training Data: USDA/NASS QuickStats Ad-hoc Query Tool (Yield Information)
+• Data spans from 2005-2024.
+• Data is at multiple geospatial levels in here, as indicated by the Geo Level column (county,
+state, national) (The goal is to estimate a state level yield, but it may be useful to train a
+model at a county or smaller level, hence inclusion of county data)
+Values represent “CORN, GRAIN – YIELD, MEASURED IN BU/ACRE”
