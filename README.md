@@ -33,3 +33,4 @@ Pip installs:
 conda install -c conda-forge geopandas rasterio shapely pyproj earthpy folium -y
 conda install -c conda-forge numpy pandas matplotlib seaborn tqdm scikit-learn xgboost -y
 pip install torch transformers huggingface_hub requests
+pip install awscli
