@@ -16,7 +16,11 @@ Steps:
 
 import io
 import sys
+import time
 import zipfile
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 import boto3
 import numpy as np
 import pandas as pd
@@ -33,8 +37,9 @@ from sklearn.metrics import mean_absolute_error
 load_dotenv(find_dotenv(usecwd=False), override=True)
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
-from analog_years import get_county_weather_features_single, get_state_weather_features
 from data_utils import load_all_states, STATES
+
+GSOD_BUCKET_NAME = "noaa-gsod-pds"   # AWS Open Data — no rate limits
 
 BUCKET         = "cornsight-data"
 TARGET_FIPS    = {"IA": "19", "CO": "08", "WI": "55", "MO": "29", "NE": "31"}
@@ -123,51 +128,159 @@ def fetch_county_centroids(yield_df):
 
 
 # ---------------------------------------------------------------------------
-# Weather — regional API (1 call per state/year, covers all counties)
+# Weather — NOAA GSOD on AWS Open Data (s3://noaa-gsod-pds)
+# No rate limits; direct S3 reads; TMAX, TMIN, PRCP per station/day
 # ---------------------------------------------------------------------------
 
-def fetch_weather_features(county_centroids, years):
-    """
-    Fetch 18-dim weather vectors using the regional API.
-    One API call per state/year returns a spatial grid; we extract each county
-    centroid from the nearest grid cell.  55 calls instead of 3,820.
+GSOD_BUCKET = "noaa-gsod-pds"
+_GSOD_STATIONS = None   # loaded once, cached in memory
 
+
+def _load_gsod_stations():
+    """
+    Download NOAA ISD station inventory from NOAA HTTPS (small CSV, ~14 MB).
+    Returns DataFrame indexed for fast nearest-station lookup.
+    """
+    global _GSOD_STATIONS
+    if _GSOD_STATIONS is not None:
+        return _GSOD_STATIONS
+
+    cache = Path("/tmp/isd_history.csv")
+    if not cache.exists():
+        print("  Downloading ISD station inventory...", end=" ", flush=True)
+        url  = "https://www.ncei.noaa.gov/pub/data/noaa/isd-history.csv"
+        resp = requests.get(url, timeout=60)
+        resp.raise_for_status()
+        cache.write_bytes(resp.content)
+        print("done")
+
+    df = pd.read_csv(cache, dtype={"USAF": str, "WBAN": str})
+    df = df.dropna(subset=["LAT", "LON"])
+    df["lat"] = pd.to_numeric(df["LAT"], errors="coerce")
+    df["lon"] = pd.to_numeric(df["LON"], errors="coerce")
+    df = df.dropna(subset=["lat", "lon"])
+    # S3 key = USAF (6 chars) + WBAN (5 chars), no separator
+    df["s3_stem"] = df["USAF"].str.zfill(6) + df["WBAN"].str.zfill(5)
+    _GSOD_STATIONS = df.reset_index(drop=True)
+    return _GSOD_STATIONS
+
+
+def _nearest_station_key(lat, lon, stations, year):
+    """Return the S3 key stem for the nearest station that has data for year."""
+    lats  = stations["lat"].values
+    lons  = stations["lon"].values
+    dists = (lats - lat) ** 2 + (lons - lon) ** 2
+    # Walk outward until we find a station file that exists for this year
+    order = np.argsort(dists)
+    s3    = boto3.client("s3", region_name="us-east-1")
+    for idx in order[:20]:           # check at most 20 nearest
+        stem = stations.iloc[idx]["s3_stem"]
+        key  = f"{year}/{stem}.csv"
+        try:
+            s3.head_object(Bucket=GSOD_BUCKET, Key=key)
+            return key
+        except Exception:
+            continue
+    return None
+
+
+def _gsod_to_vec(df_station):
+    """Convert a GSOD station DataFrame (May–Oct) to an 18-dim weather vector."""
+    df = df_station.copy()
+    df["DATE"] = pd.to_datetime(df["DATE"], errors="coerce")
+    df = df[df["DATE"].dt.month.between(5, 10)]
+
+    for col in ["MAX", "MIN", "PRCP"]:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+    # GSOD missing-data flags
+    df["MAX"]  = df["MAX"].where(df["MAX"]  < 9000.0)
+    df["MIN"]  = df["MIN"].where(df["MIN"]  < 9000.0)
+    df["PRCP"] = df["PRCP"].where(df["PRCP"] < 99.0)
+
+    # °F → °C, inches → mm
+    df["TMAX_C"]  = (df["MAX"]  - 32.0) * 5.0 / 9.0
+    df["TMIN_C"]  = (df["MIN"]  - 32.0) * 5.0 / 9.0
+    df["PRCP_MM"] = df["PRCP"]  * 25.4
+    df["month"]   = df["DATE"].dt.month
+
+    vector = []
+    for mo in _ALL_MONTHS:
+        sub = df[df["month"] == mo]
+        txv = sub["TMAX_C"].dropna().values
+        tnv = sub["TMIN_C"].dropna().values
+        prv = sub["PRCP_MM"].dropna().values
+        n   = min(len(txv), len(tnv))
+        if n > 0:
+            txv, tnv  = txv[:n], tnv[:n]
+            mean_temp = (np.mean(txv) + np.mean(tnv)) / 2.0
+            gdd_sum   = sum(max(0.0, (tx + tn) / 2.0 - 10.0)
+                            for tx, tn in zip(txv, tnv))
+        else:
+            mean_temp = gdd_sum = 0.0
+        total_prec = float(np.sum(prv)) if len(prv) > 0 else 0.0
+        vector.extend([float(mean_temp), total_prec, float(gdd_sum)])
+
+    return np.array(vector, dtype=np.float32)
+
+
+def _fetch_gsod(lat, lon, year):
+    """Return an 18-dim weather vector for (lat, lon, year) using NOAA GSOD on S3."""
+    stations = _load_gsod_stations()
+    key      = _nearest_station_key(lat, lon, stations, year)
+    if key is None:
+        raise RuntimeError(f"No GSOD station found near ({lat:.2f}, {lon:.2f}) for {year}")
+
+    s3  = boto3.client("s3", region_name="us-east-1")
+    obj = s3.get_object(Bucket=GSOD_BUCKET, Key=key)
+    df  = pd.read_csv(io.BytesIO(obj["Body"].read()))
+    return _gsod_to_vec(df)
+
+
+def _worker(args):
+    fips, name, state_abbr, state_fips2, lat, lon, year = args
+    try:
+        vec = _fetch_gsod(lat, lon, year)
+        return (fips, name, state_abbr, str(state_fips2).zfill(2), int(year), vec)
+    except Exception as e:
+        print(f"\n    WARNING: {name} {state_abbr} {year}: {e}")
+        return None
+
+
+def fetch_weather_features(county_centroids, years, max_workers=20):
+    """
+    Parallel Open-Meteo fetch — 18-dim weather vector per county/year.
     Returns DataFrame: [year, county, fips, state, state_fips, weather_vec]
     """
     years = list(years)
-    total = len(county_centroids) * len(years)
-    done  = 0
+    tasks = [
+        (fips, name, state_abbr, TARGET_FIPS[state_abbr], lat, lon, year)
+        for state_abbr, counties in county_centroids.items()
+        for fips, name, lat, lon in counties
+        for year in years
+    ]
+    total   = len(tasks)
+    done    = 0
     records = []
+    print(f"  {total} calls ({max_workers} workers)...", end=" ", flush=True)
 
-    for state_abbr, counties in county_centroids.items():
-        fips2 = TARGET_FIPS[state_abbr]
-        # get_state_weather_features expects [(fips, lat, lon), ...]
-        centroid_list = [(fips, lat, lon) for fips, name, lat, lon in counties]
-        name_map      = {fips: name for fips, name, lat, lon in counties}
-
-        for year in years:
-            done += 1
-            print(f"  {done}/{total}  {state_abbr} {year} ...", end=" ", flush=True)
-            try:
-                results = get_state_weather_features(
-                    state_abbr=state_abbr,
-                    year=year,
-                    forecast_date="final",   # always final; other dates derived by masking
-                    county_centroids=centroid_list,
-                )
-                for fips, vec in results.items():
-                    records.append({
-                        "year":        int(year),
-                        "county":      name_map[fips],
-                        "fips":        fips,
-                        "state":       state_abbr,
-                        "state_fips":  fips2,
-                        "weather_vec": vec,
-                    })
-                print(f"ok ({len(results)} counties)")
-            except Exception as e:
-                print(f"WARNING: {e}")
-
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        futures = {pool.submit(_worker, t): t for t in tasks}
+        for fut in as_completed(futures):
+            result = fut.result()
+            done  += 1
+            if done % 200 == 0:
+                print(f"{done}/{total}", end=" ", flush=True)
+            if result is not None:
+                fips, name, state_abbr, state_fips2, year, vec = result
+                records.append({
+                    "year":        year,
+                    "county":      name,
+                    "fips":        fips,
+                    "state":       state_abbr,
+                    "state_fips":  state_fips2,
+                    "weather_vec": vec,
+                })
+    print("done")
     return pd.DataFrame(records)
 
 
