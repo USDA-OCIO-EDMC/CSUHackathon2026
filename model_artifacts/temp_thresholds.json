@@ -1,0 +1,1 @@
+{"dead_zone_below_f": 40, "marginal_range_f": [40, 45], "viable_range_f": [45, 60], "optimal_range_f": [60, 75], "hot_suitable_above_f": 75, "note": "Fruit flies cannot survive below 40F. Below this threshold, risk is automatically zero regardless of other factors."}

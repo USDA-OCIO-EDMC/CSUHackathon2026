@@ -1,0 +1,26 @@
+origin_country,us_port,month,detections,next_month_detections,future_detection,temp_suitability_score,model_fruit_fly_type
+Australia,DFW,2021-12,7,5.0,1,0.0,Oriental Fruit Fly (Bactrocera dorsalis)
+Australia,DFW,2022-12,5,2.0,1,0.0,Mexican Fruit Fly (Anastrepha ludens)
+Australia,IAH,2021-10,0,0.0,0,1.0,Unknown
+Australia,IAH,2023-12,0,0.0,0,1.0,Oriental Fruit Fly (Bactrocera dorsalis)
+Australia,IAH,2025-03,0,3.0,1,0.5,Oriental Fruit Fly (Bactrocera dorsalis)
+Australia,LAX,2022-12,5,13.0,1,1.0,Mediterranean Fruit Fly (Ceratitis capitata - Medfly)
+Australia,LAX,2024-03,13,9.0,1,0.5,Mexican Fruit Fly (Anastrepha ludens)
+Brazil,DFW,2020-10,7,7.0,1,1.0,Mexican Fruit Fly (Anastrepha ludens)
+Brazil,DFW,2021-09,7,6.0,1,1.0,Oriental Fruit Fly (Bactrocera dorsalis)
+Brazil,DFW,2022-10,6,2.0,1,1.0,Oriental Fruit Fly (Bactrocera dorsalis)
+Brazil,DFW,2024-04,2,0.0,0,0.5,Mexican Fruit Fly (Anastrepha ludens)
+Brazil,IAH,2023-02,2,0.0,0,0.5,Mexican Fruit Fly (Anastrepha ludens)
+Brazil,LAX,2020-06,11,6.0,1,1.0,Oriental Fruit Fly (Bactrocera dorsalis)
+Brazil,LAX,2020-09,6,5.0,1,1.0,Oriental Fruit Fly (Bactrocera dorsalis)
+Brazil,LAX,2022-12,5,10.0,1,1.0,Mediterranean Fruit Fly (Ceratitis capitata - Medfly)
+Brazil,MIA,2020-06,10,9.0,1,1.0,Mexican Fruit Fly (Anastrepha ludens)
+Canada,DFW,2021-04,0,2.0,1,0.5,Unknown
+Canada,DFW,2024-04,2,5.0,1,0.5,Mexican Fruit Fly (Anastrepha ludens)
+Canada,DFW,2025-05,5,2.0,1,1.0,Oriental Fruit Fly (Bactrocera dorsalis)
+Canada,IAH,2020-06,2,4.0,1,1.0,Mediterranean Fruit Fly (Ceratitis capitata - Medfly)
+Canada,IAH,2024-09,4,5.0,1,1.0,Mexican Fruit Fly (Anastrepha ludens)
+Chile,DFW,2020-09,2,4.0,1,1.0,Mexican Fruit Fly (Anastrepha ludens)
+Chile,DFW,2020-12,4,0.0,0,0.0,Mediterranean Fruit Fly (Ceratitis capitata - Medfly)
+Chile,DFW,2021-04,0,5.0,1,0.5,Unknown
+Chile,LAX,2022-04,0,5.0,1,0.5,Unknown

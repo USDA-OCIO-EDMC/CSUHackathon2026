@@ -1,0 +1,6 @@
+requests>=2.31
+boto3>=1.34
+pandas>=2.0
+numpy>=1.24
+scikit-learn>=1.2
+xgboost==2.0.3

@@ -1,0 +1,251 @@
+Port,DetectionCount,Species,DetectionDate,_lat,_lng
+LAX,3,Exotic fruit fly,2020-02-01,33.9425,-118.4081
+LAX,9,Exotic fruit fly,2020-03-01,33.9425,-118.4081
+LAX,4,Oriental Fruit Fly (Bactrocera dorsalis),2020-11-01,33.9425,-118.4081
+LAX,8,No regulated fruit fly reported,2021-01-01,33.9425,-118.4081
+LAX,9,Exotic fruit fly,2021-02-01,33.9425,-118.4081
+LAX,8,No regulated fruit fly reported,2021-04-01,33.9425,-118.4081
+LAX,7,Exotic fruit fly,2021-05-01,33.9425,-118.4081
+LAX,10,Exotic fruit fly,2021-06-01,33.9425,-118.4081
+LAX,9,Exotic fruit fly,2021-07-01,33.9425,-118.4081
+LAX,7,Exotic fruit fly,2021-09-01,33.9425,-118.4081
+LAX,8,Exotic fruit fly,2021-10-01,33.9425,-118.4081
+LAX,5,Exotic fruit fly,2021-11-01,33.9425,-118.4081
+LAX,10,Exotic fruit fly,2022-03-01,33.9425,-118.4081
+LAX,10,No regulated fruit fly reported,2022-04-01,33.9425,-118.4081
+LAX,8,Exotic fruit fly,2022-05-01,33.9425,-118.4081
+LAX,7,Exotic fruit fly,2022-06-01,33.9425,-118.4081
+LAX,10,No regulated fruit fly reported,2022-07-01,33.9425,-118.4081
+LAX,10,No regulated fruit fly reported,2022-08-01,33.9425,-118.4081
+LAX,10,Exotic fruit fly,2022-09-01,33.9425,-118.4081
+LAX,5,Exotic fruit fly,2022-10-01,33.9425,-118.4081
+LAX,9,Oriental Fruit Fly (Bactrocera dorsalis),2023-01-01,33.9425,-118.4081
+LAX,7,Oriental Fruit Fly (Bactrocera dorsalis),2023-02-01,33.9425,-118.4081
+LAX,9,Exotic fruit fly,2023-05-01,33.9425,-118.4081
+LAX,8,Exotic fruit fly,2023-06-01,33.9425,-118.4081
+LAX,9,Exotic fruit fly,2023-08-01,33.9425,-118.4081
+LAX,7,Exotic fruit fly,2023-10-01,33.9425,-118.4081
+LAX,9,Exotic fruit fly,2023-11-01,33.9425,-118.4081
+LAX,4,Oriental Fruit Fly (Bactrocera dorsalis),2024-03-01,33.9425,-118.4081
+LAX,10,Oriental Fruit Fly (Bactrocera dorsalis),2024-04-01,33.9425,-118.4081
+LAX,6,Exotic fruit fly,2024-05-01,33.9425,-118.4081
+LAX,10,Exotic fruit fly,2024-06-01,33.9425,-118.4081
+LAX,10,Exotic fruit fly,2024-07-01,33.9425,-118.4081
+LAX,6,Exotic fruit fly,2024-11-01,33.9425,-118.4081
+LAX,10,Exotic fruit fly,2024-12-01,33.9425,-118.4081
+LAX,7,Oriental Fruit Fly (Bactrocera dorsalis),2025-03-01,33.9425,-118.4081
+LAX,6,Exotic fruit fly,2025-06-01,33.9425,-118.4081
+LAX,9,Exotic fruit fly,2025-11-01,33.9425,-118.4081
+LAX,9,Exotic fruit fly,2026-01-01,33.9425,-118.4081
+LAX,7,Oriental Fruit Fly (Bactrocera dorsalis),2026-02-01,33.9425,-118.4081
+LAX,10,Exotic fruit fly,2026-04-01,33.9425,-118.4081
+MIA,7,No regulated fruit fly reported,2020-03-01,25.7959,-80.287
+MIA,5,Exotic fruit fly,2020-04-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2020-05-01,25.7959,-80.287
+MIA,9,Exotic fruit fly,2020-07-01,25.7959,-80.287
+MIA,7,Exotic fruit fly,2020-08-01,25.7959,-80.287
+MIA,5,Exotic fruit fly,2020-09-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2020-11-01,25.7959,-80.287
+MIA,7,Exotic fruit fly,2020-12-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2021-01-01,25.7959,-80.287
+MIA,9,Exotic fruit fly,2021-04-01,25.7959,-80.287
+MIA,7,Exotic fruit fly,2021-06-01,25.7959,-80.287
+MIA,9,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2021-09-01,25.7959,-80.287
+MIA,3,Exotic fruit fly,2021-11-01,25.7959,-80.287
+MIA,7,Exotic fruit fly,2021-12-01,25.7959,-80.287
+MIA,3,Exotic fruit fly,2022-01-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2022-03-01,25.7959,-80.287
+MIA,9,Oriental Fruit Fly (Bactrocera dorsalis),2022-04-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2022-06-01,25.7959,-80.287
+MIA,8,Exotic fruit fly,2022-07-01,25.7959,-80.287
+MIA,7,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-01-01,25.7959,-80.287
+MIA,5,Exotic fruit fly,2023-02-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2023-04-01,25.7959,-80.287
+MIA,9,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-06-01,25.7959,-80.287
+MIA,10,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-09-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2023-12-01,25.7959,-80.287
+MIA,5,Exotic fruit fly,2024-02-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2024-03-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2024-04-01,25.7959,-80.287
+MIA,10,No regulated fruit fly reported,2024-05-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2024-11-01,25.7959,-80.287
+MIA,5,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-12-01,25.7959,-80.287
+MIA,7,Exotic fruit fly,2025-01-01,25.7959,-80.287
+MIA,10,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2025-03-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2025-05-01,25.7959,-80.287
+MIA,8,Exotic fruit fly,2025-06-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2025-08-01,25.7959,-80.287
+MIA,10,Exotic fruit fly,2025-12-01,25.7959,-80.287
+MIA,7,European Cherry Fruit Fly (Rhagoletis cerasi),2026-01-01,25.7959,-80.287
+MIA,5,Exotic fruit fly,2026-03-01,25.7959,-80.287
+MIA,5,Oriental Fruit Fly (Bactrocera dorsalis),2026-04-01,25.7959,-80.287
+JFK,5,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2020-02-01,40.6413,-73.7781
+JFK,5,Exotic fruit fly,2020-03-01,40.6413,-73.7781
+JFK,7,No regulated fruit fly reported,2020-05-01,40.6413,-73.7781
+JFK,8,Exotic fruit fly,2020-06-01,40.6413,-73.7781
+JFK,9,Exotic fruit fly,2020-07-01,40.6413,-73.7781
+JFK,8,Oriental Fruit Fly (Bactrocera dorsalis),2020-10-01,40.6413,-73.7781
+JFK,2,No regulated fruit fly reported,2021-03-01,40.6413,-73.7781
+JFK,6,Exotic fruit fly,2021-05-01,40.6413,-73.7781
+JFK,5,No regulated fruit fly reported,2021-09-01,40.6413,-73.7781
+JFK,5,Exotic fruit fly,2021-12-01,40.6413,-73.7781
+JFK,3,Exotic fruit fly,2022-02-01,40.6413,-73.7781
+JFK,3,Exotic fruit fly,2022-05-01,40.6413,-73.7781
+JFK,5,Exotic fruit fly,2022-06-01,40.6413,-73.7781
+JFK,5,Exotic fruit fly,2022-07-01,40.6413,-73.7781
+JFK,6,No regulated fruit fly reported,2022-08-01,40.6413,-73.7781
+JFK,2,Exotic fruit fly,2023-02-01,40.6413,-73.7781
+JFK,6,Exotic fruit fly,2023-03-01,40.6413,-73.7781
+JFK,2,Exotic fruit fly,2023-05-01,40.6413,-73.7781
+JFK,5,Exotic fruit fly,2023-06-01,40.6413,-73.7781
+JFK,6,Exotic fruit fly,2023-07-01,40.6413,-73.7781
+JFK,5,Exotic fruit fly,2023-09-01,40.6413,-73.7781
+JFK,4,No regulated fruit fly reported,2024-01-01,40.6413,-73.7781
+JFK,1,Exotic fruit fly,2024-02-01,40.6413,-73.7781
+JFK,5,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-04-01,40.6413,-73.7781
+JFK,8,Oriental Fruit Fly (Bactrocera dorsalis),2024-07-01,40.6413,-73.7781
+JFK,6,Exotic fruit fly,2024-09-01,40.6413,-73.7781
+JFK,7,Exotic fruit fly,2024-10-01,40.6413,-73.7781
+JFK,5,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-11-01,40.6413,-73.7781
+JFK,5,Oriental Fruit Fly (Bactrocera dorsalis),2024-12-01,40.6413,-73.7781
+JFK,5,Exotic fruit fly,2025-02-01,40.6413,-73.7781
+JFK,5,Oriental Fruit Fly (Bactrocera dorsalis),2025-04-01,40.6413,-73.7781
+JFK,5,Exotic fruit fly,2025-05-01,40.6413,-73.7781
+JFK,5,Exotic fruit fly,2025-08-01,40.6413,-73.7781
+JFK,5,Exotic fruit fly,2025-09-01,40.6413,-73.7781
+JFK,4,Exotic fruit fly,2025-12-01,40.6413,-73.7781
+IAH,8,Exotic fruit fly,2020-03-01,29.9902,-95.3368
+IAH,6,Exotic fruit fly,2020-04-01,29.9902,-95.3368
+IAH,9,Exotic fruit fly,2020-07-01,29.9902,-95.3368
+IAH,3,Exotic fruit fly,2020-09-01,29.9902,-95.3368
+IAH,4,Exotic fruit fly,2020-10-01,29.9902,-95.3368
+IAH,8,Exotic fruit fly,2020-12-01,29.9902,-95.3368
+IAH,2,Exotic fruit fly,2021-03-01,29.9902,-95.3368
+IAH,4,Exotic fruit fly,2021-04-01,29.9902,-95.3368
+IAH,7,Exotic fruit fly,2021-05-01,29.9902,-95.3368
+IAH,6,Exotic fruit fly,2021-06-01,29.9902,-95.3368
+IAH,4,Exotic fruit fly,2021-07-01,29.9902,-95.3368
+IAH,8,Exotic fruit fly,2021-08-01,29.9902,-95.3368
+IAH,5,No regulated fruit fly reported,2021-09-01,29.9902,-95.3368
+IAH,5,Exotic fruit fly,2021-12-01,29.9902,-95.3368
+IAH,7,Exotic fruit fly,2022-01-01,29.9902,-95.3368
+IAH,3,Oriental Fruit Fly (Bactrocera dorsalis),2022-04-01,29.9902,-95.3368
+IAH,2,Exotic fruit fly,2022-07-01,29.9902,-95.3368
+IAH,1,Exotic fruit fly,2023-04-01,29.9902,-95.3368
+IAH,7,Exotic fruit fly,2023-06-01,29.9902,-95.3368
+IAH,6,Oriental Fruit Fly (Bactrocera dorsalis),2023-10-01,29.9902,-95.3368
+IAH,7,Oriental Fruit Fly (Bactrocera dorsalis),2023-12-01,29.9902,-95.3368
+IAH,3,Exotic fruit fly,2024-04-01,29.9902,-95.3368
+IAH,7,Exotic fruit fly,2024-08-01,29.9902,-95.3368
+IAH,4,Exotic fruit fly,2024-10-01,29.9902,-95.3368
+IAH,4,Exotic fruit fly,2024-11-01,29.9902,-95.3368
+IAH,6,Exotic fruit fly,2025-01-01,29.9902,-95.3368
+IAH,6,Exotic fruit fly,2025-02-01,29.9902,-95.3368
+IAH,5,Oriental Fruit Fly (Bactrocera dorsalis),2025-03-01,29.9902,-95.3368
+IAH,7,Exotic fruit fly,2025-06-01,29.9902,-95.3368
+IAH,6,Exotic fruit fly,2025-07-01,29.9902,-95.3368
+IAH,8,Exotic fruit fly,2025-09-01,29.9902,-95.3368
+IAH,4,Oriental Fruit Fly (Bactrocera dorsalis),2025-10-01,29.9902,-95.3368
+IAH,7,No regulated fruit fly reported,2025-12-01,29.9902,-95.3368
+IAH,5,Exotic fruit fly,2026-01-01,29.9902,-95.3368
+IAH,8,Exotic fruit fly,2026-04-01,29.9902,-95.3368
+SEA,5,Exotic fruit fly,2020-02-01,47.4502,-122.3088
+SEA,5,No regulated fruit fly reported,2021-03-01,47.4502,-122.3088
+SEA,5,No regulated fruit fly reported,2021-04-01,47.4502,-122.3088
+SEA,6,Exotic fruit fly,2021-07-01,47.4502,-122.3088
+SEA,3,Oriental Fruit Fly (Bactrocera dorsalis),2021-08-01,47.4502,-122.3088
+SEA,5,Exotic fruit fly,2021-09-01,47.4502,-122.3088
+SEA,4,Exotic fruit fly,2022-01-01,47.4502,-122.3088
+SEA,4,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2022-02-01,47.4502,-122.3088
+SEA,1,No regulated fruit fly reported,2022-03-01,47.4502,-122.3088
+SEA,4,Exotic fruit fly,2022-04-01,47.4502,-122.3088
+SEA,4,No regulated fruit fly reported,2022-05-01,47.4502,-122.3088
+SEA,2,Exotic fruit fly,2022-08-01,47.4502,-122.3088
+SEA,3,Exotic fruit fly,2022-11-01,47.4502,-122.3088
+SEA,3,Mexican Fruit Fly (Anastrepha ludens),2023-07-01,47.4502,-122.3088
+SEA,5,Exotic fruit fly,2023-09-01,47.4502,-122.3088
+SEA,2,Exotic fruit fly,2023-11-01,47.4502,-122.3088
+SEA,3,Exotic fruit fly,2024-01-01,47.4502,-122.3088
+SEA,5,Exotic fruit fly,2024-02-01,47.4502,-122.3088
+SEA,4,No regulated fruit fly reported,2024-07-01,47.4502,-122.3088
+SEA,5,No regulated fruit fly reported,2024-09-01,47.4502,-122.3088
+SEA,5,Oriental Fruit Fly (Bactrocera dorsalis),2024-10-01,47.4502,-122.3088
+SEA,4,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2025-02-01,47.4502,-122.3088
+SEA,1,Exotic fruit fly,2025-04-01,47.4502,-122.3088
+SEA,2,Exotic fruit fly,2025-07-01,47.4502,-122.3088
+SEA,3,Exotic fruit fly,2025-09-01,47.4502,-122.3088
+SEA,4,Exotic fruit fly,2026-02-01,47.4502,-122.3088
+SEA,4,Exotic fruit fly,2026-03-01,47.4502,-122.3088
+SEA,6,Exotic fruit fly,2026-04-01,47.4502,-122.3088
+ORD,1,Exotic fruit fly,2020-04-01,41.9742,-87.9073
+ORD,5,Exotic fruit fly,2020-06-01,41.9742,-87.9073
+ORD,1,Exotic fruit fly,2020-07-01,41.9742,-87.9073
+ORD,4,No regulated fruit fly reported,2020-08-01,41.9742,-87.9073
+ORD,4,Exotic fruit fly,2020-09-01,41.9742,-87.9073
+ORD,3,Exotic fruit fly,2020-12-01,41.9742,-87.9073
+ORD,1,Exotic fruit fly,2021-09-01,41.9742,-87.9073
+ORD,2,Exotic fruit fly,2021-11-01,41.9742,-87.9073
+ORD,3,Exotic fruit fly,2022-03-01,41.9742,-87.9073
+ORD,3,Exotic fruit fly,2022-06-01,41.9742,-87.9073
+ORD,4,Exotic fruit fly,2022-08-01,41.9742,-87.9073
+ORD,2,Exotic fruit fly,2022-10-01,41.9742,-87.9073
+ORD,3,Exotic fruit fly,2022-11-01,41.9742,-87.9073
+ORD,0,No regulated fruit fly reported,2022-12-01,41.9742,-87.9073
+ORD,3,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-03-01,41.9742,-87.9073
+ORD,5,Exotic fruit fly,2023-05-01,41.9742,-87.9073
+ORD,5,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-01-01,41.9742,-87.9073
+ORD,0,Exotic fruit fly,2024-03-01,41.9742,-87.9073
+ORD,1,Exotic fruit fly,2024-08-01,41.9742,-87.9073
+ORD,4,Exotic fruit fly,2024-12-01,41.9742,-87.9073
+ORD,4,Exotic fruit fly,2025-01-01,41.9742,-87.9073
+ORD,1,Oriental Fruit Fly (Bactrocera dorsalis),2025-03-01,41.9742,-87.9073
+ORD,2,Oriental Fruit Fly (Bactrocera dorsalis),2026-02-01,41.9742,-87.9073
+ORD,2,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2026-03-01,41.9742,-87.9073
+ORD,1,Exotic fruit fly,2026-04-01,41.9742,-87.9073
+DFW,3,Exotic fruit fly,2020-05-01,32.8998,-97.0403
+DFW,4,Exotic fruit fly,2020-07-01,32.8998,-97.0403
+DFW,2,No regulated fruit fly reported,2020-09-01,32.8998,-97.0403
+DFW,3,Mexican Fruit Fly (Anastrepha ludens),2021-01-01,32.8998,-97.0403
+DFW,2,Mexican Fruit Fly (Anastrepha ludens),2022-01-01,32.8998,-97.0403
+DFW,1,Exotic fruit fly,2022-02-01,32.8998,-97.0403
+DFW,3,Exotic fruit fly,2022-04-01,32.8998,-97.0403
+DFW,3,Exotic fruit fly,2022-05-01,32.8998,-97.0403
+DFW,1,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2022-10-01,32.8998,-97.0403
+DFW,5,Exotic fruit fly,2022-11-01,32.8998,-97.0403
+DFW,0,Exotic fruit fly,2023-01-01,32.8998,-97.0403
+DFW,3,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-02-01,32.8998,-97.0403
+DFW,4,Exotic fruit fly,2023-06-01,32.8998,-97.0403
+DFW,2,Exotic fruit fly,2023-08-01,32.8998,-97.0403
+DFW,1,Mexican Fruit Fly (Anastrepha ludens),2023-09-01,32.8998,-97.0403
+DFW,2,Oriental Fruit Fly (Bactrocera dorsalis),2024-04-01,32.8998,-97.0403
+DFW,2,Oriental Fruit Fly (Bactrocera dorsalis),2024-05-01,32.8998,-97.0403
+DFW,4,Exotic fruit fly,2024-06-01,32.8998,-97.0403
+DFW,3,Exotic fruit fly,2024-08-01,32.8998,-97.0403
+DFW,1,No regulated fruit fly reported,2024-11-01,32.8998,-97.0403
+DFW,2,Exotic fruit fly,2025-07-01,32.8998,-97.0403
+DFW,3,Exotic fruit fly,2025-08-01,32.8998,-97.0403
+DFW,5,Exotic fruit fly,2025-12-01,32.8998,-97.0403
+DFW,4,Exotic fruit fly,2026-03-01,32.8998,-97.0403
+DFW,4,No regulated fruit fly reported,2026-04-01,32.8998,-97.0403
+ATL,3,No regulated fruit fly reported,2020-01-01,33.6407,-84.4277
+ATL,3,Exotic fruit fly,2020-02-01,33.6407,-84.4277
+ATL,3,Exotic fruit fly,2020-07-01,33.6407,-84.4277
+ATL,1,Exotic fruit fly,2020-09-01,33.6407,-84.4277
+ATL,3,Oriental Fruit Fly (Bactrocera dorsalis),2020-10-01,33.6407,-84.4277
+ATL,2,Oriental Fruit Fly (Bactrocera dorsalis),2020-12-01,33.6407,-84.4277
+ATL,2,Exotic fruit fly,2021-01-01,33.6407,-84.4277
+ATL,4,Exotic fruit fly,2021-07-01,33.6407,-84.4277
+ATL,5,No regulated fruit fly reported,2021-08-01,33.6407,-84.4277
+ATL,1,Exotic fruit fly,2022-04-01,33.6407,-84.4277
+ATL,2,Exotic fruit fly,2022-09-01,33.6407,-84.4277
+ATL,1,Oriental Fruit Fly (Bactrocera dorsalis),2022-11-01,33.6407,-84.4277
+ATL,3,Oriental Fruit Fly (Bactrocera dorsalis),2022-12-01,33.6407,-84.4277
+ATL,4,Exotic fruit fly,2023-02-01,33.6407,-84.4277
+ATL,1,Exotic fruit fly,2023-03-01,33.6407,-84.4277
+ATL,1,Exotic fruit fly,2023-05-01,33.6407,-84.4277
+ATL,5,Exotic fruit fly,2023-07-01,33.6407,-84.4277
+ATL,3,Exotic fruit fly,2023-10-01,33.6407,-84.4277
+ATL,3,Exotic fruit fly,2024-01-01,33.6407,-84.4277
+ATL,4,Exotic fruit fly,2024-03-01,33.6407,-84.4277
+ATL,3,Exotic fruit fly,2025-07-01,33.6407,-84.4277
+ATL,5,No regulated fruit fly reported,2026-02-01,33.6407,-84.4277

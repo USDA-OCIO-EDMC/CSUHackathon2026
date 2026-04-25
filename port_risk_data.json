@@ -1,0 +1,314 @@
+[
+  {
+    "id": "ATL",
+    "name": "ATL",
+    "detections": 62,
+    "lat": 33.6407,
+    "lng": -84.4277,
+    "routes": 29,
+    "passengerVolume": 5169924,
+    "cargoVolume": 101393,
+    "topOrigin": "China",
+    "species": {
+      "bdorsalis": 15,
+      "ccapitata": 0,
+      "anastrepha": 0
+    },
+    "pathway": {
+      "passenger": 54,
+      "cargo": 35,
+      "courier": 11
+    },
+    "pheromone": "Methyl eugenol",
+    "monthlyRisk": [
+      53,
+      80,
+      33,
+      7,
+      7,
+      0,
+      100,
+      33,
+      20,
+      40,
+      7,
+      33
+    ],
+    "cpri": 74.1,
+    "risk": "HIGH",
+    "decoyStatus": "deploy"
+  },
+  {
+    "id": "DFW",
+    "name": "DFW",
+    "detections": 67,
+    "lat": 32.8998,
+    "lng": -97.0403,
+    "routes": 42,
+    "passengerVolume": 6563193,
+    "cargoVolume": 250884,
+    "topOrigin": "Spain",
+    "species": {
+      "bdorsalis": 6,
+      "ccapitata": 6,
+      "anastrepha": 9
+    },
+    "pathway": {
+      "passenger": 54,
+      "cargo": 35,
+      "courier": 11
+    },
+    "pheromone": "Trimedlure",
+    "monthlyRisk": [
+      56,
+      44,
+      44,
+      100,
+      89,
+      89,
+      67,
+      89,
+      33,
+      11,
+      67,
+      56
+    ],
+    "cpri": 71.8,
+    "risk": "HIGH",
+    "decoyStatus": "deploy"
+  },
+  {
+    "id": "IAH",
+    "name": "IAH",
+    "detections": 192,
+    "lat": 29.9902,
+    "lng": -95.3368,
+    "routes": 27,
+    "passengerVolume": 7994256,
+    "cargoVolume": 114526,
+    "topOrigin": "Australia",
+    "species": {
+      "bdorsalis": 13,
+      "ccapitata": 0,
+      "anastrepha": 0
+    },
+    "pathway": {
+      "passenger": 54,
+      "cargo": 35,
+      "courier": 11
+    },
+    "pheromone": "Methyl eugenol",
+    "monthlyRisk": [
+      67,
+      22,
+      56,
+      93,
+      26,
+      74,
+      78,
+      56,
+      59,
+      67,
+      15,
+      100
+    ],
+    "cpri": 69.3,
+    "risk": "MEDIUM",
+    "decoyStatus": "monitor"
+  },
+  {
+    "id": "JFK",
+    "name": "JFK",
+    "detections": 178,
+    "lat": 40.6413,
+    "lng": -73.7781,
+    "routes": 24,
+    "passengerVolume": 5728734,
+    "cargoVolume": 84547,
+    "topOrigin": "Canada",
+    "species": {
+      "bdorsalis": 15,
+      "ccapitata": 8,
+      "anastrepha": 0
+    },
+    "pathway": {
+      "passenger": 54,
+      "cargo": 35,
+      "courier": 11
+    },
+    "pheromone": "Methyl eugenol",
+    "monthlyRisk": [
+      14,
+      57,
+      46,
+      36,
+      82,
+      64,
+      100,
+      39,
+      75,
+      54,
+      18,
+      50
+    ],
+    "cpri": 57.1,
+    "risk": "MEDIUM",
+    "decoyStatus": "monitor"
+  },
+  {
+    "id": "LAX",
+    "name": "LAX",
+    "detections": 319,
+    "lat": 33.9425,
+    "lng": -118.4081,
+    "routes": 37,
+    "passengerVolume": 8509202,
+    "cargoVolume": 104541,
+    "topOrigin": "Germany",
+    "species": {
+      "bdorsalis": 15,
+      "ccapitata": 0,
+      "anastrepha": 0
+    },
+    "pathway": {
+      "passenger": 54,
+      "cargo": 35,
+      "courier": 11
+    },
+    "pheromone": "Methyl eugenol",
+    "monthlyRisk": [
+      63,
+      63,
+      73,
+      93,
+      73,
+      100,
+      71,
+      46,
+      41,
+      49,
+      80,
+      24
+    ],
+    "cpri": 68.8,
+    "risk": "MEDIUM",
+    "decoyStatus": "monitor"
+  },
+  {
+    "id": "MIA",
+    "name": "MIA",
+    "detections": 318,
+    "lat": 25.7959,
+    "lng": -80.287,
+    "routes": 27,
+    "passengerVolume": 6755165,
+    "cargoVolume": 116326,
+    "topOrigin": "Chile",
+    "species": {
+      "bdorsalis": 4,
+      "ccapitata": 16,
+      "anastrepha": 0
+    },
+    "pathway": {
+      "passenger": 54,
+      "cargo": 35,
+      "courier": 11
+    },
+    "pheromone": "Trimedlure",
+    "monthlyRisk": [
+      71,
+      21,
+      88,
+      100,
+      62,
+      71,
+      35,
+      35,
+      50,
+      0,
+      48,
+      81
+    ],
+    "cpri": 71.3,
+    "risk": "HIGH",
+    "decoyStatus": "deploy"
+  },
+  {
+    "id": "ORD",
+    "name": "ORD",
+    "detections": 64,
+    "lat": 41.9742,
+    "lng": -87.9073,
+    "routes": 32,
+    "passengerVolume": 7018597,
+    "cargoVolume": 161832,
+    "topOrigin": "Australia",
+    "species": {
+      "bdorsalis": 5,
+      "ccapitata": 16,
+      "anastrepha": 0
+    },
+    "pathway": {
+      "passenger": 54,
+      "cargo": 35,
+      "courier": 11
+    },
+    "pheromone": "Trimedlure",
+    "monthlyRisk": [
+      100,
+      22,
+      100,
+      22,
+      56,
+      89,
+      11,
+      100,
+      56,
+      22,
+      56,
+      78
+    ],
+    "cpri": 70.8,
+    "risk": "HIGH",
+    "decoyStatus": "deploy"
+  },
+  {
+    "id": "SEA",
+    "name": "SEA",
+    "detections": 107,
+    "lat": 47.4502,
+    "lng": -122.3088,
+    "routes": 32,
+    "passengerVolume": 7420959,
+    "cargoVolume": 130237,
+    "topOrigin": "Australia",
+    "species": {
+      "bdorsalis": 7,
+      "ccapitata": 7,
+      "anastrepha": 3
+    },
+    "pathway": {
+      "passenger": 54,
+      "cargo": 35,
+      "courier": 11
+    },
+    "pheromone": "Methyl eugenol",
+    "monthlyRisk": [
+      32,
+      100,
+      45,
+      73,
+      18,
+      0,
+      68,
+      23,
+      82,
+      23,
+      23,
+      0
+    ],
+    "cpri": 70.5,
+    "risk": "HIGH",
+    "decoyStatus": "deploy"
+  }
+]

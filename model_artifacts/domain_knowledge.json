@@ -1,0 +1,42 @@
+{
+  "temp_dead_zone_f": 40,
+  "temp_marginal_range_f": [
+    40,
+    45
+  ],
+  "temp_viable_range_f": [
+    45,
+    60
+  ],
+  "temp_optimal_range_f": [
+    60,
+    75
+  ],
+  "peak_months": [
+    6,
+    7,
+    8,
+    9
+  ],
+  "risk_class_names": [
+    "NO_RISK (0)",
+    "LOW (1-5)",
+    "MEDIUM (6-10)",
+    "HIGH (11+)"
+  ],
+  "pest_score_map": {
+    "Absent": 0,
+    "Emerging": 1,
+    "Present": 2
+  },
+  "port_map": {
+    "Atlanta": "ATL",
+    "Dallas": "DFW",
+    "Houston": "IAH",
+    "JFK": "JFK",
+    "LAX": "LAX",
+    "Miami": "MIA",
+    "Chicago": "ORD",
+    "Seattle": "SEA"
+  }
+}

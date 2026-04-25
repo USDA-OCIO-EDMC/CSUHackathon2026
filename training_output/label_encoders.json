@@ -1,0 +1,1 @@
+{"origin_country": {"Australia": 0, "Brazil": 1, "Canada": 2, "Chile": 3, "China": 4, "Germany": 5, "India": 6, "Japan": 7, "Mexico": 8, "Spain": 9, "United Kingdom": 10}, "us_port": {"DFW": 0, "IAH": 1, "LAX": 2, "MIA": 3}, "detection_type": {"Agricultural inspection": 0, "Cargo shipment inspection": 1, "Mail/package inspection": 2, "Passenger baggage inspection": 3}}

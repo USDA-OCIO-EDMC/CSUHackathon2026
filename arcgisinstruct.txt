@@ -1,0 +1,214 @@
+take a look at the .ipynb i just provided to see:
+import os
+import sys
+from uuid import uuid4
+
+import boto3
+import pandas as pd
+
+from arcgis.geocoding import geocode
+from arcgis.geometry import Geometry, MultiPoint
+from arcgis.geometry.filters import intersects
+from arcgis.gis import GIS, ItemProperties, ItemTypeEnum
+
+from arcgis.raster import utils as raster_utils
+from arcgis.raster import ImageryLayer
+from arcgis.raster.functions import band_arithmetic
+
+#gis = GIS("home")
+
+# If you are using a guest account for the hackathon you can connect to the
+# CSU ArcGIS Online org it is as simple as passing in the assigned guest
+# username and password:
+gis = GIS('https://csurams.maps.arcgis.com', 'my user name', 'my password')
+
+# If you need to connect the the CSU ArcGIS Online org via eID use this pattern.
+# You will be redirected to eID login;
+# paste the code generated from your sign in into the box in the output of this cell
+
+# hackathon_client_id = 'ID PROVIDED DURING THE HACKATHON'
+#gis = GIS('https://csurams.maps.arcgis.com', client_id=hackathon_client_id)
+
+# prove I'm connected
+me = gis.users.me
+print(me.username)
+
+ use get() when you know the ID of an existing item
+
+# Grab the USDA NAIP Color Infrared Imagery from the Living Atlas
+naip_cir = gis.content.get('e4da3b6720f545aeaaf3fe8141da1e21')
+print(f'{naip_cir.title}, is a {naip_cir.type}')
+
+# Search for NAIP imagery.  
+
+# While USDA is the creator NAIP, it is 'owned' by Esri via Living Atlas content
+query = 'NAIP AND owner:Esri'
+naip_items = gis.content.search(query=query,
+                                max_items=50,
+                                item_type="Image Service",
+                                outside_org=True)  # include public items in the Living Atlas
+
+# Display the search results
+for item in naip_items:
+    print(f"{item.title:<20} | {item.type:<10} | {item.id}")
+
+# push AWS creds to environ vars
+os.environ['AWS_SHARED_CREDENTIALS_FILE'] = '/arcgis/home/config/aws_credentials'
+os.environ['AWS_CONFIG_FILE'] = '/arcgis/home/config'
+
+s3 = boto3.client('s3')
+
+demo_id = uuid4().hex
+
+# download CSV
+local_file_path = f'/arcgis/home/dc_poi_data_{demo_id}.csv'
+s3.download_file('csu-hackathon-2026-arcgis-sample-data',
+                 'dc_points_of_interest.csv',
+                 local_file_path)
+
+# take a look at the data; make a note as to how many records are in the data
+poi_data = pd.read_csv(local_file_path)
+poi_data
+
+# Create item properties to describe the CSV
+item_props = ItemProperties(
+    title=f'DC Points of Interest CSV {demo_id}',
+    item_type=ItemTypeEnum.CSV,
+    snippet='CSV of POIs uploaded and published via Python API',
+    tags=['POI', 'demo', 'Washington DC'],
+)
+
+# Upload the CSV to the desired folder - root folder in this example
+root_folder = gis.content.folders.get()
+
+add_job = root_folder.add(item_properties=item_props, file=local_file_path)
+csv_item = add_job.result()
+print(f'Uploaded item: {csv_item.title} (ID: {csv_item.itemid})')
+
+# Publish the CSV as a feature service; ArcGIS will handle conveting lat-longs  
+dc_poi_item = csv_item.publish()
+print(f'Published POI Layer: {dc_poi_item.id} is a {dc_poi_item.type}')
+
+os.remove(local_file_path)
+
+# pull down from S3
+local_file_path = '/arcgis/home/ftcollins_cir_lowres.tif'
+s3.download_file('csu-hackathon-2026-arcgis-sample-data',
+                 'FtCollins_CIR_LowRes.tif',
+                 local_file_path)
+
+
+# Publish the raster as a *tiled* hosted imagery layer
+foco_cir_item = raster_utils.publish_hosted_imagery_layer(
+    input_data=[local_file_path],         
+    layer_configuration="ONE_IMAGE",  
+    tiles_only=True,                   # generate cache only (faster display)
+    output_name="Fort Collins CIR Low Resolution")
+
+print(f"Published FoCo CIR imagery layer, ID: {foco_cir_item.id}")
+os.remove(local_file_path)
+
+# Web maps can be used in interactive Notebooks.  This can be useful to verifying data you've published to AGOL
+
+# Create a webmap; for this case we'll center it around Washington DC so we can see the points from the CSV we uploaded
+poi_map = gis.map('Washington DC') 
+poi_map.content.add(dc_poi_item)
+
+# let's take a took at the map here in the Notebook
+poi_map
+
+# we can also save the web map and use when configuring apps such as dashboards, or for use in custom JS apps
+poi_map_item = poi_map.save(item_properties={"title": "DC POI map",
+                                            "snippet": "webmap created with the python API",
+                                            "tags":["test", "POI"]})
+# if you noticed in the map there were only 4 points in DC, you are correct.  The coordinates for the Korean Memorial were wrong (0,0)
+# which placed the point in the Atlantic Ocean off the coast of Africa at lat/lon 0,0.  Let's fix that
+
+# we can use geocoding to get the correct coordinates.  Geocoding is process of converting a description of 
+# a location, such as an address, into geographic coordinates.  Geocoding in ArcGIS is as simple as: 
+kwvm_name = "Korean War Veterans Memorial"
+kwvm = geocode(kwvm_name)[0]
+
+# to update we'll create a new feature with point geometry in JSON
+# including the correct coordinates for KWVM we got from geocoding
+kwvm_x = kwvm['location']['x'] #-77.04775
+kwvm_y = kwvm['location']['y'] # 38.887836
+kwvm_addr = kwvm['attributes']['Place_addr']
+kwvm_url = kwvm['attributes']['URL']
+
+new_poi = {"geometry": {"x": kwvm_x,
+                        "y":kwvm_y,
+                        "spatialReference":{
+                            "wkid": 4326,
+                            "latestWkid": 4326}
+                       },
+            "attributes": {
+                "name":kwvm_name,
+                "address": kwvm_addr,
+                "lat": kwvm_y,
+                "long": kwvm_x,
+                "url": kwvm_url}
+            }
+
+# to get rid of the incorrect KWVM feature we just need it's unique id;  
+# in ArcGIS these are called OjectIDs
+
+# first get the feature layer from the item
+poi_layer = dc_poi_item.layers[0]
+
+bad_ids = poi_layer.query(where="Name='Korean War Veterans Memorial'",
+                         return_ids_only=True)
+bad_poi_id = bad_ids['objectIds']
+# and finally to update we can push the new point and ID of the point to remove 
+# using edit_features() which can do upserts & deletes in 1 call
+poi_layer.edit_features(adds=[new_poi],
+                        deletes=[bad_poi_id])
+
+
+# let's find all the government buildings over 5,000 square feet within 1 mile of the POIs
+
+
+# prep - geometry filter need a single geometry; combine POIs into a MultiPoint
+fs = poi_layer.query().features
+poi_sr = poi_layer.properties['spatialReference']
+points_xy = [[f.geometry['x'], f.geometry['y']] for f in fs]
+
+# create the MultiPoint geometry in the same spatial reference
+multi_pt = MultiPoint({
+    "points": points_xy,
+    "spatialReference": poi_sr
+})
+
+# build geometry filter with MultiPoint and the logical intersect op
+geom_filter = intersects(Geometry(multi_pt), poi_sr)
+
+# national structures data from Living Atlas
+structures = gis.content.get('0ec8512ad21e4bb987d7e848d14e7e24').layers[0]
+
+# now we can query the structures by both fields (state, occupancy class, & sqfeet) and a buffer area around our POIs
+df_govbuildings_nearby = structures.query(where="PROP_ST='District Of Columbia' AND OCC_CLS='Government' AND SQFEET >= 5000",
+                                          geometry_filter=geom_filter, #our combined POIs
+                                          distance=1,
+                                          units="esriSRUnit_StatuteMile",  #both distance and units are required
+                                          as_df=True)  # output as Pandas dataframe
+                                          
+# check results
+df_govbuildings_nearby.head()
+
+# Normalized Difference Vegetation Index, or NDVI, is a indicator that measures vegetation  
+# health by comparing near-infrared and red light reflectance.
+# To calculate NDVI, use the formula:  NDVI = (NIR - Red) / (NIR + Red)
+
+# The USDA NAIP imagery program has imagery that includes the NIR band
+naip_item_id = "e4da3b6720f545aeaaf3fe8141da1e21"
+naip_item = gis.content.get(naip_item_id)
+
+# Create an ImageryLayer object from the item
+naip_ilayer = ImageryLayer.fromitem(naip_item)
+
+# perfrom the NDVI calculation manually
+band_operation = "(B4 - B1)/(B4 + B1)"
+ndvi = band_arithmetic(naip_ilayer, band_indexes=band_operation, method=0)
+
+# NDVI is so commonly used, it is a predefined band operation and can be done by
+#band_op = band_arithmetic(naip_ilayer, method=1)

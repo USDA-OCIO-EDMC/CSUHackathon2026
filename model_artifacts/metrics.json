@@ -1,0 +1,47 @@
+{
+  "regression": {
+    "loo_mae": 2.7233,
+    "loo_r2": 0.2197,
+    "kfold_mae": 2.5976,
+    "kfold_r2": 0.2462
+  },
+  "risk_tier_classification": {
+    "loo_accuracy": 0.5489,
+    "kfold_accuracy": 0.5263,
+    "n_classes": 4,
+    "class_names": [
+      "NO_RISK (0)",
+      "LOW (1-5)",
+      "MEDIUM (6-10)",
+      "HIGH (11+)"
+    ]
+  },
+  "binary_temp_masked": {
+    "loo_accuracy": 0.5433,
+    "loo_roc_auc": 0.4341,
+    "viable_samples": 127,
+    "dead_zone_samples": 6
+  },
+  "dataset": {
+    "n_samples": 133,
+    "n_features": 37,
+    "positive_rate": 0.8421,
+    "detection_mean": 5.63,
+    "detection_median": 6.0
+  },
+  "domain_knowledge": {
+    "temp_threshold_f": 40,
+    "peak_season_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "risk_tiers": {
+      "0": "NO_RISK",
+      "1": "LOW (1-5)",
+      "2": "MEDIUM (6-10)",
+      "3": "HIGH (11+)"
+    }
+  }
+}

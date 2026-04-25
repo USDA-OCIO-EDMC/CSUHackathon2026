@@ -1,0 +1,251 @@
+DestinationPort,OriginCountry,OriginRegion,RouteName,PassengerVolume,FruitImports,PestStatus,FruitFlyType,DetectionDate,_lat,_lng
+SEA,China,China,China-SEA-2020-01-0,177711,9894.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2020-01-01,47.4502,-122.3088
+ATL,Australia,Australia,Australia-ATL-2020-01-1,217925,0.0,Absent,No regulated fruit fly reported,2020-01-01,33.6407,-84.4277
+DFW,Spain,Spain,Spain-DFW-2020-01-2,138959,0.0,Absent,No regulated fruit fly reported,2020-01-01,32.8998,-97.0403
+MIA,India,India,India-MIA-2020-01-3,138832,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2020-01-01,25.7959,-80.287
+ORD,Spain,Spain,Spain-ORD-2020-02-4,87632,0.0,Absent,No regulated fruit fly reported,2020-02-01,41.9742,-87.9073
+JFK,Brazil,Brazil,Brazil-JFK-2020-02-5,394970,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2020-02-01,40.6413,-73.7781
+MIA,Germany,Germany,Germany-MIA-2020-03-6,168731,0.0,Absent,No regulated fruit fly reported,2020-03-01,25.7959,-80.287
+SEA,Chile,Chile,Chile-SEA-2020-03-7,342118,14890.0,Absent,No regulated fruit fly reported,2020-03-01,47.4502,-122.3088
+JFK,Canada,Canada,Canada-JFK-2020-05-8,216898,0.0,Absent,No regulated fruit fly reported,2020-05-01,40.6413,-73.7781
+DFW,United Kingdom,United Kingdom,United Kingdom-DFW-2020-06-9,251261,0.0,Absent,No regulated fruit fly reported,2020-06-01,32.8998,-97.0403
+LAX,Brazil,Brazil,Brazil-LAX-2020-06-10,205062,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2020-06-01,33.9425,-118.4081
+LAX,Germany,Germany,Germany-LAX-2020-06-11,254401,0.0,Absent,No regulated fruit fly reported,2020-06-01,33.9425,-118.4081
+IAH,Canada,Canada,Canada-IAH-2020-06-12,281880,0.0,Absent,No regulated fruit fly reported,2020-06-01,29.9902,-95.3368
+MIA,Brazil,Brazil,Brazil-MIA-2020-06-13,382998,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2020-06-01,25.7959,-80.287
+LAX,Canada,Canada,Canada-LAX-2020-07-14,129700,10301.0,Absent,No regulated fruit fly reported,2020-07-01,33.9425,-118.4081
+LAX,Japan,Japan,Japan-LAX-2020-07-15,341338,0.0,Absent,No regulated fruit fly reported,2020-07-01,33.9425,-118.4081
+LAX,Japan,Japan,Japan-LAX-2020-08-16,342407,0.0,Absent,No regulated fruit fly reported,2020-08-01,33.9425,-118.4081
+LAX,United Kingdom,United Kingdom,United Kingdom-LAX-2020-08-17,204601,0.0,Absent,No regulated fruit fly reported,2020-08-01,33.9425,-118.4081
+ORD,Australia,Australia,Australia-ORD-2020-08-18,205621,0.0,Absent,No regulated fruit fly reported,2020-08-01,41.9742,-87.9073
+DFW,Chile,Chile,Chile-DFW-2020-09-19,164724,0.0,Absent,No regulated fruit fly reported,2020-09-01,32.8998,-97.0403
+SEA,China,China,China-SEA-2020-09-20,179642,16631.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2020-09-01,47.4502,-122.3088
+LAX,Brazil,Brazil,Brazil-LAX-2020-09-21,204104,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2020-09-01,33.9425,-118.4081
+SEA,United Kingdom,United Kingdom,United Kingdom-SEA-2020-09-22,255706,0.0,Absent,No regulated fruit fly reported,2020-09-01,47.4502,-122.3088
+ATL,China,China,China-ATL-2020-10-23,121140,15571.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2020-10-01,33.6407,-84.4277
+DFW,Brazil,Brazil,Brazil-DFW-2020-10-24,87119,19801.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2020-10-01,32.8998,-97.0403
+JFK,China,China,China-JFK-2020-10-25,122430,15571.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2020-10-01,40.6413,-73.7781
+DFW,Spain,Spain,Spain-DFW-2020-10-26,138133,0.0,Absent,No regulated fruit fly reported,2020-10-01,32.8998,-97.0403
+MIA,Chile,Chile,Chile-MIA-2020-10-27,274845,0.0,Absent,No regulated fruit fly reported,2020-10-01,25.7959,-80.287
+MIA,India,India,India-MIA-2020-10-28,127704,12767.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2020-10-01,25.7959,-80.287
+LAX,Germany,Germany,Germany-LAX-2020-11-29,247644,0.0,Absent,No regulated fruit fly reported,2020-11-01,33.9425,-118.4081
+JFK,Spain,Spain,Spain-JFK-2020-11-30,114898,0.0,Absent,No regulated fruit fly reported,2020-11-01,40.6413,-73.7781
+ORD,Mexico,Mexico,Mexico-ORD-2020-11-31,387699,23488.0,Present,Mexican Fruit Fly (Anastrepha ludens),2020-11-01,41.9742,-87.9073
+ORD,India,India,India-ORD-2020-11-32,387952,11000.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2020-11-01,41.9742,-87.9073
+IAH,Mexico,Mexico,Mexico-IAH-2020-11-33,134881,23488.0,Present,Mexican Fruit Fly (Anastrepha ludens),2020-11-01,29.9902,-95.3368
+LAX,China,China,China-LAX-2020-11-34,143939,14456.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2020-11-01,33.9425,-118.4081
+ATL,China,China,China-ATL-2020-12-35,119139,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2020-12-01,33.6407,-84.4277
+DFW,Chile,Chile,Chile-DFW-2020-12-36,159843,0.0,Absent,No regulated fruit fly reported,2020-12-01,32.8998,-97.0403
+SEA,Australia,Australia,Australia-SEA-2020-12-37,215257,0.0,Absent,No regulated fruit fly reported,2020-12-01,47.4502,-122.3088
+DFW,Mexico,Mexico,Mexico-DFW-2021-01-38,92415,19070.0,Present,Mexican Fruit Fly (Anastrepha ludens),2021-01-01,32.8998,-97.0403
+DFW,Spain,Spain,Spain-DFW-2021-01-39,131937,0.0,Absent,No regulated fruit fly reported,2021-01-01,32.8998,-97.0403
+LAX,Germany,Germany,Germany-LAX-2021-01-40,247324,7928.0,Absent,No regulated fruit fly reported,2021-01-01,33.9425,-118.4081
+DFW,Germany,Germany,Germany-DFW-2021-01-41,132788,7928.0,Absent,No regulated fruit fly reported,2021-01-01,32.8998,-97.0403
+IAH,United Kingdom,United Kingdom,United Kingdom-IAH-2021-02-42,353381,7353.0,Absent,No regulated fruit fly reported,2021-02-01,29.9902,-95.3368
+JFK,United Kingdom,United Kingdom,United Kingdom-JFK-2021-02-43,351841,7353.0,Absent,No regulated fruit fly reported,2021-02-01,40.6413,-73.7781
+JFK,Spain,Spain,Spain-JFK-2021-03-44,108253,0.0,Absent,No regulated fruit fly reported,2021-03-01,40.6413,-73.7781
+SEA,Chile,Chile,Chile-SEA-2021-03-45,326061,13354.0,Absent,No regulated fruit fly reported,2021-03-01,47.4502,-122.3088
+ORD,Chile,Chile,Chile-ORD-2021-03-46,114054,13354.0,Absent,No regulated fruit fly reported,2021-03-01,41.9742,-87.9073
+SEA,Japan,Japan,Japan-SEA-2021-04-47,77792,0.0,Absent,No regulated fruit fly reported,2021-04-01,47.4502,-122.3088
+ATL,China,China,China-ATL-2021-04-48,121302,20301.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2021-04-01,33.6407,-84.4277
+DFW,Canada,Canada,Canada-DFW-2021-04-49,114129,0.0,Absent,No regulated fruit fly reported,2021-04-01,32.8998,-97.0403
+ORD,China,China,China-ORD-2021-04-50,112838,20301.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2021-04-01,41.9742,-87.9073
+LAX,United Kingdom,United Kingdom,United Kingdom-LAX-2021-04-51,202041,5014.0,Absent,No regulated fruit fly reported,2021-04-01,33.9425,-118.4081
+DFW,Chile,Chile,Chile-DFW-2021-04-52,166814,0.0,Absent,No regulated fruit fly reported,2021-04-01,32.8998,-97.0403
+SEA,Spain,Spain,Spain-SEA-2021-05-53,200192,0.0,Absent,No regulated fruit fly reported,2021-05-01,47.4502,-122.3088
+MIA,United Kingdom,United Kingdom,United Kingdom-MIA-2021-05-54,224567,0.0,Absent,No regulated fruit fly reported,2021-05-01,25.7959,-80.287
+ATL,Australia,Australia,Australia-ATL-2021-05-55,205051,0.0,Absent,No regulated fruit fly reported,2021-05-01,33.6407,-84.4277
+ORD,Brazil,Brazil,Brazil-ORD-2021-06-56,379783,24031.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2021-06-01,41.9742,-87.9073
+JFK,China,China,China-JFK-2021-07-57,115543,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2021-07-01,40.6413,-73.7781
+SEA,Australia,Australia,Australia-SEA-2021-08-58,239785,0.0,Absent,No regulated fruit fly reported,2021-08-01,47.4502,-122.3088
+ATL,Germany,Germany,Germany-ATL-2021-08-59,224539,7297.0,Absent,No regulated fruit fly reported,2021-08-01,33.6407,-84.4277
+SEA,China,China,China-SEA-2021-08-60,176535,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2021-08-01,47.4502,-122.3088
+MIA,Japan,Japan,Japan-MIA-2021-08-61,295333,0.0,Absent,No regulated fruit fly reported,2021-08-01,25.7959,-80.287
+IAH,Spain,Spain,Spain-IAH-2021-09-62,306608,0.0,Absent,No regulated fruit fly reported,2021-09-01,29.9902,-95.3368
+JFK,Canada,Canada,Canada-JFK-2021-09-63,231183,8810.0,Absent,No regulated fruit fly reported,2021-09-01,40.6413,-73.7781
+DFW,China,China,China-DFW-2021-09-64,219147,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2021-09-01,32.8998,-97.0403
+DFW,Brazil,Brazil,Brazil-DFW-2021-09-65,87283,18354.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2021-09-01,32.8998,-97.0403
+MIA,Brazil,Brazil,Brazil-MIA-2021-09-66,394610,18354.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2021-09-01,25.7959,-80.287
+DFW,China,China,China-DFW-2021-10-67,212327,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2021-10-01,32.8998,-97.0403
+ATL,Mexico,Mexico,Mexico-ATL-2021-10-68,137223,0.0,Present,Mexican Fruit Fly (Anastrepha ludens),2021-10-01,33.6407,-84.4277
+IAH,Australia,Australia,Australia-IAH-2021-10-69,331485,12350.0,Absent,No regulated fruit fly reported,2021-10-01,29.9902,-95.3368
+ATL,United Kingdom,United Kingdom,United Kingdom-ATL-2021-10-70,222706,0.0,Absent,No regulated fruit fly reported,2021-10-01,33.6407,-84.4277
+ATL,Australia,Australia,Australia-ATL-2021-11-71,211078,0.0,Absent,No regulated fruit fly reported,2021-11-01,33.6407,-84.4277
+DFW,Australia,Australia,Australia-DFW-2021-12-72,356029,0.0,Absent,No regulated fruit fly reported,2021-12-01,32.8998,-97.0403
+JFK,Germany,Germany,Germany-JFK-2022-01-73,263179,0.0,Absent,No regulated fruit fly reported,2022-01-01,40.6413,-73.7781
+ATL,India,India,India-ATL-2022-01-74,291560,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2022-01-01,33.6407,-84.4277
+DFW,Mexico,Mexico,Mexico-DFW-2022-01-75,96841,0.0,Present,Mexican Fruit Fly (Anastrepha ludens),2022-01-01,32.8998,-97.0403
+ORD,Spain,Spain,Spain-ORD-2022-02-76,79870,0.0,Emerging,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2022-02-01,41.9742,-87.9073
+SEA,Spain,Spain,Spain-SEA-2022-02-77,193717,0.0,Emerging,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2022-02-01,47.4502,-122.3088
+ATL,China,China,China-ATL-2022-02-78,125965,11939.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2022-02-01,33.6407,-84.4277
+JFK,Canada,Canada,Canada-JFK-2022-03-79,229569,0.0,Absent,No regulated fruit fly reported,2022-03-01,40.6413,-73.7781
+SEA,Canada,Canada,Canada-SEA-2022-03-80,193973,0.0,Absent,No regulated fruit fly reported,2022-03-01,47.4502,-122.3088
+DFW,Mexico,Mexico,Mexico-DFW-2022-03-81,94411,0.0,Present,Mexican Fruit Fly (Anastrepha ludens),2022-03-01,32.8998,-97.0403
+ORD,Chile,Chile,Chile-ORD-2022-04-82,121651,0.0,Absent,No regulated fruit fly reported,2022-04-01,41.9742,-87.9073
+ORD,Canada,Canada,Canada-ORD-2022-04-83,206499,0.0,Absent,No regulated fruit fly reported,2022-04-01,41.9742,-87.9073
+LAX,Chile,Chile,Chile-LAX-2022-04-84,355744,0.0,Absent,No regulated fruit fly reported,2022-04-01,33.9425,-118.4081
+IAH,India,India,India-IAH-2022-04-85,310977,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2022-04-01,29.9902,-95.3368
+MIA,China,China,China-MIA-2022-04-86,212812,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2022-04-01,25.7959,-80.287
+SEA,Chile,Chile,Chile-SEA-2022-05-87,307573,0.0,Absent,No regulated fruit fly reported,2022-05-01,47.4502,-122.3088
+ORD,China,China,China-ORD-2022-05-88,104929,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2022-05-01,41.9742,-87.9073
+ORD,Spain,Spain,Spain-ORD-2022-05-89,79096,0.0,Emerging,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2022-05-01,41.9742,-87.9073
+ATL,Germany,Germany,Germany-ATL-2022-05-90,220161,6122.0,Absent,No regulated fruit fly reported,2022-05-01,33.6407,-84.4277
+IAH,India,India,India-IAH-2022-06-91,316318,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2022-06-01,29.9902,-95.3368
+ATL,Canada,Canada,Canada-ATL-2022-07-92,153145,0.0,Absent,No regulated fruit fly reported,2022-07-01,33.6407,-84.4277
+LAX,United Kingdom,United Kingdom,United Kingdom-LAX-2022-07-93,189729,0.0,Absent,No regulated fruit fly reported,2022-07-01,33.9425,-118.4081
+SEA,Canada,Canada,Canada-SEA-2022-07-94,185508,0.0,Absent,No regulated fruit fly reported,2022-07-01,47.4502,-122.3088
+LAX,Japan,Japan,Japan-LAX-2022-07-95,321372,0.0,Absent,No regulated fruit fly reported,2022-07-01,33.9425,-118.4081
+LAX,Germany,Germany,Germany-LAX-2022-08-96,260387,0.0,Absent,No regulated fruit fly reported,2022-08-01,33.9425,-118.4081
+MIA,China,China,China-MIA-2022-08-97,216572,20205.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2022-08-01,25.7959,-80.287
+LAX,Japan,Japan,Japan-LAX-2022-08-98,312955,0.0,Absent,No regulated fruit fly reported,2022-08-01,33.9425,-118.4081
+JFK,Chile,Chile,Chile-JFK-2022-08-99,395605,0.0,Absent,No regulated fruit fly reported,2022-08-01,40.6413,-73.7781
+ORD,Australia,Australia,Australia-ORD-2022-09-100,242811,0.0,Absent,No regulated fruit fly reported,2022-09-01,41.9742,-87.9073
+DFW,Mexico,Mexico,Mexico-DFW-2022-09-101,100926,0.0,Present,Mexican Fruit Fly (Anastrepha ludens),2022-09-01,32.8998,-97.0403
+JFK,United Kingdom,United Kingdom,United Kingdom-JFK-2022-09-102,358316,0.0,Absent,No regulated fruit fly reported,2022-09-01,40.6413,-73.7781
+JFK,Australia,Australia,Australia-JFK-2022-10-103,229562,0.0,Absent,No regulated fruit fly reported,2022-10-01,40.6413,-73.7781
+MIA,China,China,China-MIA-2022-10-104,215062,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2022-10-01,25.7959,-80.287
+DFW,Brazil,Brazil,Brazil-DFW-2022-10-105,80726,22619.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2022-10-01,32.8998,-97.0403
+ATL,China,China,China-ATL-2022-11-106,117680,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2022-11-01,33.6407,-84.4277
+IAH,Japan,Japan,Japan-IAH-2022-11-107,416102,0.0,Absent,No regulated fruit fly reported,2022-11-01,29.9902,-95.3368
+IAH,Germany,Germany,Germany-IAH-2022-11-108,80249,0.0,Absent,No regulated fruit fly reported,2022-11-01,29.9902,-95.3368
+MIA,Chile,Chile,Chile-MIA-2022-11-109,264572,0.0,Absent,No regulated fruit fly reported,2022-11-01,25.7959,-80.287
+MIA,Mexico,Mexico,Mexico-MIA-2022-11-110,225510,22613.0,Present,Mexican Fruit Fly (Anastrepha ludens),2022-11-01,25.7959,-80.287
+DFW,China,China,China-DFW-2022-12-111,229434,16813.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2022-12-01,32.8998,-97.0403
+DFW,Australia,Australia,Australia-DFW-2022-12-112,337546,0.0,Absent,No regulated fruit fly reported,2022-12-01,32.8998,-97.0403
+LAX,Brazil,Brazil,Brazil-LAX-2022-12-113,228454,26839.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2022-12-01,33.9425,-118.4081
+ATL,China,China,China-ATL-2022-12-114,125071,16813.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2022-12-01,33.6407,-84.4277
+LAX,Australia,Australia,Australia-LAX-2022-12-115,220183,0.0,Absent,No regulated fruit fly reported,2022-12-01,33.9425,-118.4081
+IAH,United Kingdom,United Kingdom,United Kingdom-IAH-2022-12-116,347901,0.0,Absent,No regulated fruit fly reported,2022-12-01,29.9902,-95.3368
+ORD,Chile,Chile,Chile-ORD-2022-12-117,120771,0.0,Absent,No regulated fruit fly reported,2022-12-01,41.9742,-87.9073
+LAX,Chile,Chile,Chile-LAX-2022-12-118,350647,0.0,Absent,No regulated fruit fly reported,2022-12-01,33.9425,-118.4081
+MIA,Chile,Chile,Chile-MIA-2023-01-119,267712,10645.0,Emerging,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-01-01,25.7959,-80.287
+ATL,United Kingdom,United Kingdom,United Kingdom-ATL-2023-01-120,212830,0.0,Absent,No regulated fruit fly reported,2023-01-01,33.6407,-84.4277
+IAH,Spain,Spain,Spain-IAH-2023-01-121,292599,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-01-01,29.9902,-95.3368
+SEA,Canada,Canada,Canada-SEA-2023-01-122,193695,4749.0,Absent,No regulated fruit fly reported,2023-01-01,47.4502,-122.3088
+ATL,Chile,Chile,Chile-ATL-2023-01-123,145276,10645.0,Emerging,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-01-01,33.6407,-84.4277
+LAX,India,India,India-LAX-2023-01-124,224287,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2023-01-01,33.9425,-118.4081
+IAH,Brazil,Brazil,Brazil-IAH-2023-02-125,436395,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-02-01,29.9902,-95.3368
+LAX,China,China,China-LAX-2023-02-126,126405,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2023-02-01,33.9425,-118.4081
+DFW,Spain,Spain,Spain-DFW-2023-02-127,124357,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-02-01,32.8998,-97.0403
+SEA,Chile,Chile,Chile-SEA-2023-02-128,291762,10196.0,Emerging,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-02-01,47.4502,-122.3088
+LAX,India,India,India-LAX-2023-03-129,224718,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2023-03-01,33.9425,-118.4081
+ORD,Spain,Spain,Spain-ORD-2023-03-130,76080,8138.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-03-01,41.9742,-87.9073
+DFW,Spain,Spain,Spain-DFW-2023-03-131,125669,8138.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-03-01,32.8998,-97.0403
+ORD,United Kingdom,United Kingdom,United Kingdom-ORD-2023-03-132,245148,0.0,Absent,No regulated fruit fly reported,2023-03-01,41.9742,-87.9073
+DFW,India,India,India-DFW-2023-03-133,97786,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2023-03-01,32.8998,-97.0403
+LAX,Germany,Germany,Germany-LAX-2023-03-134,247632,0.0,Absent,No regulated fruit fly reported,2023-03-01,33.9425,-118.4081
+DFW,China,China,China-DFW-2023-04-135,238079,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2023-04-01,32.8998,-97.0403
+ATL,China,China,China-ATL-2023-04-136,123830,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2023-04-01,33.6407,-84.4277
+SEA,Germany,Germany,Germany-SEA-2023-05-137,195846,0.0,Absent,No regulated fruit fly reported,2023-05-01,47.4502,-122.3088
+IAH,Brazil,Brazil,Brazil-IAH-2023-05-138,437071,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-05-01,29.9902,-95.3368
+SEA,Australia,Australia,Australia-SEA-2023-06-139,263554,13205.0,Emerging,Oriental Fruit Fly (Bactrocera dorsalis),2023-06-01,47.4502,-122.3088
+ORD,Germany,Germany,Germany-ORD-2023-06-140,152581,0.0,Absent,No regulated fruit fly reported,2023-06-01,41.9742,-87.9073
+MIA,Chile,Chile,Chile-MIA-2023-06-141,265405,0.0,Emerging,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-06-01,25.7959,-80.287
+ATL,Chile,Chile,Chile-ATL-2023-06-142,142125,0.0,Emerging,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-06-01,33.6407,-84.4277
+SEA,Mexico,Mexico,Mexico-SEA-2023-07-143,315736,0.0,Present,Mexican Fruit Fly (Anastrepha ludens),2023-07-01,47.4502,-122.3088
+SEA,Spain,Spain,Spain-SEA-2023-07-144,190116,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-07-01,47.4502,-122.3088
+LAX,Brazil,Brazil,Brazil-LAX-2023-07-145,245889,18089.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-07-01,33.9425,-118.4081
+SEA,Japan,Japan,Japan-SEA-2023-07-146,69357,0.0,Absent,No regulated fruit fly reported,2023-07-01,47.4502,-122.3088
+SEA,Australia,Australia,Australia-SEA-2023-07-147,265395,11420.0,Emerging,Oriental Fruit Fly (Bactrocera dorsalis),2023-07-01,47.4502,-122.3088
+DFW,Spain,Spain,Spain-DFW-2023-07-148,122420,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-07-01,32.8998,-97.0403
+JFK,Australia,Australia,Australia-JFK-2023-08-149,217238,10116.0,Emerging,Oriental Fruit Fly (Bactrocera dorsalis),2023-08-01,40.6413,-73.7781
+MIA,Japan,Japan,Japan-MIA-2023-08-150,325934,7080.0,Absent,No regulated fruit fly reported,2023-08-01,25.7959,-80.287
+MIA,Chile,Chile,Chile-MIA-2023-09-151,264534,0.0,Emerging,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2023-09-01,25.7959,-80.287
+ATL,Australia,Australia,Australia-ATL-2023-09-152,193612,0.0,Emerging,Oriental Fruit Fly (Bactrocera dorsalis),2023-09-01,33.6407,-84.4277
+DFW,Mexico,Mexico,Mexico-DFW-2023-09-153,93997,29517.0,Present,Mexican Fruit Fly (Anastrepha ludens),2023-09-01,32.8998,-97.0403
+IAH,China,China,China-IAH-2023-10-154,240459,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2023-10-01,29.9902,-95.3368
+IAH,Australia,Australia,Australia-IAH-2023-12-155,318585,9170.0,Emerging,Oriental Fruit Fly (Bactrocera dorsalis),2023-12-01,29.9902,-95.3368
+DFW,Australia,Australia,Australia-DFW-2023-12-156,322945,9170.0,Emerging,Oriental Fruit Fly (Bactrocera dorsalis),2023-12-01,32.8998,-97.0403
+ORD,Brazil,Brazil,Brazil-ORD-2024-01-157,403419,23021.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-01-01,41.9742,-87.9073
+ORD,Australia,Australia,Australia-ORD-2024-01-158,270134,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-01-01,41.9742,-87.9073
+JFK,Germany,Germany,Germany-JFK-2024-01-159,299040,0.0,Absent,No regulated fruit fly reported,2024-01-01,40.6413,-73.7781
+JFK,Canada,Canada,Canada-JFK-2024-01-160,221840,0.0,Absent,No regulated fruit fly reported,2024-01-01,40.6413,-73.7781
+LAX,Germany,Germany,Germany-LAX-2024-01-161,254122,0.0,Absent,No regulated fruit fly reported,2024-01-01,33.9425,-118.4081
+ORD,Australia,Australia,Australia-ORD-2024-02-162,272991,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-02-01,41.9742,-87.9073
+LAX,Australia,Australia,Australia-LAX-2024-03-163,249036,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-03-01,33.9425,-118.4081
+DFW,China,China,China-DFW-2024-04-164,250789,12942.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-04-01,32.8998,-97.0403
+LAX,China,China,China-LAX-2024-04-165,121173,12942.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-04-01,33.9425,-118.4081
+JFK,Spain,Spain,Spain-JFK-2024-04-166,95990,10919.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-04-01,40.6413,-73.7781
+DFW,Canada,Canada,Canada-DFW-2024-04-167,100724,0.0,Absent,No regulated fruit fly reported,2024-04-01,32.8998,-97.0403
+DFW,Brazil,Brazil,Brazil-DFW-2024-04-168,86450,30000.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-04-01,32.8998,-97.0403
+SEA,Chile,Chile,Chile-SEA-2024-05-169,280350,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-05-01,47.4502,-122.3088
+DFW,India,India,India-DFW-2024-05-170,97895,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-05-01,32.8998,-97.0403
+MIA,United Kingdom,United Kingdom,United Kingdom-MIA-2024-05-171,228225,4017.0,Absent,No regulated fruit fly reported,2024-05-01,25.7959,-80.287
+ATL,Spain,Spain,Spain-ATL-2024-06-172,305220,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-06-01,33.6407,-84.4277
+IAH,Spain,Spain,Spain-IAH-2024-07-173,279373,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-07-01,29.9902,-95.3368
+DFW,Spain,Spain,Spain-DFW-2024-07-174,117989,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-07-01,32.8998,-97.0403
+ORD,Brazil,Brazil,Brazil-ORD-2024-07-175,378008,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-07-01,41.9742,-87.9073
+SEA,United Kingdom,United Kingdom,United Kingdom-SEA-2024-07-176,327471,0.0,Absent,No regulated fruit fly reported,2024-07-01,47.4502,-122.3088
+JFK,China,China,China-JFK-2024-07-177,116639,19500.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-07-01,40.6413,-73.7781
+SEA,Brazil,Brazil,Brazil-SEA-2024-08-178,192724,26926.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-08-01,47.4502,-122.3088
+LAX,United Kingdom,United Kingdom,United Kingdom-LAX-2024-08-179,175899,0.0,Absent,No regulated fruit fly reported,2024-08-01,33.9425,-118.4081
+MIA,China,China,China-MIA-2024-08-180,198986,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-08-01,25.7959,-80.287
+MIA,Canada,Canada,Canada-MIA-2024-08-181,270887,0.0,Absent,No regulated fruit fly reported,2024-08-01,25.7959,-80.287
+MIA,Germany,Germany,Germany-MIA-2024-08-182,165115,6597.0,Absent,No regulated fruit fly reported,2024-08-01,25.7959,-80.287
+IAH,Canada,Canada,Canada-IAH-2024-09-183,343875,0.0,Absent,No regulated fruit fly reported,2024-09-01,29.9902,-95.3368
+ORD,Chile,Chile,Chile-ORD-2024-09-184,133017,12269.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-09-01,41.9742,-87.9073
+SEA,Canada,Canada,Canada-SEA-2024-09-185,182710,0.0,Absent,No regulated fruit fly reported,2024-09-01,47.4502,-122.3088
+MIA,Spain,Spain,Spain-MIA-2024-10-186,269463,8067.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-10-01,25.7959,-80.287
+DFW,Spain,Spain,Spain-DFW-2024-10-187,119874,8067.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-10-01,32.8998,-97.0403
+SEA,Chile,Chile,Chile-SEA-2024-10-188,281282,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-10-01,47.4502,-122.3088
+DFW,Chile,Chile,Chile-DFW-2024-10-189,207783,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-10-01,32.8998,-97.0403
+LAX,Australia,Australia,Australia-LAX-2024-10-190,248659,8972.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-10-01,33.9425,-118.4081
+SEA,Australia,Australia,Australia-SEA-2024-10-191,282644,8972.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-10-01,47.4502,-122.3088
+JFK,Brazil,Brazil,Brazil-JFK-2024-11-192,330976,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-11-01,40.6413,-73.7781
+DFW,United Kingdom,United Kingdom,United Kingdom-DFW-2024-11-193,317148,0.0,Absent,No regulated fruit fly reported,2024-11-01,32.8998,-97.0403
+SEA,Australia,Australia,Australia-SEA-2024-12-194,284935,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-12-01,47.4502,-122.3088
+MIA,Spain,Spain,Spain-MIA-2024-12-195,267480,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-12-01,25.7959,-80.287
+JFK,India,India,India-JFK-2024-12-196,243210,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-12-01,40.6413,-73.7781
+IAH,China,China,China-IAH-2024-12-197,228615,14903.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2024-12-01,29.9902,-95.3368
+DFW,Brazil,Brazil,Brazil-DFW-2024-12-198,87135,30000.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2024-12-01,32.8998,-97.0403
+ATL,China,China,China-ATL-2025-01-199,123188,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-01-01,33.6407,-84.4277
+DFW,China,China,China-DFW-2025-01-200,271049,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-01-01,32.8998,-97.0403
+ATL,United Kingdom,United Kingdom,United Kingdom-ATL-2025-01-201,221551,4904.0,Absent,No regulated fruit fly reported,2025-01-01,33.6407,-84.4277
+DFW,India,India,India-DFW-2025-01-202,102974,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-01-01,32.8998,-97.0403
+SEA,Spain,Spain,Spain-SEA-2025-02-203,169152,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2025-02-01,47.4502,-122.3088
+ORD,Australia,Australia,Australia-ORD-2025-02-204,288590,15134.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-02-01,41.9742,-87.9073
+ATL,Spain,Spain,Spain-ATL-2025-03-205,284229,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2025-03-01,33.6407,-84.4277
+MIA,Spain,Spain,Spain-MIA-2025-03-206,283627,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2025-03-01,25.7959,-80.287
+ORD,Australia,Australia,Australia-ORD-2025-03-207,277605,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-03-01,41.9742,-87.9073
+SEA,Australia,Australia,Australia-SEA-2025-03-208,296203,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-03-01,47.4502,-122.3088
+LAX,India,India,India-LAX-2025-03-209,216715,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-03-01,33.9425,-118.4081
+IAH,Australia,Australia,Australia-IAH-2025-03-210,306916,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-03-01,29.9902,-95.3368
+JFK,Australia,Australia,Australia-JFK-2025-04-211,195001,6324.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-04-01,40.6413,-73.7781
+ATL,Germany,Germany,Germany-ATL-2025-04-212,190363,0.0,Emerging,European Cherry Fruit Fly (Rhagoletis cerasi),2025-04-01,33.6407,-84.4277
+ORD,Chile,Chile,Chile-ORD-2025-05-213,143982,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2025-05-01,41.9742,-87.9073
+IAH,China,China,China-IAH-2025-05-214,213147,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-05-01,29.9902,-95.3368
+DFW,Canada,Canada,Canada-DFW-2025-05-215,93052,0.0,Absent,No regulated fruit fly reported,2025-05-01,32.8998,-97.0403
+LAX,Chile,Chile,Chile-LAX-2025-05-216,308060,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2025-05-01,33.9425,-118.4081
+ORD,Canada,Canada,Canada-ORD-2025-06-217,177785,0.0,Absent,No regulated fruit fly reported,2025-06-01,41.9742,-87.9073
+IAH,Japan,Japan,Japan-IAH-2025-08-218,479051,7380.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-08-01,29.9902,-95.3368
+IAH,Chile,Chile,Chile-IAH-2025-08-219,210373,10310.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2025-08-01,29.9902,-95.3368
+LAX,China,China,China-LAX-2025-09-220,116056,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-09-01,33.9425,-118.4081
+ORD,Australia,Australia,Australia-ORD-2025-09-221,285667,11096.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-09-01,41.9742,-87.9073
+LAX,India,India,India-LAX-2025-09-222,215008,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-09-01,33.9425,-118.4081
+IAH,China,China,China-IAH-2025-10-223,211714,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-10-01,29.9902,-95.3368
+MIA,Germany,Germany,Germany-MIA-2025-10-224,155767,0.0,Emerging,European Cherry Fruit Fly (Rhagoletis cerasi),2025-10-01,25.7959,-80.287
+IAH,India,India,India-IAH-2025-10-225,369135,12460.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-10-01,29.9902,-95.3368
+LAX,United Kingdom,United Kingdom,United Kingdom-LAX-2025-10-226,163185,0.0,Absent,No regulated fruit fly reported,2025-10-01,33.9425,-118.4081
+LAX,Spain,Spain,Spain-LAX-2025-10-227,240991,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2025-10-01,33.9425,-118.4081
+LAX,Mexico,Mexico,Mexico-LAX-2025-10-228,110484,0.0,Present,Mexican Fruit Fly (Anastrepha ludens),2025-10-01,33.9425,-118.4081
+SEA,Chile,Chile,Chile-SEA-2025-11-229,266457,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2025-11-01,47.4502,-122.3088
+IAH,Germany,Germany,Germany-IAH-2025-11-230,79496,4192.0,Emerging,European Cherry Fruit Fly (Rhagoletis cerasi),2025-11-01,29.9902,-95.3368
+ORD,Brazil,Brazil,Brazil-ORD-2025-11-231,375542,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2025-11-01,41.9742,-87.9073
+ORD,Canada,Canada,Canada-ORD-2025-11-232,172698,0.0,Absent,No regulated fruit fly reported,2025-11-01,41.9742,-87.9073
+IAH,Australia,Australia,Australia-IAH-2025-11-233,305717,6662.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2025-11-01,29.9902,-95.3368
+ATL,Canada,Canada,Canada-ATL-2025-11-234,132478,0.0,Absent,No regulated fruit fly reported,2025-11-01,33.6407,-84.4277
+ORD,United Kingdom,United Kingdom,United Kingdom-ORD-2025-12-235,274729,0.0,Absent,No regulated fruit fly reported,2025-12-01,41.9742,-87.9073
+IAH,Canada,Canada,Canada-IAH-2025-12-236,361953,6258.0,Absent,No regulated fruit fly reported,2025-12-01,29.9902,-95.3368
+MIA,Germany,Germany,Germany-MIA-2026-01-237,163291,5981.0,Present,European Cherry Fruit Fly (Rhagoletis cerasi),2026-01-01,25.7959,-80.287
+DFW,India,India,India-DFW-2026-01-238,100734,18465.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2026-01-01,32.8998,-97.0403
+ATL,Canada,Canada,Canada-ATL-2026-01-239,129812,0.0,Absent,No regulated fruit fly reported,2026-01-01,33.6407,-84.4277
+JFK,Germany,Germany,Germany-JFK-2026-02-240,331723,5954.0,Present,European Cherry Fruit Fly (Rhagoletis cerasi),2026-02-01,40.6413,-73.7781
+LAX,Japan,Japan,Japan-LAX-2026-02-241,258851,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2026-02-01,33.9425,-118.4081
+ATL,Canada,Canada,Canada-ATL-2026-02-242,130195,0.0,Absent,No regulated fruit fly reported,2026-02-01,33.6407,-84.4277
+JFK,Mexico,Mexico,Mexico-JFK-2026-02-243,315454,0.0,Present,Mexican Fruit Fly (Anastrepha ludens),2026-02-01,40.6413,-73.7781
+ORD,China,China,China-ORD-2026-02-244,88920,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2026-02-01,41.9742,-87.9073
+ATL,United Kingdom,United Kingdom,United Kingdom-ATL-2026-03-245,221530,7801.0,Absent,No regulated fruit fly reported,2026-03-01,33.6407,-84.4277
+ORD,Brazil,Brazil,Brazil-ORD-2026-03-246,370495,0.0,Present,Mediterranean Fruit Fly (Ceratitis capitata - Medfly),2026-03-01,41.9742,-87.9073
+MIA,Australia,Australia,Australia-MIA-2026-04-247,486591,0.0,Present,Oriental Fruit Fly (Bactrocera dorsalis),2026-04-01,25.7959,-80.287
+DFW,Canada,Canada,Canada-DFW-2026-04-248,91552,0.0,Absent,No regulated fruit fly reported,2026-04-01,32.8998,-97.0403
+JFK,Canada,Canada,Canada-JFK-2026-04-249,229376,0.0,Absent,No regulated fruit fly reported,2026-04-01,40.6413,-73.7781
