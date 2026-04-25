@@ -7,14 +7,13 @@ import numpy as np
 import boto3
 import rasterio
 from rasterio.io import MemoryFile
-import os
 
-NASS_KEY = os.environ.get("NASS_API_KEY", "")  # Register at quickstats.nass.usda.gov
 STATES = {"IA":"19","CO":"08","WI":"55","MO":"29","NE":"31"}
 
-def get_nass_yields(state_fips, year_start=2010, year_end=2024):
+def _fetch_nass_year(nass_key, state_fips, year, retries=3):
+    """Fetch a single year from NASS QuickStats with retry on timeout."""
     params = {
-        "key": NASS_KEY,
+        "key": nass_key,
         "source_desc": "SURVEY",
         "sector_desc": "CROPS",
         "commodity_desc": "CORN",
@@ -22,17 +21,38 @@ def get_nass_yields(state_fips, year_start=2010, year_end=2024):
         "unit_desc": "BU / ACRE",
         "agg_level_desc": "COUNTY",
         "state_fips_code": state_fips,
-        "year__GE": year_start,
-        "year__LE": year_end,
+        "year": year,
         "format": "JSON"
     }
-    r = requests.get("https://quickstats.nass.usda.gov/api/api_GET/", params=params, timeout=30)
-    r.raise_for_status()
-    data = r.json().get("data", [])
-    if not data:
+    for attempt in range(retries):
+        try:
+            r = requests.get(
+                "https://quickstats.nass.usda.gov/api/api_GET/",
+                params=params,
+                timeout=60
+            )
+            r.raise_for_status()
+            return r.json().get("data", [])
+        except requests.exceptions.Timeout:
+            if attempt == retries - 1:
+                raise
+            print(f"    Timeout on year {year}, retrying ({attempt + 2}/{retries})...")
+
+def get_nass_yields(state_fips, year_start=2010, year_end=2024):
+    nass_key = os.environ.get("NASS_API_KEY", "")
+    frames = []
+    for year in range(year_start, year_end + 1):
+        print(f"    year {year}...", end=" ", flush=True)
+        data = _fetch_nass_year(nass_key, state_fips, year)
+        if data:
+            frames.append(pd.DataFrame(data)[["year", "county_name", "Value"]])
+            print(f"{len(data)} rows")
+        else:
+            print("no data")
+    if not frames:
         return pd.DataFrame(columns=["year", "county_name", "yield_bu_acre"])
-    return pd.DataFrame(data)[["year","county_name","Value"]] \
-             .rename(columns={"Value":"yield_bu_acre"}) \
+    return pd.concat(frames, ignore_index=True) \
+             .rename(columns={"Value": "yield_bu_acre"}) \
              .assign(yield_bu_acre=lambda d: pd.to_numeric(d.yield_bu_acre, errors="coerce"))
 
 def save_yields_to_s3(df, bucket, state_fips):
