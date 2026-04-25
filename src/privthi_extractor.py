@@ -1,9 +1,9 @@
-from transformers import AutoModel
+import transformers
 import torch, rasterio
 import numpy as np
 
 def load_prithvi(device="cpu"):
-    model = AutoModel.from_pretrained(
+    model = transformers.AutoModel.from_pretrained(
         "ibm-nasa-geospatial/Prithvi-100M",
         trust_remote_code=True
     ).to(device).eval()
