@@ -1,0 +1,575 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans, system-ui, sans-serif); background: transparent; color: var(--color-text-primary); font-size: 14px; }
+
+  .header { padding: 1.25rem 1.5rem 0.75rem; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .header-title { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; }
+  .header-sub { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+  .timer { font-size: 13px; font-weight: 500; background: var(--color-background-warning); color: var(--color-text-warning); padding: 4px 10px; border-radius: 6px; }
+
+  .tabs { display: flex; gap: 0; border-bottom: 0.5px solid var(--color-border-tertiary); padding: 0 1.5rem; overflow-x: auto; }
+  .tab { padding: 10px 14px; font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent; color: var(--color-text-secondary); white-space: nowrap; transition: color 0.15s; }
+  .tab.active { color: var(--color-text-primary); border-bottom-color: var(--color-text-primary); font-weight: 500; }
+  .tab:hover:not(.active) { color: var(--color-text-primary); }
+
+  .panel { display: none; padding: 1.25rem 1.5rem; }
+  .panel.active { display: block; }
+
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+  .grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 10px; padding: 1rem 1.1rem; }
+  .card-label { font-size: 11px; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .card-val { font-size: 22px; font-weight: 500; }
+  .card-sub { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; }
+
+  .section-head { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 10px; margin-top: 1rem; }
+  .section-head:first-child { margin-top: 0; }
+
+  /* Phase timeline */
+  .phase-row { display: grid; grid-template-columns: 90px 1fr 80px 80px; gap: 10px; align-items: start; padding: 10px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .phase-row:last-child { border-bottom: none; }
+  .phase-label { font-size: 12px; font-weight: 500; }
+  .phase-tasks { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
+  .phase-hrs { font-size: 12px; color: var(--color-text-secondary); text-align: right; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+  .badge-blue { background: var(--color-background-info); color: var(--color-text-info); }
+  .badge-green { background: var(--color-background-success); color: var(--color-text-success); }
+  .badge-amber { background: var(--color-background-warning); color: var(--color-text-warning); }
+  .badge-red { background: var(--color-background-danger); color: var(--color-text-danger); }
+
+  /* Task list */
+  .task { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .task:last-child { border-bottom: none; }
+  .task input[type=checkbox] { margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+  .task-body { flex: 1; }
+  .task-title { font-size: 13px; line-height: 1.4; }
+  .task-title.done { text-decoration: line-through; color: var(--color-text-secondary); }
+  .task-meta { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+  .task-owner { font-size: 11px; font-weight: 500; padding: 1px 7px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); white-space: nowrap; }
+
+  /* Data sources */
+  .source-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .source-row:last-child { border-bottom: none; }
+  .source-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .source-name { font-size: 13px; font-weight: 500; flex: 1; }
+  .source-desc { font-size: 12px; color: var(--color-text-secondary); }
+  .source-link { font-size: 12px; color: var(--color-text-info); cursor: pointer; text-decoration: underline; white-space: nowrap; }
+
+  /* Architecture */
+  .arch-layer { border: 0.5px solid var(--color-border-tertiary); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .arch-layer-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .arch-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-primary); background: var(--color-background-secondary); }
+  .chip.highlight { border-color: var(--color-border-info); color: var(--color-text-info); background: var(--color-background-info); }
+  .arch-arrow { text-align: center; font-size: 14px; color: var(--color-text-secondary); margin: -2px 0; }
+
+  /* Team */
+  .member { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .member:last-child { border-bottom: none; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .member-info { flex: 1; }
+  .member-name { font-size: 13px; font-weight: 500; }
+  .member-role { font-size: 12px; color: var(--color-text-secondary); margin-top: 1px; }
+  .member-tasks { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; line-height: 1.5; }
+
+  /* Cone of uncertainty */
+  .cone-step { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .cone-step:last-child { border-bottom: none; }
+  .cone-date { font-size: 12px; font-weight: 500; color: var(--color-text-info); background: var(--color-background-info); border-radius: 6px; padding: 3px 8px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .cone-body { flex: 1; }
+  .cone-title { font-size: 13px; font-weight: 500; }
+  .cone-desc { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; line-height: 1.55; }
+
+  .progress-bar { height: 4px; background: var(--color-border-tertiary); border-radius: 2px; margin-top: 8px; }
+  .progress-fill { height: 4px; border-radius: 2px; background: var(--color-text-success); }
+
+  .code-block { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 8px; padding: 12px 14px; font-family: var(--font-mono, monospace); font-size: 12px; line-height: 1.7; overflow-x: auto; color: var(--color-text-primary); margin-top: 6px; white-space: pre; }
+
+  .btn { font-size: 12px; padding: 5px 12px; border: 0.5px solid var(--color-border-secondary); border-radius: 6px; background: transparent; color: var(--color-text-primary); cursor: pointer; transition: background 0.12s; }
+  .btn:hover { background: var(--color-background-secondary); }
+  .btn-primary { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
+  .btn-primary:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">🌽 CornSight — Geospatial Yield Forecasting</div>
+    <div class="header-sub">Hackathon Template · Iowa · Colorado · Wisconsin · Missouri · Nebraska</div>
+  </div>
+  <div class="timer" id="timer">⏱ 21:00:00 remaining</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('overview')">Overview</div>
+  <div class="tab" onclick="switchTab('tasks')">Task Board</div>
+  <div class="tab" onclick="switchTab('pipeline')">ML Pipeline</div>
+  <div class="tab" onclick="switchTab('data')">Data Sources</div>
+  <div class="tab" onclick="switchTab('team')">Team Roles</div>
+  <div class="tab" onclick="switchTab('cone')">Cone of Uncertainty</div>
+  <div class="tab" onclick="switchTab('code')">Starter Code</div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="panel active" id="panel-overview">
+  <div class="grid4" style="margin-bottom: 1.25rem;">
+    <div class="card"><div class="card-label">Forecast Points</div><div class="card-val">4</div><div class="card-sub">Aug · Sep · Oct · EOS</div></div>
+    <div class="card"><div class="card-label">Target States</div><div class="card-val">5</div><div class="card-sub">IA · CO · WI · MO · NE</div></div>
+    <div class="card"><div class="card-label">Core Model</div><div class="card-val" style="font-size:16px;">Prithvi</div><div class="card-sub">NASA GeoAI Foundation</div></div>
+    <div class="card"><div class="card-label">Team Size</div><div class="card-val">4</div><div class="card-sub">Junior CS students</div></div>
+  </div>
+
+  <div class="section-head">21-Hour Phase Plan</div>
+  <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 10px; padding: 0 1rem;">
+    <div class="phase-row" style="font-size:11px; font-weight:500; color:var(--color-text-secondary); text-transform:uppercase; letter-spacing:0.05em; padding-bottom:6px;">
+      <div>Phase</div><div>Key Deliverables</div><div style="text-align:right">Hours</div><div style="text-align:right">By</div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label"><span class="badge badge-blue">Phase 1</span><br><span style="font-size:11px; color:var(--color-text-secondary)">Setup</span></div>
+      <div class="phase-tasks">Env setup · Download NAIP + NASS data · Clone Prithvi repo · Split team roles · Create shared GitHub repo</div>
+      <div class="phase-hrs">0–3 hrs</div>
+      <div class="phase-hrs"><span class="badge badge-blue">Hr 3</span></div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label"><span class="badge badge-green">Phase 2</span><br><span style="font-size:11px; color:var(--color-text-secondary)">Data</span></div>
+      <div class="phase-tasks">Preprocess NAIP tiles · Align NASS yield labels · Pull NOAA weather signals · Create GeoDataFrame per state</div>
+      <div class="phase-hrs">3–7 hrs</div>
+      <div class="phase-hrs"><span class="badge badge-green">Hr 7</span></div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label"><span class="badge badge-amber">Phase 3</span><br><span style="font-size:11px; color:var(--color-text-secondary)">Modeling</span></div>
+      <div class="phase-tasks">Prithvi feature extraction · Train regression head · Generate Aug/Sep/Oct/EOS predictions · Validate against NASS actuals</div>
+      <div class="phase-hrs">7–15 hrs</div>
+      <div class="phase-hrs"><span class="badge badge-amber">Hr 15</span></div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label"><span class="badge badge-red">Phase 4</span><br><span style="font-size:11px; color:var(--color-text-secondary)">Cone</span></div>
+      <div class="phase-tasks">Identify analog years · Compute uncertainty bounds · Overlay weather/geospatial signals · Visualize cone per state</div>
+      <div class="phase-hrs">15–18 hrs</div>
+      <div class="phase-hrs"><span class="badge badge-red">Hr 18</span></div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label"><span class="badge" style="background:var(--color-background-secondary); color:var(--color-text-secondary);">Phase 5</span><br><span style="font-size:11px; color:var(--color-text-secondary)">Polish</span></div>
+      <div class="phase-tasks">Dashboard / maps · Slide deck · Demo narrative · README · Final submission</div>
+      <div class="phase-hrs">18–21 hrs</div>
+      <div class="phase-hrs"><span class="badge badge-green">Submit</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TASKS -->
+<div class="panel" id="panel-tasks">
+  <div id="task-progress-bar" style="margin-bottom:1rem;"></div>
+  <div id="task-list"></div>
+</div>
+
+<!-- PIPELINE -->
+<div class="panel" id="panel-pipeline">
+  <div class="section-head">ML Pipeline Architecture</div>
+
+  <div class="arch-layer" style="border-color: var(--color-border-info);">
+    <div class="arch-layer-title">① Raw Data Ingestion</div>
+    <div class="arch-chips">
+      <span class="chip highlight">NAIP Imagery (USDA)</span>
+      <span class="chip highlight">NASS Corn Yield CSV</span>
+      <span class="chip highlight">NOAA Weather Signals</span>
+      <span class="chip">Cropland Data Layer (CDL)</span>
+      <span class="chip">Elevation / Soil Data</span>
+    </div>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div class="arch-layer">
+    <div class="arch-layer-title">② Preprocessing &amp; Alignment</div>
+    <div class="arch-chips">
+      <span class="chip">Reproject to EPSG:4326</span>
+      <span class="chip">Tile NAIP to 224×224px</span>
+      <span class="chip">Mask non-corn pixels (CDL)</span>
+      <span class="chip">Normalize bands (RGB+NIR)</span>
+      <span class="chip">Align to county boundaries</span>
+      <span class="chip">Split by state + season</span>
+    </div>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div class="arch-layer" style="border-color: var(--color-border-success);">
+    <div class="arch-layer-title">③ Prithvi Foundation Model (NASA)</div>
+    <div class="arch-chips">
+      <span class="chip highlight">prithvi-100M checkpoint</span>
+      <span class="chip">Masked Autoencoder backbone</span>
+      <span class="chip">Multi-temporal inputs (Aug/Sep/Oct)</span>
+      <span class="chip">Frozen encoder + fine-tune head</span>
+    </div>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div class="arch-layer">
+    <div class="arch-layer-title">④ Feature Engineering + Fusion</div>
+    <div class="arch-chips">
+      <span class="chip">Prithvi spatial embeddings</span>
+      <span class="chip">NDVI time-series features</span>
+      <span class="chip">GDD (Growing Degree Days)</span>
+      <span class="chip">Precipitation anomalies</span>
+      <span class="chip">Analog year similarity score</span>
+    </div>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div class="arch-layer" style="border-color: var(--color-border-warning);">
+    <div class="arch-layer-title">⑤ Regression Head &amp; Forecast Output</div>
+    <div class="arch-chips">
+      <span class="chip highlight">Ridge / XGBoost regressor</span>
+      <span class="chip">Per-state, per-date predictions</span>
+      <span class="chip">Aug 1 · Sep 1 · Oct 1 · EOS</span>
+      <span class="chip">Cone of uncertainty bounds</span>
+      <span class="chip">bu/acre output per county</span>
+    </div>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div class="arch-layer">
+    <div class="arch-layer-title">⑥ Visualization &amp; Deliverable</div>
+    <div class="arch-chips">
+      <span class="chip">Folium / GeoPandas choropleth</span>
+      <span class="chip">Yield forecast time-series plot</span>
+      <span class="chip">Cone of uncertainty ribbon chart</span>
+      <span class="chip">State-level summary table</span>
+    </div>
+  </div>
+</div>
+
+<!-- DATA SOURCES -->
+<div class="panel" id="panel-data">
+  <div class="section-head">Primary Data Sources</div>
+  <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 10px; padding: 0 1rem;">
+    <div class="source-row">
+      <div class="source-dot" style="background:#3B8BD4;"></div>
+      <div class="source-name">NAIP Imagery</div>
+      <div class="source-desc">4-band aerial (RGB+NIR), 1m resolution, county-level tiles</div>
+      <div class="source-link" onclick="window.open('https://nassgeodata.gmu.edu/NaipMapper/')">Open ↗</div>
+    </div>
+    <div class="source-row">
+      <div class="source-dot" style="background:#1D9E75;"></div>
+      <div class="source-name">NASS Quick Stats</div>
+      <div class="source-desc">Historical corn-for-grain yields by county, state, year (bu/acre)</div>
+      <div class="source-link" onclick="window.open('https://quickstats.nass.usda.gov/')">Open ↗</div>
+    </div>
+    <div class="source-row">
+      <div class="source-dot" style="background:#EF9F27;"></div>
+      <div class="source-name">NASA Prithvi Model</div>
+      <div class="source-desc">GeoAI foundation model weights + HuggingFace config</div>
+      <div class="source-link" onclick="window.open('https://huggingface.co/ibm-nasa-geospatial/Prithvi-100M')">Open ↗</div>
+    </div>
+    <div class="source-row">
+      <div class="source-dot" style="background:#E24B4A;"></div>
+      <div class="source-name">NOAA Climate Data</div>
+      <div class="source-desc">Temperature, precipitation, GDD by weather station, 1950–present</div>
+      <div class="source-link" onclick="window.open('https://www.ncei.noaa.gov/cdo-web/')">Open ↗</div>
+    </div>
+    <div class="source-row">
+      <div class="source-dot" style="background:#7F77DD;"></div>
+      <div class="source-name">USDA Cropland Data Layer</div>
+      <div class="source-desc">30m raster crop type masks — use to isolate corn pixels</div>
+      <div class="source-link" onclick="window.open('https://nassgeodata.gmu.edu/CropScape/')">Open ↗</div>
+    </div>
+    <div class="source-row">
+      <div class="source-dot" style="background:#888780;"></div>
+      <div class="source-name">HLS Sentinel-2 / Landsat</div>
+      <div class="source-desc">NASA Harmonized Landsat Sentinel: multi-temporal satellite imagery</div>
+      <div class="source-link" onclick="window.open('https://lpdaac.usgs.gov/products/hlss30v002/')">Open ↗</div>
+    </div>
+  </div>
+
+  <div class="section-head" style="margin-top:1.25rem;">Key Python Packages</div>
+  <div class="grid3">
+    <div class="card" style="padding:0.75rem 1rem;">
+      <div class="card-label">Geospatial</div>
+      <div style="font-size:12px; color:var(--color-text-primary); line-height:1.7;">geopandas · rasterio<br>shapely · pyproj<br>folium · earthpy</div>
+    </div>
+    <div class="card" style="padding:0.75rem 1rem;">
+      <div class="card-label">ML / Model</div>
+      <div style="font-size:12px; color:var(--color-text-primary); line-height:1.7;">torch · transformers<br>huggingface-hub<br>xgboost · scikit-learn</div>
+    </div>
+    <div class="card" style="padding:0.75rem 1rem;">
+      <div class="card-label">Data / Viz</div>
+      <div style="font-size:12px; color:var(--color-text-primary); line-height:1.7;">pandas · numpy<br>matplotlib · seaborn<br>requests · tqdm</div>
+    </div>
+  </div>
+</div>
+
+<!-- TEAM -->
+<div class="panel" id="panel-team">
+  <div class="section-head">Suggested Role Split (4 people, 21 hours)</div>
+  <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 10px; padding: 0 1rem;">
+    <div class="member">
+      <div class="avatar" style="background:var(--color-background-info); color:var(--color-text-info);">A</div>
+      <div class="member-info">
+        <div class="member-name">Person A — Data Engineer</div>
+        <div class="member-role">Data acquisition, preprocessing, CDL masking</div>
+        <div class="member-tasks">↳ Download NAIP + NASS + NOAA · Reproject &amp; tile imagery · Build county-level GeoDataFrames · Export clean train/test splits</div>
+      </div>
+    </div>
+    <div class="member">
+      <div class="avatar" style="background:var(--color-background-success); color:var(--color-text-success);">B</div>
+      <div class="member-info">
+        <div class="member-name">Person B — ML Engineer</div>
+        <div class="member-role">Prithvi model setup, feature extraction, regression head</div>
+        <div class="member-tasks">↳ Load Prithvi checkpoint · Extract embeddings from tiles · Train XGBoost regressor · Evaluate vs NASS actuals per forecast date</div>
+      </div>
+    </div>
+    <div class="member">
+      <div class="avatar" style="background:var(--color-background-warning); color:var(--color-text-warning);">C</div>
+      <div class="member-info">
+        <div class="member-name">Person C — Analog Year + Uncertainty</div>
+        <div class="member-role">Cone of uncertainty, analog year identification, weather signals</div>
+        <div class="member-tasks">↳ Compute GDD / precipitation features · Find analog years via cosine similarity · Build uncertainty bounds · Construct cone ribbon per state</div>
+      </div>
+    </div>
+    <div class="member">
+      <div class="avatar" style="background:var(--color-background-danger); color:var(--color-text-danger);">D</div>
+      <div class="member-info">
+        <div class="member-name">Person D — Viz + Presentation</div>
+        <div class="member-role">Maps, charts, slide deck, demo narrative</div>
+        <div class="member-tasks">↳ Folium choropleth maps per state · Forecast time-series plots · Cone ribbon charts · Build slide deck + README · Practice 3-min demo</div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:1rem; background:var(--color-background-secondary);">
+    <div class="card-label">Sync Points (everyone)</div>
+    <div style="font-size:12px; color:var(--color-text-primary); line-height:1.8; margin-top:4px;">
+      ✓ Hr 0 — Kickoff: agree on file structure, GitHub repo, data format spec<br>
+      ✓ Hr 3 — Data check-in: confirm A has clean data A+B can use immediately<br>
+      ✓ Hr 7 — Model check-in: B shows first predictions, C shows weather features<br>
+      ✓ Hr 15 — Integration: merge model output + cone + maps<br>
+      ✓ Hr 19 — Rehearsal: dry-run full demo, lock slides
+    </div>
+  </div>
+</div>
+
+<!-- CONE OF UNCERTAINTY -->
+<div class="panel" id="panel-cone">
+  <div class="section-head">Cone of Uncertainty — Forecast Timeline</div>
+  <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 10px; padding: 0 1rem;">
+    <div class="cone-step">
+      <div class="cone-date">Aug 1</div>
+      <div class="cone-body">
+        <div class="cone-title">Early-Season Estimate — Widest Uncertainty</div>
+        <div class="cone-desc">Inputs: NAIP July imagery · CDL corn mask · June–July GDD · precipitation anomaly vs 30-yr avg · NDVI from HLS. Analog year search: find years with similar June–July weather profile. Output: preliminary bu/acre range per state, wide confidence interval (±25%).</div>
+      </div>
+    </div>
+    <div class="cone-step">
+      <div class="cone-date">Sep 1</div>
+      <div class="cone-body">
+        <div class="cone-title">Mid-Season Update — Cone Narrows</div>
+        <div class="cone-desc">Add August satellite imagery, silking/pollination stress signals, updated weather actuals. Recalculate analog year weights (penalize poor-fit years). Update regression model with new features. Confidence interval tightens to ±15%.</div>
+      </div>
+    </div>
+    <div class="cone-step">
+      <div class="cone-date">Oct 1</div>
+      <div class="cone-body">
+        <div class="cone-title">Late-Season — Near-Final Forecast</div>
+        <div class="cone-desc">Dough/dent stage visible in imagery. Most weather uncertainty resolved. Analog years largely settled. Strong correlation with final NASS report. Confidence interval ±8%. State-level forecasts highly differentiated.</div>
+      </div>
+    </div>
+    <div class="cone-step">
+      <div class="cone-date">EOS</div>
+      <div class="cone-body">
+        <div class="cone-title">End-of-Season — Final Estimate vs NASS</div>
+        <div class="cone-desc">Post-harvest NAIP if available, or final growing-season composite. Compare final model prediction to NASS published yield. Calculate RMSE and % error vs NASS. Cone collapses to near-point — benchmark for model accuracy.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head" style="margin-top:1.25rem;">Analog Year Algorithm (simplified)</div>
+  <div class="code-block">def find_analog_years(target_weather, historical_df, n=5):
+    """Find years most similar to current season weather profile."""
+    features = ['jun_gdd', 'jul_gdd', 'aug_gdd',
+                'jun_precip_anom', 'jul_precip_anom', 'aug_precip_anom']
+    X = historical_df[features].values
+    target = target_weather[features].values.reshape(1, -1)
+    # Cosine similarity across all historical years
+    sims = cosine_similarity(target, X)[0]
+    top_idx = np.argsort(sims)[::-1][:n]
+    return historical_df.iloc[top_idx][['year', 'yield_bu_acre']].copy()</div>
+</div>
+
+<!-- STARTER CODE -->
+<div class="panel" id="panel-code">
+  <div class="section-head">Project Structure</div>
+  <div class="code-block">cornsight/
+├── data/
+│   ├── raw/          # NAIP tiles, NASS CSV, NOAA weather
+│   ├── processed/    # Aligned, masked, normalized
+│   └── features/     # Feature matrices per state/date
+├── notebooks/
+│   ├── 01_data_prep.ipynb
+│   ├── 02_prithvi_features.ipynb
+│   ├── 03_train_forecast.ipynb
+│   └── 04_cone_uncertainty.ipynb
+├── src/
+│   ├── data_utils.py
+│   ├── prithvi_extractor.py
+│   ├── forecaster.py
+│   ├── analog_years.py
+│   └── visualize.py
+├── outputs/
+│   └── maps/, charts/, forecasts/
+└── requirements.txt</div>
+
+  <div class="section-head" style="margin-top:1rem;">Prithvi Feature Extraction</div>
+  <div class="code-block">from transformers import AutoModel
+import torch, rasterio
+import numpy as np
+
+def load_prithvi(device="cpu"):
+    model = AutoModel.from_pretrained(
+        "ibm-nasa-geospatial/Prithvi-100M",
+        trust_remote_code=True
+    ).to(device).eval()
+    return model
+
+def extract_features(model, naip_tile_path, device="cpu"):
+    """Extract spatial embeddings from a single NAIP tile."""
+    with rasterio.open(naip_tile_path) as src:
+        # NAIP: bands 1=R, 2=G, 3=B, 4=NIR
+        img = src.read().astype(np.float32)  # (4, H, W)
+    # Normalize per-band
+    img = (img - img.mean(axis=(1,2), keepdims=True)) / \
+          (img.std(axis=(1,2), keepdims=True) + 1e-6)
+    tensor = torch.tensor(img).unsqueeze(0).to(device)  # (1,4,H,W)
+    with torch.no_grad():
+        out = model(pixel_values=tensor)
+    # Mean-pool patch embeddings → fixed-dim feature vector
+    return out.last_hidden_state.mean(dim=1).squeeze().cpu().numpy()</div>
+
+  <div class="section-head" style="margin-top:1rem;">Quick NASS Data Pull</div>
+  <div class="code-block">import requests, pandas as pd
+
+NASS_KEY = "YOUR_API_KEY"  # Register at quickstats.nass.usda.gov
+STATES = {"IA":"19","CO":"08","WI":"55","MO":"29","NE":"31"}
+
+def get_nass_yields(state_fips, year_start=2010, year_end=2023):
+    params = {
+        "key": NASS_KEY,
+        "source_desc": "SURVEY",
+        "sector_desc": "CROPS",
+        "commodity_desc": "CORN",
+        "statisticcat_desc": "YIELD",
+        "unit_desc": "BU / ACRE",
+        "agg_level_desc": "COUNTY",
+        "state_fips_code": state_fips,
+        "year__GE": year_start,
+        "year__LE": year_end,
+        "format": "JSON"
+    }
+    r = requests.get("https://quickstats.nass.usda.gov/api/api_GET/", params=params)
+    data = r.json().get("data", [])
+    return pd.DataFrame(data)[["year","county_name","Value"]] \
+             .rename(columns={"Value":"yield_bu_acre"}) \
+             .assign(yield_bu_acre=lambda d: pd.to_numeric(d.yield_bu_acre, errors="coerce"))</div>
+
+  <div class="section-head" style="margin-top:1rem;">Install Requirements</div>
+  <div class="code-block">pip install torch transformers huggingface_hub
+pip install geopandas rasterio earthpy shapely pyproj
+pip install xgboost scikit-learn pandas numpy
+pip install folium matplotlib seaborn tqdm requests</div>
+</div>
+
+<script>
+// Timer
+const startMs = Date.now();
+const totalSecs = 21 * 3600;
+function updateTimer() {
+  const elapsed = Math.floor((Date.now() - startMs) / 1000);
+  const rem = Math.max(0, totalSecs - elapsed);
+  const h = Math.floor(rem / 3600).toString().padStart(2,'0');
+  const m = Math.floor((rem % 3600) / 60).toString().padStart(2,'0');
+  const s = (rem % 60).toString().padStart(2,'0');
+  document.getElementById('timer').textContent = `⏱ ${h}:${m}:${s} remaining`;
+}
+setInterval(updateTimer, 1000);
+
+// Tabs
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+// Tasks
+const tasks = [
+  { id:1, phase:'Setup', title:'Create GitHub repo, agree on branch strategy', owner:'Everyone', hrs:'0-1', done:false },
+  { id:2, phase:'Setup', title:'Set up Python environment + install packages', owner:'A', hrs:'0-1', done:false },
+  { id:3, phase:'Setup', title:'Register NASS API key and test data pull', owner:'A', hrs:'0-2', done:false },
+  { id:4, phase:'Setup', title:'Download Prithvi model weights from HuggingFace', owner:'B', hrs:'0-2', done:false },
+  { id:5, phase:'Setup', title:'Agree on county list and data schema', owner:'Everyone', hrs:'2-3', done:false },
+  { id:6, phase:'Data', title:'Download NAIP tiles for all 5 states', owner:'A', hrs:'3-5', done:false },
+  { id:7, phase:'Data', title:'Pull NASS county yield data (2010–2023)', owner:'A', hrs:'3-4', done:false },
+  { id:8, phase:'Data', title:'Download CDL rasters for corn masking', owner:'A', hrs:'4-5', done:false },
+  { id:9, phase:'Data', title:'Pull NOAA weather data (GDD, precip) per state', owner:'C', hrs:'3-5', done:false },
+  { id:10, phase:'Data', title:'Reproject and tile NAIP to 224×224 patches', owner:'A', hrs:'5-7', done:false },
+  { id:11, phase:'Data', title:'Mask non-corn pixels using CDL', owner:'A', hrs:'5-7', done:false },
+  { id:12, phase:'Data', title:'Build county-level GeoDataFrames', owner:'A', hrs:'6-7', done:false },
+  { id:13, phase:'Model', title:'Run Prithvi feature extraction on all tiles', owner:'B', hrs:'7-10', done:false },
+  { id:14, phase:'Model', title:'Compute NDVI features from NAIP NIR band', owner:'B', hrs:'7-9', done:false },
+  { id:15, phase:'Model', title:'Engineer GDD + precip anomaly features', owner:'C', hrs:'7-9', done:false },
+  { id:16, phase:'Model', title:'Merge spatial embeddings + weather features per county', owner:'B', hrs:'9-11', done:false },
+  { id:17, phase:'Model', title:'Train XGBoost regressor on 2010–2020 data', owner:'B', hrs:'11-13', done:false },
+  { id:18, phase:'Model', title:'Generate Aug/Sep/Oct/EOS predictions per state', owner:'B', hrs:'13-15', done:false },
+  { id:19, phase:'Model', title:'Validate predictions vs NASS actuals (RMSE, R²)', owner:'B', hrs:'14-15', done:false },
+  { id:20, phase:'Cone', title:'Implement analog year cosine similarity search', owner:'C', hrs:'15-16', done:false },
+  { id:21, phase:'Cone', title:'Compute uncertainty bounds from analog outcomes', owner:'C', hrs:'16-17', done:false },
+  { id:22, phase:'Cone', title:'Build cone ribbon per state × forecast date', owner:'C', hrs:'17-18', done:false },
+  { id:23, phase:'Viz', title:'Create Folium choropleth maps per state', owner:'D', hrs:'15-17', done:false },
+  { id:24, phase:'Viz', title:'Plot forecast time-series with cone overlay', owner:'D', hrs:'17-19', done:false },
+  { id:25, phase:'Viz', title:'Build slide deck (problem → method → results)', owner:'D', hrs:'18-20', done:false },
+  { id:26, phase:'Viz', title:'Write README with setup instructions', owner:'D', hrs:'19-20', done:false },
+  { id:27, phase:'Final', title:'Full dry-run demo (everyone)', owner:'Everyone', hrs:'19-20', done:false },
+  { id:28, phase:'Final', title:'Final polish and submission', owner:'Everyone', hrs:'20-21', done:false },
+];
+
+const phaseColors = { Setup:'badge-blue', Data:'badge-green', Model:'badge-amber', Cone:'badge-red', Viz:'badge-blue', Final:'badge-green' };
+
+function renderTasks() {
+  const done = tasks.filter(t => t.done).length;
+  const pct = Math.round(done / tasks.length * 100);
+  document.getElementById('task-progress-bar').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <span style="font-size:13px;font-weight:500;">Progress</span>
+      <span style="font-size:12px;color:var(--color-text-secondary);">${done}/${tasks.length} tasks done</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+  `;
+
+  let html = '';
+  let lastPhase = '';
+  tasks.forEach(t => {
+    if (t.phase !== lastPhase) {
+      html += `<div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-secondary);padding:12px 0 4px;">${t.phase}</div>`;
+      lastPhase = t.phase;
+    }
+    html += `<div class="task">
+      <input type="checkbox" id="t${t.id}" ${t.done ? 'checked' : ''} onchange="toggleTask(${t.id})">
+      <div class="task-body">
+        <div class="task-title${t.done ? ' done' : ''}">${t.title}</div>
+        <div class="task-meta">Hr ${t.hrs} · <span class="task-owner">${t.owner}</span></div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('task-list').innerHTML = html;
+}
+
+function toggleTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (t) t.done = document.getElementById('t' + id).checked;
+  renderTasks();
+}
+
+renderTasks();
+</script>
+</body>
+</html>
