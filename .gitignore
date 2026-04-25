@@ -1,0 +1,38 @@
+# Virtual environment
+Cimetric/
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# HuggingFace model cache (large .pt files)
+*.pt
+*.bin
+*.safetensors
+
+# Environment variables / secrets
+.env
+*.env
+
+# AWS credentials (never commit)
+.aws/
+
+# Data files
+*.npy
+*.tif
+*.tiff
+*.geotiff
+*.csv
+
+# OS
+.DS_Store
+Thumbs.db
