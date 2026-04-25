@@ -1,0 +1,112 @@
+{
+    "Mexican Fruit Fly":{
+        "Scientific Name": "Anastrepha ludens",
+        "Description": "The Mexican fruit fly, also known as Anastrepha ludens, is a species of fruit fly that is native to Mexico and parts of Central America. It is a significant agricultural pest that primarily targets citrus fruits, but it can also infest other types of fruits such as mangoes, guavas, and peaches. The larvae of the Mexican fruit fly feed on the pulp of the fruit, causing damage and making it unsuitable for consumption. This pest poses a threat to the agricultural industry and can lead to economic losses if not properly managed.",
+        "Temperature Maximum":"30°C",
+        "Temperature Minimum":"9.4°C",
+        "Countries of Orgin" :[
+           "Mexico",
+           "Costa Rica",
+            "Nicaragua", 
+            "Belize",
+            "Guatemala",
+            "Honduras",
+            "El Salvador"
+        ] ,
+        
+        "hscodes": [
+            "080510",
+            "080520",
+            "080530",
+            "080930",
+            "080910",
+            "080940",
+            "080820",
+            "080450",
+            "080810",
+            "080590"
+        ]
+
+        
+    },
+    "Mediterranean Fruit Fly":{
+        "Scientific Name": "Ceratitis capitata or Medfly",
+        "Description": "The Mediterranean fruit fly, also known as Ceratitis capitata or Medfly, is a species of fruit fly that is native to the Mediterranean region. It is a significant agricultural pest that targets a wide range of fruits, including citrus, stone fruits, and pome fruits. The larvae of the Mediterranean fruit fly feed on the flesh of the fruit, causing damage and making it unsuitable for consumption. This pest poses a threat to the agricultural industry and can lead to economic losses if not properly managed.",
+        "Temperature Maximum":"29°C",
+        "Temperature Minimum":"17°C",
+        "Countries of Orgin" :[
+           "Southern Europe",
+           "Yemen",
+           "Jordan",
+           "Lebanon",
+           "Syria",
+           "Saudia Arabia",
+           "Israel",
+           "Australia",
+            "Argentina", 
+            "Bolivia",
+            "Brazil",
+            "Chile",
+            "Colombia",
+            "Ecuador",
+            "Paraguay",
+            "Peru",
+            "Suriname",
+            "Urguay",
+            "Venezuela",
+            "Guatemala",
+            "Panama",
+            "El Salvador"
+        ] ,
+        
+        "hscodes": [
+            "080510",
+            "080540",
+            "080930",
+            "080450",
+            "080810",
+            "080440",
+            "080820",
+            "080450",
+            "080590"
+        ]
+
+        
+    },
+    
+    "Oriental Fruit Fly":{
+        "Scientific Name": "Bactrocera dorsalis",
+        "Description":"The Oriental fruit fly, also known as Bactrocera dorsalis, is a species of fruit fly that is native to Southeast Asia. It is a significant agricultural pest that targets a wide range of fruits, including citrus, stone fruits, and pome fruits. The larvae of the Oriental fruit fly feed on the flesh of the fruit, causing damage and making it unsuitable for consumption. This pest poses a threat to the agricultural industry and can lead to economic losses if not properly managed.",
+        "Temperature Maximum":"35°C",
+        "Temperature Minimum":"15°C",
+        "Countries of Orgin" :[
+           "South-east China",
+           "Southern Asia",
+           "Bangladesh",
+            "Cambodia", 
+            "India",
+            "Indonesia",
+            "Laos",
+            "Myanmar",
+            "Nepal",
+            "Pakistan",
+            "Philippines",
+            "Sri Lanka",
+            "Thaliand",
+            "Vietnam"
+        ] ,
+        
+        "hscodes": [
+            "080440",
+            "080720",
+            "080450",
+            "080300",
+            "080930",
+            "080930",
+            "080910"
+        ]
+
+        
+    }
+    
+}
