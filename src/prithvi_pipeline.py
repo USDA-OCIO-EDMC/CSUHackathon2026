@@ -18,12 +18,13 @@ Or in code:
 
 import os
 import sys
+import re
 import argparse
 import numpy as np
 import pandas as pd
 from pathlib import Path
 from tqdm import tqdm
-from datetime import datetime
+from datetime import datetime, timedelta
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -35,6 +36,10 @@ from rasterio.features import geometry_mask
 from hls_downloader import login as hls_login, search_hls, iter_granules_cloud
 from privthi_extractor import load_prithvi, extract_features_from_array
 from data_utils import STATES
+
+# Project root = parent of src/
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_OUTPUT_DIR = str(PROJECT_ROOT / "data" / "processed")
 
 # ---------------------------------------------------------------------------
 # County Geometry Setup
@@ -197,6 +202,23 @@ def extract_monthly_embeddings(
     
     # Extract embeddings from each granule
     print(f"\n[2/3] Extracting embeddings from granules...")
+# HLS GranuleUR format: HLS.{L30|S30}.T{tile}.{YYYY}{DDD}T{HHMMSS}.v2.0
+_GRANULE_DATE_RE = re.compile(r"\.(\d{4})(\d{3})T\d{6}\.")
+
+
+def _month_from_granule_id(granule_id: str, fallback: int) -> int:
+    """Extract acquisition month from HLS GranuleUR. Returns fallback on parse failure."""
+    m = _GRANULE_DATE_RE.search(granule_id or "")
+    if not m:
+        return fallback
+    try:
+        year = int(m.group(1))
+        doy = int(m.group(2))
+        return (datetime(year, 1, 1) + timedelta(days=doy - 1)).month
+    except (ValueError, OverflowError):
+        return fallback
+
+
     
     for stacked, profile, granule_id in iter_granules_cloud(
         state_abbr, year, forecast_date, max_granules=None
@@ -204,18 +226,19 @@ def extract_monthly_embeddings(
         try:
             # Get granule bbox and date info
             granule_bbox = get_granule_bbox(profile)
-            
-            # Extract month from granule_id (format varies, approximate from year)
-            # HLS granule IDs typically contain acquisition date
-            # For simplicity, assume mid-range month in forecast window
+
+            # Extract acquisition month from granule_id; fall back to mid-window if unparseable
             forecast_months = {
                 "aug1": [5, 6, 7],
                 "sep1": [5, 6, 7, 8],
                 "oct1": [5, 6, 7, 8, 9],
                 "final": [5, 6, 7, 8, 9, 10],
             }
-            months = forecast_months.get(forecast_date, [5, 6, 7, 8, 9, 10])
-            month = months[len(months) // 2]  # Use middle month
+            window = forecast_months.get(forecast_date, [5, 6, 7, 8, 9, 10])
+            month = _month_from_granule_id(granule_id, fallback=window[len(window) // 2])
+            # Drop granules acquired outside the forecast window (no temporal leakage)
+            if month not in window:
+                continue
             
             # Extract Prithvi embedding
             try:
@@ -347,7 +370,7 @@ def build_all_states(
     year: int,
     forecast_date: str = "final",
     device: str = "cpu",
-    output_dir: str = "Hackathon2026/data/processed",
+    output_dir: str = DEFAULT_OUTPUT_DIR,
 ) -> pd.DataFrame:
     """
     Build Prithvi embeddings for all 5 target states, then combine.
@@ -432,7 +455,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--output-dir",
         type=str,
-        default="Hackathon2026/data/processed",
+        default=DEFAULT_OUTPUT_DIR,
         help="Output directory for parquet files",
     )
     parser.add_argument(

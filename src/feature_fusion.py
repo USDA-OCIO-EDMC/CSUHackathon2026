@@ -26,6 +26,10 @@ from sklearn.preprocessing import StandardScaler
 from analog_years import get_state_weather_features, FORECAST_MONTHS
 from data_utils import STATES
 
+# Project root = parent of src/
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_OUTPUT_DIR = str(PROJECT_ROOT / "data" / "processed")
+
 # County centroids (from prithvi_pipeline.py)
 COUNTY_CENTROIDS = {
     "IA": [
@@ -62,7 +66,8 @@ def fuse_features(
     year: int,
     prithvi_df: pd.DataFrame = None,
     weather_df: pd.DataFrame = None,
-    output_dir: str = "Hackathon2026/data/processed",
+    output_dir: str = DEFAULT_OUTPUT_DIR,
+    allow_synthetic_weather: bool = False,
 ) -> pd.DataFrame:
     """
     Combine Prithvi embeddings + weather vectors into unified embeddings.
@@ -118,13 +123,17 @@ def fuse_features(
         )
         print(f"  ✓ Fetched weather for {len(weather_dict)} counties")
     except Exception as e:
-        print(f"  ⚠ Weather fetch warning: {e}")
-        # Create dummy weather vectors as fallback
+        if not allow_synthetic_weather:
+            raise RuntimeError(
+                f"Weather fetch failed for {state_abbr} {year}: {e}. "
+                f"Pass allow_synthetic_weather=True to fall back to noise (NOT for training)."
+            ) from e
+        print(f"  ⚠⚠⚠ Weather fetch failed: {e}")
+        print(f"  ⚠⚠⚠ SYNTHETIC random-noise weather vectors in use — DO NOT TRAIN ON THIS DATA")
         weather_dict = {
             fips: np.random.randn(18).astype(np.float32) * 0.1
             for fips, _, _ in county_list
         }
-        print(f"  ℹ Using synthetic weather vectors")
     
     # Fuse features
     print(f"\n[3/3] Combining embeddings...")
@@ -138,9 +147,14 @@ def fuse_features(
         # Get weather vector
         if county_fips in weather_dict:
             weather_vec = weather_dict[county_fips]
-        else:
-            # Fallback
+        elif allow_synthetic_weather:
+            print(f"  ⚠ Synthetic weather for missing fips {county_fips}")
             weather_vec = np.random.randn(18).astype(np.float32) * 0.1
+        else:
+            raise KeyError(
+                f"Weather vector missing for fips {county_fips} "
+                f"({state_abbr} {year}). Pass allow_synthetic_weather=True to ignore."
+            )
         
         # Concatenate: [weather_18 + prithvi_768] → (786,)
         prithvi_vec = row['prithvi_embedding']
@@ -178,7 +192,7 @@ def fuse_features(
 
 def combine_all_states(
     year: int,
-    output_dir: str = "Hackathon2026/data/processed",
+    output_dir: str = DEFAULT_OUTPUT_DIR,
 ) -> pd.DataFrame:
     """
     Combine fused features from all 5 states into master_features.parquet
@@ -254,7 +268,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--output-dir",
         type=str,
-        default="Hackathon2026/data/processed",
+        default=DEFAULT_OUTPUT_DIR,
         help="Output directory",
     )
     parser.add_argument(
