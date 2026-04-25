@@ -1,5 +1,13 @@
 Group 22 Spring 26 Hackathon
 
+Python Environment:
+conda create -n Hackathon2026 python=3.14 -y
+conda deactivate
+conda activate Hackathon2026
+
+Then make sure that the interpreter is to Hackathon2026 -> conda
+CTRL+SHIFT+P -> Python: Select Interpreter 
+
 Project structure
 cornsight/
 ├── data/
@@ -22,7 +30,6 @@ cornsight/
 └── requirements.txt
 
 Pip installs:
-pip install torch transformers huggingface_hub
-pip install geopandas rasterio earthpy shapely pyproj
-pip install xgboost scikit-learn pandas numpy
-pip install folium matplotlib seaborn tqdm requests
+conda install -c conda-forge geopandas rasterio shapely pyproj earthpy folium -y
+conda install -c conda-forge numpy pandas matplotlib seaborn tqdm scikit-learn xgboost -y
+pip install torch transformers huggingface_hub requests
