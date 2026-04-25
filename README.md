@@ -6,3 +6,6 @@
 *Note* 
 
 Do not run train.py. It is only used for concurrency inside SagemakerAI to speed up goobie, and doesn't provide any results on its own.
+
+##Additional Info##
+We used Prithvi-EO for our model. Since it is too large to upload to GitHub, you may access a zip file of the model here: https://drive.google.com/file/d/1iS90r5DQrehxiYXljxRHTpyudAYEMgyg/view?usp=sharing
