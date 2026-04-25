@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# HarvestSight: never commit data/models (too large)
+data/raw/
+data/processed/chips/
+data/processed/features/
+models/checkpoints/
+reports/training_logs/
+.cache/
+
+# Local logs
+/tmp/*.log

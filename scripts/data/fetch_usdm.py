@@ -11,6 +11,7 @@ scalar drought feature that's the workhorse for analog-year matching.
 """
 from __future__ import annotations
 
+import sys
 from datetime import date
 from pathlib import Path
 
@@ -38,8 +39,11 @@ def fetch_state(state_abbr: str) -> pd.DataFrame:
     }
     r = requests.get(API, params=params, timeout=300)
     r.raise_for_status()
-    rows = r.json()
-    df = pd.DataFrame(rows)
+    if not r.text.strip():
+        print(f"  USDM empty response for {state_abbr} — skipping")
+        return pd.DataFrame()
+    import io
+    df = pd.read_csv(io.StringIO(r.text))
     if df.empty:
         return df
     df = df.rename(columns={
@@ -60,6 +64,9 @@ def main() -> None:
     frames = []
     for s in tqdm(list(STATE_FP), desc="USDM states"):
         frames.append(fetch_state(s))
+    frames = [f for f in frames if not f.empty]
+    if not frames:
+        sys.exit("USDM: all states returned empty — API may be down")
     df = pd.concat(frames, ignore_index=True)
     out = OUT / "county_weekly.parquet"
     df.to_parquet(out, index=False)

@@ -27,6 +27,8 @@ from pathlib import Path
 
 import earthaccess
 import pandas as pd
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "data" / "raw" / "hls"
@@ -39,8 +41,24 @@ DATE_END = os.getenv("HLS_DATE_END", "2024-08-31")
 MAX_SCENES = int(os.getenv("HLS_MAX_SCENES", "10"))
 MAX_CLOUD = int(os.getenv("HLS_MAX_CLOUD", "30"))
 PRODUCT = os.getenv("HLS_PRODUCT", "both").lower()
+DOWNLOAD_THREADS = int(os.getenv("HLS_DOWNLOAD_THREADS", "8"))
 
 PRODUCTS = ["HLSL30", "HLSS30"] if PRODUCT == "both" else [PRODUCT.upper()]
+
+# Only the 6 model bands + cloud mask — skips thermal, view-angle, SAA/SZA files
+NEEDED_BANDS = {"B02", "B03", "B04", "B05", "B06", "B07", "B8A", "B11", "B12", "Fmask"}
+
+
+def band_links(granules: list) -> list[str]:
+    """Return only the download URLs for the bands we actually need."""
+    urls = []
+    for g in granules:
+        for link in g.data_links():
+            # HLS filenames end in .<BAND>.tif  e.g.  ...v2.0.B02.tif
+            stem = link.rsplit(".", 2)[-2]  # second-to-last extension
+            if stem in NEEDED_BANDS:
+                urls.append(link)
+    return urls
 
 
 def search(short_name: str) -> list:
@@ -56,10 +74,10 @@ def search(short_name: str) -> list:
 
 
 def main() -> None:
-    print("NASA Earthdata login (first run prompts; subsequent runs use ~/.netrc)")
-    auth = earthaccess.login(persist=True)
+    print("NASA Earthdata login (using EARTHDATA_USERNAME / EARTHDATA_PASSWORD from .env)")
+    auth = earthaccess.login(strategy="environment", persist=True)
     if not auth.authenticated:
-        sys.exit("Earthdata login failed — check credentials at https://urs.earthdata.nasa.gov")
+        sys.exit("Earthdata login failed — check EARTHDATA_USERNAME/PASSWORD in .env")
 
     all_results = []
     for sn in PRODUCTS:
@@ -70,8 +88,10 @@ def main() -> None:
     if not all_results:
         sys.exit("No scenes matched. Widen date range, bbox, or cloud cover threshold.")
 
-    print(f"\nDownloading {len(all_results)} scenes -> {SCENES_DIR}")
-    files = earthaccess.download(all_results, str(SCENES_DIR))
+    urls = band_links(all_results)
+    print(f"\nDownloading {len(urls)} band files from {len(all_results)} scenes "
+          f"-> {SCENES_DIR}  (threads={DOWNLOAD_THREADS})")
+    files = earthaccess.download(urls, str(SCENES_DIR), threads=DOWNLOAD_THREADS)
     print(f"  wrote {len(files)} files")
 
     rows = []

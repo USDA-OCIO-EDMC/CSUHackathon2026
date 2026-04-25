@@ -33,7 +33,7 @@ prithvi:
 training:
   device: cuda
   precision: bf16
-  batch_size: 16
+  batch_size: 64
   epochs: 25
   lr: 5.0e-5
   weight_decay: 1.0e-4

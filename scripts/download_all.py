@@ -39,7 +39,8 @@ import shutil
 import subprocess
 import sys
 import time
-from dataclasses import dataclass
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -56,6 +57,7 @@ class Step:
     output: Path                         # canonical output to test for completeness
     needs_env: tuple[str, ...] = ()      # required env vars
     est: str = "?"                       # rough wall-clock estimate
+    deps: list[str] = field(default_factory=list)  # step keys that must finish first
 
 STEPS: list[Step] = [
     Step("nass",     "NASS QuickStats yield + crop progress",
@@ -93,15 +95,18 @@ STEPS: list[Step] = [
     Step("labels",   "Build chip metadata + label tables",
          "scripts/training/build_labels_metadata.py",
          ROOT / "data/processed/labels/chip_metadata.parquet",
-         est="~2 min"),
+         est="~2 min",
+         deps=["nass", "hls"]),
     Step("features", "Build state-checkpoint analog-matching features",
          "scripts/training/build_features.py",
          ROOT / "data/processed/features/state_checkpoint_features.parquet",
-         est="~5 min"),
+         est="~5 min",
+         deps=["gridmet", "usdm", "landsat", "hls_ndvi"]),
     Step("check",    "Sanity-check all data joins",
          "notebooks/01_sanity_check.py",
          ROOT / "data/processed/features/state_checkpoint_features.parquet",  # re-uses
-         est="~1 min"),
+         est="~1 min",
+         deps=["labels", "features"]),
 ]
 
 # Tier presets: which step keys belong to each tier.
@@ -138,7 +143,7 @@ def run_step(step: Step, dry: bool) -> bool:
     missing = check_env(step)
     if missing:
         print(f"  SKIP — missing env: {missing}. See .env.example")
-        return False
+        return True  # skipped, not failed — don't cascade-block dependents
     cmd = [sys.executable, str(ROOT / step.script)]
     print(f"  $ {' '.join(cmd)}")
     if dry:
@@ -154,15 +159,62 @@ def run_step(step: Step, dry: bool) -> bool:
     return True
 
 
+def run_parallel(selected: list[Step], dry: bool, workers: int) -> list[str]:
+    """Run steps in parallel, respecting deps. Returns list of failed step keys."""
+    step_map = {s.key: s for s in selected}
+    selected_keys = set(step_map)
+    done: set[str] = set()
+    failed: set[str] = set()
+    futures = {}
+    failed_keys: list[str] = []
+
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        pending = list(selected)
+        while pending or futures:
+            # Launch any step whose deps are satisfied and hasn't failed
+            still_pending = []
+            for step in pending:
+                blocking_deps = [d for d in step.deps if d in selected_keys and d not in done]
+                failed_deps = [d for d in step.deps if d in failed]
+                if failed_deps:
+                    print(f"\n[SKIP] {step.key} — dep(s) failed: {failed_deps}")
+                    failed.add(step.key)
+                    failed_keys.append(step.key)
+                elif not blocking_deps:
+                    fut = pool.submit(run_step, step, dry)
+                    futures[fut] = step
+                else:
+                    still_pending.append(step)
+            pending = still_pending
+
+            if not futures:
+                break  # nothing running, nothing launchable → stuck (dep cycle or all done)
+
+            # Wait for the next step to finish
+            finished = next(as_completed(futures))
+            step = futures.pop(finished)
+            ok = finished.result()
+            if ok:
+                done.add(step.key)
+            else:
+                failed.add(step.key)
+                failed_keys.append(step.key)
+
+    return failed_keys
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--tier", choices=list(TIERS), default="full",
-                    help="preset bundle of steps (default: full). mini=NASS+USDM only; "
-                         "quick=enough to train an analog XGBoost; full=everything incl. HLS chips")
+                    help="preset bundle of steps. Steps needing missing creds are "
+                         "skipped automatically. mini=NASS+USDM; quick=XGBoost-ready; full=everything")
     ap.add_argument("--force", action="store_true", help="re-run steps even if outputs exist")
     ap.add_argument("--skip", action="append", default=[], help="step key(s) to skip")
     ap.add_argument("--only", action="append", default=[], help="run only these step key(s)")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--workers", type=int, default=4,
+                    help="max parallel download steps (default: 4). "
+                         "GEE allows ~5 concurrent requests before throttling.")
     args = ap.parse_args()
 
     tier_keys = set(TIERS[args.tier])
@@ -184,23 +236,24 @@ def main() -> None:
         print("\nNothing to do.")
         return
 
-    # Pre-flight: verify GEE auth once
-    if any("EE_PROJECT" in s.needs_env for s in selected):
+    # Pre-flight: verify GEE auth once — only if EE_PROJECT is actually set
+    ee_project = os.getenv("EE_PROJECT")
+    if ee_project and any("EE_PROJECT" in s.needs_env for s in selected):
         try:
             import ee  # noqa: F401
-            ee.Initialize(project=os.getenv("EE_PROJECT"))
-            print(f"\nGEE OK (project={os.getenv('EE_PROJECT')})")
+            ee.Initialize(project=ee_project)
+            print(f"\nGEE OK (project={ee_project})")
         except Exception as e:
             print(f"\nGEE init failed: {e}")
             print("Run: earthengine authenticate")
             sys.exit(2)
+    elif any("EE_PROJECT" in s.needs_env for s in selected):
+        print("\nEE_PROJECT not set — GEE steps will be skipped automatically.")
 
     # Execute
     overall_t0 = time.time()
-    failed: list[str] = []
-    for s in selected:
-        if not run_step(s, args.dry_run):
-            failed.append(s.key)
+    print(f"\nRunning up to {args.workers} steps in parallel (dep-ordered).")
+    failed = run_parallel(selected, args.dry_run, workers=args.workers)
     hr("SUMMARY")
     print(f"  total wall: {fmt(time.time() - overall_t0)}")
     print(f"  ran: {len(selected) - len(failed)}/{len(selected)}")

@@ -10,6 +10,7 @@ trainer:
   precision: bf16-mixed
   max_epochs: 25
   log_every_n_steps: 20
+  torch_compile: true
   default_root_dir: models/checkpoints/prithvi_yield
   callbacks:
     - class_path: lightning.pytorch.callbacks.ModelCheckpoint
@@ -64,10 +65,10 @@ data:
     metadata_path: data/processed/labels/chip_metadata.parquet
     holdout_year: 2024
     val_year: 2023
-    batch_size: 16
-    num_workers: 8
-    chips_per_county_train: 8     # random subsample per county per epoch
-    chips_per_county_val: 16
+    batch_size: 64
+    num_workers: 16
+    chips_per_county_train: 16    # random subsample per county per epoch
+    chips_per_county_val: 32
     augmentations:
       - flip_h
       - flip_v

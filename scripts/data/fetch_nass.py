@@ -40,6 +40,9 @@ def _get(params: dict) -> list[dict]:
     r = requests.get(API, params=p, timeout=120)
     if r.status_code == 413:
         raise RuntimeError(f"NASS row limit hit, narrow the query: {params}")
+    if r.status_code == 400:
+        print(f"    NASS 400 (no data for these params) — returning empty")
+        return []
     r.raise_for_status()
     return r.json().get("data", [])
 
