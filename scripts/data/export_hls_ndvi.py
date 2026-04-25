@@ -28,7 +28,15 @@ OUT = ROOT / "data" / "processed" / "features"
 OUT.mkdir(parents=True, exist_ok=True)
 
 STATE_FP = {"IA": "19", "CO": "08", "WI": "55", "MO": "29", "NE": "31"}
-YEARS = range(CFG["project"]["hls_era_start"], CFG["project"]["target_year"] + 1)
+
+# Default to full 2015–target range. Override with HLS_YEARS env var (comma-separated)
+# to fetch a narrow slice — e.g. HLS_YEARS=2024,2025 trims wall time from ~1 hr to ~12 min.
+_env_years = os.getenv("HLS_YEARS", "").strip()
+if _env_years:
+    YEARS = [int(y) for y in _env_years.split(",") if y.strip()]
+    print(f"HLS_YEARS override: {YEARS}")
+else:
+    YEARS = list(range(CFG["project"]["hls_era_start"], CFG["project"]["target_year"] + 1))
 
 
 def init_ee() -> None:
@@ -102,7 +110,7 @@ def main() -> None:
     fc = counties()
     frames = []
     months = list(range(4, 11))                                     # Apr..Oct
-    for y in tqdm(list(YEARS), desc="HLS NDVI years"):
+    for y in tqdm(YEARS, desc="HLS NDVI years"):
         for m in months:
             try:
                 frames.append(aggregate(y, m, fc))

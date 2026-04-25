@@ -1,19 +1,32 @@
 """One-shot orchestrator: download every dataset needed to train.
 
 Usage:
-    python scripts/download_all.py                  # full pipeline (~overnight, includes HLS chips)
-    python scripts/download_all.py --tier mini      # NASS + USDM only (~5 min, no Earth Engine)
-    python scripts/download_all.py --tier quick     # enough to train an XGBoost model (~2 hr)
-    python scripts/download_all.py --tier full      # everything incl. HLS chips for Prithvi (~overnight)
-    python scripts/download_all.py --force          # re-run even if outputs exist
-    python scripts/download_all.py --skip hls       # skip specific step(s)
-    python scripts/download_all.py --only nass      # run only specific step(s)
-    python scripts/download_all.py --dry-run        # print plan, run nothing
+    python scripts/download_all.py                       # full pipeline (~overnight, includes HLS chips)
+    python scripts/download_all.py --tier mini           # NASS + USDM only (~5 min, no creds)
+    python scripts/download_all.py --tier earthdata      # NASA HLS direct, NO Google Earth Engine (~15 min)
+    python scripts/download_all.py --tier sample         # NASS+USDM+HLS NDVI summaries via GEE (~20 min)
+    python scripts/download_all.py --tier quick          # analog-feature pipeline via GEE (~2 hr)
+    python scripts/download_all.py --tier full           # everything incl. Prithvi chips (~overnight)
+    python scripts/download_all.py --force               # re-run even if outputs exist
+    python scripts/download_all.py --skip hls            # skip specific step(s)
+    python scripts/download_all.py --only nass           # run only specific step(s)
+    python scripts/download_all.py --dry-run             # print plan, run nothing
 
 Tiers:
-    mini   = nass, usdm                                          → labels + drought, no EE needed
-    quick  = mini + gridmet, landsat, labels, features, check    → trains an analog-feature XGBoost
-    full   = quick + gnatsgo, hls_ndvi, hls                      → enables Prithvi+LoRA fine-tune
+    mini      = nass, usdm                                       → labels + drought, no creds (~5 min)
+    earthdata = mini + hls_nasa                                  → real HLS scenes, NO GEE NEEDED (~15 min)
+    sample    = mini + hls_ndvi (narrow via HLS_YEARS)           → satellite NDVI via GEE (~20 min)
+    quick     = mini + gridmet, landsat, labels, features, check → analog XGBoost via GEE (~2 hr)
+    full      = quick + gnatsgo, hls_ndvi, hls                   → Prithvi+LoRA via GEE (~overnight)
+
+Credential paths:
+    earthdata tier  → only needs NASS_API_KEY + NASA Earthdata account (~30s signup,
+                      https://urs.earthdata.nasa.gov/users/new)
+    sample/quick/full → also need EE_PROJECT (Google Cloud project with Earth Engine)
+
+Tunable knobs (env vars, set before running):
+    HLS_YEARS=2024,2025      narrow GEE HLS NDVI to specific years (sample tier)
+    HLS_BBOX, HLS_DATE_*     narrow direct NASA HLS download (earthdata tier — see fetch_hls_earthaccess.py)
 
 Each step writes to a known parquet/zarr path; if that path exists and --force is
 not passed, the step is skipped (idempotent).
@@ -73,6 +86,10 @@ STEPS: list[Step] = [
          "scripts/data/export_hls_chips.py",
          ROOT / "data/processed/chips",          # directory; idempotent inside script
          needs_env=("EE_PROJECT",), est="~overnight"),
+    Step("hls_nasa", "HLS scenes direct from NASA LP DAAC (no GEE)",
+         "scripts/data/fetch_hls_earthaccess.py",
+         ROOT / "data/raw/hls/manifest.parquet",
+         est="~10-20 min"),
     Step("labels",   "Build chip metadata + label tables",
          "scripts/training/build_labels_metadata.py",
          ROOT / "data/processed/labels/chip_metadata.parquet",
@@ -92,9 +109,11 @@ STEPS: list[Step] = [
 # quick = enough to train an analog-features XGBoost model end-to-end.
 # full  = everything including the overnight HLS chip export for Prithvi fine-tuning.
 TIERS: dict[str, list[str]] = {
-    "mini":  ["nass", "usdm"],
-    "quick": ["nass", "usdm", "gridmet", "landsat", "labels", "features", "check"],
-    "full":  [s.key for s in STEPS],
+    "mini":     ["nass", "usdm"],
+    "earthdata":["nass", "usdm", "hls_nasa"],   # satellite imagery without GEE setup
+    "sample":   ["nass", "usdm", "hls_ndvi"],   # satellite NDVI summaries via GEE
+    "quick":    ["nass", "usdm", "gridmet", "landsat", "labels", "features", "check"],
+    "full":     [s.key for s in STEPS],
 }
 
 
