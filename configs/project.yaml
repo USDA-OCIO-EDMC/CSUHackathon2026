@@ -1,0 +1,55 @@
+project:
+  name: prithvi-corn-yield-2025
+  states: [IA, CO, WI, MO, NE]
+  target_year: 2025
+  history_start: 2005
+  history_end: 2024
+  hls_era_start: 2015
+  forecast_checkpoints:
+    aug_01: "08-01"
+    sep_01: "09-01"
+    oct_01: "10-01"
+    end_of_season: "12-15"
+
+paths:
+  raw: data/raw
+  interim: data/interim
+  processed: data/processed
+  models: models
+  reports: reports
+
+prithvi:
+  model_id: ibm-nasa-geospatial/Prithvi-EO-2.0-600M-TL
+  backbone_dim: 1024
+  chip_size: 224
+  pixel_size_m: 30
+  bands: [Blue, Green, Red, NarrowNIR, SWIR1, SWIR2]
+  hls_band_map:
+    HLSL30: {Blue: B02, Green: B03, Red: B04, NarrowNIR: B05, SWIR1: B06, SWIR2: B07, Fmask: Fmask}
+    HLSS30: {Blue: B02, Green: B03, Red: B04, NarrowNIR: B8A, SWIR1: B11, SWIR2: B12, Fmask: Fmask}
+  timesteps: 3
+  scale_factor: 10000.0
+
+training:
+  device: cuda
+  precision: bf16
+  batch_size: 16
+  epochs: 25
+  lr: 5.0e-5
+  weight_decay: 1.0e-4
+  lora:
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules: [qkv, proj]
+  cv: leave_one_year_out
+  holdout_year: 2024
+
+uncertainty:
+  analog_k: 5
+  features: [gdd_cum, precip_cum, vpd_p90, usdm_d2_pct, ndvi_anomaly]
+
+env:
+  nass_api_key_env: NASS_API_KEY
+  ee_project_env: EE_PROJECT
+  hf_token_env: HF_TOKEN

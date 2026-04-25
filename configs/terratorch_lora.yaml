@@ -1,0 +1,84 @@
+# TerraTorch config: Prithvi-EO-2.0-600M-TL + LoRA + regression head for corn yield.
+# Trains on county-year HLS chip stacks (3 timesteps, 6 bands, 224x224) with metadata
+# (lat, lon, dates) feeding the TL temporal+location embedding.
+#
+# Run: terratorch fit --config configs/terratorch_lora.yaml
+
+trainer:
+  accelerator: gpu
+  devices: 1
+  precision: bf16-mixed
+  max_epochs: 25
+  log_every_n_steps: 20
+  default_root_dir: models/checkpoints/prithvi_yield
+  callbacks:
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        monitor: val_rmse
+        mode: min
+        save_top_k: 3
+        filename: "epoch{epoch:02d}-rmse{val_rmse:.2f}"
+    - class_path: lightning.pytorch.callbacks.EarlyStopping
+      init_args:
+        monitor: val_rmse
+        patience: 5
+        mode: min
+
+model:
+  class_path: terratorch.tasks.PixelwiseRegressionTask
+  init_args:
+    model_args:
+      backbone: prithvi_eo_v2_600_tl
+      backbone_pretrained: true
+      backbone_pretrained_path: ibm-nasa-geospatial/Prithvi-EO-2.0-600M-TL
+      backbone_in_channels: 6
+      backbone_num_frames: 3
+      backbone_img_size: 224
+      backbone_patch_size: 16
+      # Pool token-level features and regress to a SCALAR yield (bu/acre).
+      head: scalar_regression
+      head_dropout: 0.1
+      head_hidden_dim: 256
+      head_pool: mean             # mean over patch tokens, then over chips per county
+      # LoRA: keep backbone mostly frozen; train rank-16 adapters on attention.
+      peft_config:
+        method: lora
+        r: 16
+        alpha: 32
+        dropout: 0.05
+        target_modules: ["qkv", "proj"]
+        bias: none
+    loss: mse
+    optimizer: AdamW
+    lr: 5.0e-5
+    weight_decay: 1.0e-4
+    scheduler: CosineAnnealingLR
+    scheduler_hparams:
+      T_max: 25
+
+data:
+  class_path: scripts.training.dataset.CornYieldChipDataModule
+  init_args:
+    chip_root: data/processed/chips
+    labels_path: data/processed/labels/county_yield.parquet
+    metadata_path: data/processed/labels/chip_metadata.parquet
+    holdout_year: 2024
+    val_year: 2023
+    batch_size: 16
+    num_workers: 8
+    chips_per_county_train: 8     # random subsample per county per epoch
+    chips_per_county_val: 16
+    augmentations:
+      - flip_h
+      - flip_v
+      - rot90
+    normalize:
+      means: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]   # using raw reflectance; head learns scaling
+      stds:  [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    use_temporal_location: true   # passes (lat, lon, dates) into TL embedding
+
+logger:
+  class_path: lightning.pytorch.loggers.CSVLogger
+  init_args:
+    save_dir: reports/training_logs
+    name: prithvi_600m_tl_lora
