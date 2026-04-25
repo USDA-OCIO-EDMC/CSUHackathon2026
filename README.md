@@ -1,5 +1,9 @@
 Group 22 Spring 26 Hackathon
 
+Python Environment:
+python -m venv Hackathon2026
+source Hackathon2026/bin/activate
+
 Project structure
 cornsight/
 ├── data/
