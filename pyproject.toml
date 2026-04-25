@@ -1,0 +1,69 @@
+[project]
+name = "hack26"
+version = "0.0.1"
+description = "Geospatial AI corn-yield forecasting (CSU hackathon 2026)."
+requires-python = ">=3.11"
+dependencies = [
+    "pandas>=2.2",
+    "geopandas>=1.0",
+    "shapely>=2.0",
+    "pyogrio>=0.9",
+    "pyarrow>=16.0",
+    "requests>=2.32",
+    # CDL: read national GeoTIFF, mask to county polygon, histogram pixel classes.
+    "rasterio>=1.3",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+# Sentinel-2 stack — optional because pystac_client + stackstac drag in xarray,
+# rioxarray, dask, etc. Weather still works without these; the Sentinel fetcher
+# returns empty NDVI/NDWI frames and the merge degrades gracefully.
+sentinel = [
+    "pystac-client>=0.7",
+    "stackstac>=0.5",
+    "planetary-computer>=1.0",
+]
+# TFT model + training stack. Gated because torch+lightning is ~2 GB installed
+# and the engine is fully usable for data assembly without it.
+forecast = [
+    "darts>=0.30",
+    # darts.models eagerly imports this; a stale wheel vs NumPy 2 raises
+    # "numpy.dtype size changed" at import. Pin so pip can resolve a current wheel.
+    "catboost>=1.2.5",
+    "torch>=2.2",
+    "pytorch-lightning>=2.2",
+    "scikit-learn>=1.4",
+    "rich>=13",
+]
+dev = [
+    "pytest>=8.0",
+]
+
+[project.scripts]
+hack26-counties = "engine.counties:_main"
+hack26-cdl = "engine.cdl:_main"
+hack26-weather = "engine.weather.core:_main"
+hack26-nass = "engine.nass.core:_main"
+hack26-dataset = "engine.dataset:_main"
+hack26-train = "engine.model:_main"
+hack26-forecast = "engine.forecast:_main"
+hack26-analogs = "engine.analogs:_main"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# `engine` lives under software/, not at the repo root. Treat software/ as the
+# package source root so `import engine` works from anywhere once installed.
+[tool.setuptools]
+package-dir = {"" = "software"}
+
+[tool.setuptools.packages.find]
+where = ["software"]
+include = ["engine*"]
+
+[tool.pytest.ini_options]
+testpaths = ["software/tests"]
+pythonpath = ["software"]
+addopts = "-ra -q"
