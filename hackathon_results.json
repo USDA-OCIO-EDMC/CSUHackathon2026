@@ -1,0 +1,152 @@
+{
+  "Colorado": {
+    "Aug1_EarlyGrainFill": {
+      "yield_estimate_bu_acre": 116.0,
+      "cone_low_bu_acre": 102.1,
+      "cone_high_bu_acre": 129.9,
+      "mean_ndvi": 0.185,
+      "prithvi_loaded": false
+    },
+    "Sep1_LateGrainFill": {
+      "yield_estimate_bu_acre": 122.3,
+      "cone_low_bu_acre": 111.3,
+      "cone_high_bu_acre": 133.3,
+      "mean_ndvi": 0.185,
+      "prithvi_loaded": false
+    },
+    "Oct1_Maturity": {
+      "yield_estimate_bu_acre": 126.1,
+      "cone_low_bu_acre": 118.5,
+      "cone_high_bu_acre": 133.7,
+      "mean_ndvi": 0.185,
+      "prithvi_loaded": false
+    },
+    "Final_PostHarvest": {
+      "yield_estimate_bu_acre": 128.6,
+      "cone_low_bu_acre": 123.5,
+      "cone_high_bu_acre": 133.7,
+      "mean_ndvi": 0.185,
+      "prithvi_loaded": false
+    }
+  },
+  "Iowa": {
+    "Aug1_EarlyGrainFill": {
+      "yield_estimate_bu_acre": 166.0,
+      "cone_low_bu_acre": 146.1,
+      "cone_high_bu_acre": 185.9,
+      "mean_ndvi": 0.0907,
+      "prithvi_loaded": false
+    },
+    "Sep1_LateGrainFill": {
+      "yield_estimate_bu_acre": 175.0,
+      "cone_low_bu_acre": 159.2,
+      "cone_high_bu_acre": 190.8,
+      "mean_ndvi": 0.0907,
+      "prithvi_loaded": false
+    },
+    "Oct1_Maturity": {
+      "yield_estimate_bu_acre": 180.4,
+      "cone_low_bu_acre": 169.6,
+      "cone_high_bu_acre": 191.2,
+      "mean_ndvi": 0.0907,
+      "prithvi_loaded": false
+    },
+    "Final_PostHarvest": {
+      "yield_estimate_bu_acre": 184.1,
+      "cone_low_bu_acre": 176.7,
+      "cone_high_bu_acre": 191.5,
+      "mean_ndvi": 0.0907,
+      "prithvi_loaded": false
+    }
+  },
+  "Nebraska": {
+    "Aug1_EarlyGrainFill": {
+      "yield_estimate_bu_acre": 165.6,
+      "cone_low_bu_acre": 145.7,
+      "cone_high_bu_acre": 185.5,
+      "mean_ndvi": 0.3328,
+      "prithvi_loaded": false
+    },
+    "Sep1_LateGrainFill": {
+      "yield_estimate_bu_acre": 174.6,
+      "cone_low_bu_acre": 158.9,
+      "cone_high_bu_acre": 190.3,
+      "mean_ndvi": 0.3328,
+      "prithvi_loaded": false
+    },
+    "Oct1_Maturity": {
+      "yield_estimate_bu_acre": 180.0,
+      "cone_low_bu_acre": 169.2,
+      "cone_high_bu_acre": 190.8,
+      "mean_ndvi": 0.3328,
+      "prithvi_loaded": false
+    },
+    "Final_PostHarvest": {
+      "yield_estimate_bu_acre": 183.6,
+      "cone_low_bu_acre": 176.3,
+      "cone_high_bu_acre": 190.9,
+      "mean_ndvi": 0.3328,
+      "prithvi_loaded": false
+    }
+  },
+  "Wisconsin": {
+    "Aug1_EarlyGrainFill": {
+      "yield_estimate_bu_acre": 157.2,
+      "cone_low_bu_acre": 138.3,
+      "cone_high_bu_acre": 176.1,
+      "mean_ndvi": 0.3813,
+      "prithvi_loaded": false
+    },
+    "Sep1_LateGrainFill": {
+      "yield_estimate_bu_acre": 165.7,
+      "cone_low_bu_acre": 150.8,
+      "cone_high_bu_acre": 180.6,
+      "mean_ndvi": 0.3813,
+      "prithvi_loaded": false
+    },
+    "Oct1_Maturity": {
+      "yield_estimate_bu_acre": 170.9,
+      "cone_low_bu_acre": 160.6,
+      "cone_high_bu_acre": 181.2,
+      "mean_ndvi": 0.3813,
+      "prithvi_loaded": false
+    },
+    "Final_PostHarvest": {
+      "yield_estimate_bu_acre": 174.3,
+      "cone_low_bu_acre": 167.3,
+      "cone_high_bu_acre": 181.3,
+      "mean_ndvi": 0.3813,
+      "prithvi_loaded": false
+    }
+  },
+  "Missouri": {
+    "Aug1_EarlyGrainFill": {
+      "yield_estimate_bu_acre": 137.0,
+      "cone_low_bu_acre": 120.6,
+      "cone_high_bu_acre": 153.4,
+      "mean_ndvi": 0.2313,
+      "prithvi_loaded": false
+    },
+    "Sep1_LateGrainFill": {
+      "yield_estimate_bu_acre": 144.4,
+      "cone_low_bu_acre": 131.4,
+      "cone_high_bu_acre": 157.4,
+      "mean_ndvi": 0.2313,
+      "prithvi_loaded": false
+    },
+    "Oct1_Maturity": {
+      "yield_estimate_bu_acre": 148.9,
+      "cone_low_bu_acre": 140.0,
+      "cone_high_bu_acre": 157.8,
+      "mean_ndvi": 0.2313,
+      "prithvi_loaded": false
+    },
+    "Final_PostHarvest": {
+      "yield_estimate_bu_acre": 151.9,
+      "cone_low_bu_acre": 145.8,
+      "cone_high_bu_acre": 158.0,
+      "mean_ndvi": 0.2313,
+      "prithvi_loaded": false
+    }
+  }
+}
