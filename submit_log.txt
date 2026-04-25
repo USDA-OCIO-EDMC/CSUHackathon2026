@@ -1,0 +1,10 @@
+nohup: ignoring input
+21:44:10 Waiting for slot... (8/4 running)
+21:45:14 Waiting for slot... (5/4 running)
+21:46:19 Waiting for slot... (5/4 running)
+21:47:23 Waiting for slot... (5/4 running)
+21:48:27 Waiting for slot... (5/4 running)
+21:49:31 Waiting for slot... (5/4 running)
+21:50:35 Waiting for slot... (5/4 running)
+21:51:41 Waiting for slot... (5/4 running)
+21:52:45 Waiting for slot... (5/4 running)

@@ -21,6 +21,7 @@ from pathlib import Path
 import numpy as np
 import torch
 import boto3
+import rasterio
 
 # ---------------------------------------------------------------------------
 # Prithvi-100M normalization constants (raw HLS DN units, NOT reflectance!)
@@ -137,6 +138,88 @@ def _crop_tiles(arr_6hw, tile_size=TILE_SIZE):
     return tiles
 
 
+def _crop_tiles_with_mask(arr_6hw, mask_hw, tile_size=TILE_SIZE, min_corn_frac=0.05):
+    """
+    Like _crop_tiles, but also takes a (H, W) boolean corn mask and:
+      - drops tiles whose corn fraction < min_corn_frac
+      - zeros out non-corn pixels inside the kept tiles (post-normalization)
+
+    Returns
+    -------
+    kept_tiles : list of (6, tile_size, tile_size) arrays
+    n_total    : int, total candidate tiles before filtering
+    """
+    _, H, W = arr_6hw.shape
+    kept = []
+    n_total = 0
+    threshold = int(min_corn_frac * tile_size * tile_size)
+    for r in range(0, H - tile_size + 1, tile_size):
+        for c in range(0, W - tile_size + 1, tile_size):
+            n_total += 1
+            tile_mask = mask_hw[r:r + tile_size, c:c + tile_size]
+            if tile_mask.sum() < threshold:
+                continue
+            tile = arr_6hw[:, r:r + tile_size, c:c + tile_size].copy()
+            # Zero out non-corn pixels (post-normalization, so 0 == band mean)
+            tile[:, ~tile_mask] = 0.0
+            kept.append(tile)
+    return kept, n_total
+
+
+# ---------------------------------------------------------------------------
+# CDL corn mask -> granule grid
+# ---------------------------------------------------------------------------
+
+_STATE_FIPS = {"IA": "19", "CO": "08", "WI": "55", "MO": "29", "NE": "31"}
+_CORN_CLASS = 1
+
+
+def load_corn_mask_for_grid(bucket, state_abbr, year, profile):
+    """
+    Pull the CDL corn raster for (state, year) from S3 and reproject it onto the
+    grid described by `profile` (a rasterio profile dict from the HLS read).
+
+    Returns a (H, W) bool array, True == corn.  Returns None if no CDL is
+    available (e.g. Colorado pre-2009).  Falls back to most recent prior year
+    if the exact year is missing.
+    """
+    from rasterio.io import MemoryFile
+    from rasterio.warp import Resampling, reproject
+    import boto3
+
+    fips = _STATE_FIPS[state_abbr]
+    s3 = boto3.client("s3")
+
+    # Pick the most recent CDL <= requested year
+    candidates = [year] + list(range(year - 1, 2007, -1))
+    key = None
+    for y in candidates:
+        k = f"raw/cdl/{fips}/{y}.tif"
+        try:
+            s3.head_object(Bucket=bucket, Key=k)
+            key = k
+            break
+        except Exception:
+            continue
+    if key is None:
+        return None
+
+    H, W = profile["height"], profile["width"]
+    out = np.zeros((H, W), dtype=np.uint8)
+    obj = s3.get_object(Bucket=bucket, Key=key)
+    with MemoryFile(obj["Body"].read()) as mf, mf.open() as src:
+        reproject(
+            source=rasterio.band(src, 1),
+            destination=out,
+            src_transform=src.transform,
+            src_crs=src.crs,
+            dst_transform=profile["transform"],
+            dst_crs=profile["crs"],
+            resampling=Resampling.nearest,
+        )
+    return out == _CORN_CLASS
+
+
 # ---------------------------------------------------------------------------
 # Feature extraction
 # ---------------------------------------------------------------------------
@@ -195,6 +278,84 @@ def extract_features_from_array(model, arr_6hw, max_tiles=None):
 
     # Mean-pool across all tiles -> single (embed_dim,) granule vector
     return np.stack(all_embeddings, axis=0).mean(axis=0)
+
+
+def _embed_tiles(model, tiles):
+    """Run a list of (6, 224, 224) preprocessed tiles through Prithvi and mean-pool."""
+    device = next(model.parameters()).device
+    all_embeddings = []
+    for tile in tiles:
+        tensor = (
+            torch.from_numpy(tile)
+            .unsqueeze(0)
+            .unsqueeze(2)
+            .to(device)
+        )
+        with torch.no_grad():
+            out = model(tensor)
+        latent = out[0] if isinstance(out, tuple) else out
+        embedding = latent[:, 1:, :].mean(dim=1).squeeze(0).cpu().numpy()
+        all_embeddings.append(embedding)
+    return np.stack(all_embeddings, axis=0).mean(axis=0)
+
+
+def extract_features_corn_only(
+    model,
+    arr_6hw,
+    profile,
+    state_abbr,
+    year,
+    bucket,
+    min_corn_frac=0.05,
+    max_tiles=None,
+    verbose=False,
+):
+    """
+    Same as extract_features_from_array, but skips tiles with no corn coverage
+    using the cached CDL corn mask in S3.
+
+    Parameters
+    ----------
+    arr_6hw       : (6, H, W) HLS granule array (raw 0-10000)
+    profile       : rasterio profile from stack_granule_cloud (gives CRS+transform)
+    state_abbr    : e.g. "IA"
+    year          : e.g. 2023 (used to pick CDL year)
+    bucket        : S3 bucket holding raw/cdl/{fips}/{year}.tif
+    min_corn_frac : drop tiles with corn fraction below this (0.0-1.0).
+                    Default 0.05 keeps tiles with >= 5% corn pixels.
+
+    Returns
+    -------
+    (features (768,), kept_tiles, total_tiles)
+
+    Falls back to no-mask extraction if no CDL is available for that state/year.
+    """
+    mask = load_corn_mask_for_grid(bucket, state_abbr, year, profile)
+    if mask is None:
+        if verbose:
+            print(f"    no CDL mask for {state_abbr} {year} — using full granule")
+        feats = extract_features_from_array(model, arr_6hw, max_tiles=max_tiles)
+        n = len(_crop_tiles(preprocess_tile(arr_6hw)))
+        return feats, n, n
+
+    arr = preprocess_tile(arr_6hw)
+    tiles, n_total = _crop_tiles_with_mask(arr, mask, min_corn_frac=min_corn_frac)
+
+    if verbose:
+        print(f"    corn-filtered tiles: {len(tiles)} / {n_total} "
+              f"(min_corn_frac={min_corn_frac:.2f})")
+
+    if not tiles:
+        # No tile met the corn threshold — granule is essentially non-corn.
+        # Return zeros so the caller can decide to drop it.
+        return np.zeros(768, dtype=np.float32), 0, n_total
+
+    if max_tiles:
+        tiles = tiles[:max_tiles]
+
+    feats = _embed_tiles(model, tiles)
+    return feats, len(tiles), n_total
+
 
 
 def extract_features_batch(model, arrays, max_tiles_per_granule=16):

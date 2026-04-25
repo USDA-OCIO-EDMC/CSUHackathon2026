@@ -420,6 +420,80 @@ def test_real_weather_api():
         return None
 
 
+def test_mock_training_2024_2025():
+    """Test training and validation with mock data for 2024 and 2025."""
+    print("\n[MOCK TEST] Training and Validation for 2024-2025")
+    print("-" * 60)
+    
+    try:
+        from train_model import prepare_matrices, train_and_validate
+        
+        print("  Creating mock seasonal signatures for 2005-2025...")
+        
+        # Simulate 20 years of historical data for one county
+        years = range(2005, 2026)
+        seasonal_signatures_list = []
+        for year in years:
+            seasonal_signatures_list.append({
+                'year': year,
+                'state_fips': '19',
+                'county': 'STORY',
+                'embedding_vector': np.random.rand(768)
+            })
+        
+        seasonal_signatures = pd.DataFrame(seasonal_signatures_list)
+        
+        # Mock yield data for 2005-2023 (historical)
+        yield_df_list = []
+        for year in range(2005, 2025):
+             yield_df_list.append({
+                'year': year,
+                'state_fips': '19',
+                'county': 'STORY',
+                'yield_bu_acre': 180 + np.random.randn() * 10
+            })
+        
+        # Add mock yield for 2024 and 2025 for validation
+        yield_df_list.append({'year': 2024, 'state_fips': '19', 'county': 'STORY', 'yield_bu_acre': 190})
+        yield_df_list.append({'year': 2025, 'state_fips': '19', 'county': 'STORY', 'yield_bu_acre': 195})
+
+        yield_df = pd.DataFrame(yield_df_list)
+
+        print(f"  ✓ Created {len(seasonal_signatures)} signature records")
+        print(f"  ✓ Created {len(yield_df)} yield records")
+
+        # Filter for 2024 and 2025 for this specific test
+        seasonal_signatures_test = seasonal_signatures[seasonal_signatures['year'].isin([2024, 2025])]
+        yield_df_test = yield_df[yield_df['year'].isin([2024, 2025])]
+
+        print("\n  Preparing matrices for 2024-2025...")
+        X, y = prepare_matrices(seasonal_signatures_test, yield_df_test)
+        
+        print(f"  ✓ Feature matrix X shape: {X.shape}")
+        print(f"  ✓ Target vector y shape: {y.shape}")
+        
+        assert X.shape == (2, 768), f"Expected X shape (2, 768), got {X.shape}"
+        assert y.shape == (2,), f"Expected y shape (2,), got {y.shape}"
+        
+        print("\n  Running training and validation (LOOCV)...")
+        mae, actuals, preds = train_and_validate(X, y)
+        
+        print(f"  ✓ MAE: {mae:.2f}")
+        print(f"  ✓ Actuals: {actuals}")
+        print(f"  ✓ Predictions: {preds}")
+        
+        assert mae > 0, "MAE should be greater than 0"
+        
+        print("\n  ✓ Mock training test for 2024-2025 passed")
+        return True
+        
+    except Exception as e:
+        print(f"  ✗ Error in mock training test: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+
 # ===========================================================================
 # MAIN TEST RUNNER
 # ===========================================================================
@@ -445,6 +519,7 @@ def run_all_tests(mode="mock"):
         results['mock_weather'] = test_mock_weather_vectors()
         results['mock_fusion'] = test_mock_feature_fusion()
         results['mock_analog'] = test_mock_get_analog_years()
+        results['mock_training_2024_2025'] = test_mock_training_2024_2025()
         results['full_pipeline'] = test_full_mock_pipeline()
     
     elif mode == "real":

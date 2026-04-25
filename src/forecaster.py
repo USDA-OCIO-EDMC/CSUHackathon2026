@@ -104,9 +104,12 @@ def get_analog_years(
 
     current_vector = current_sig['embedding_vector'].values[0].reshape(1, -1)
 
-    history_sigs = seasonal_signatures[seasonal_signatures['year'] < query_year].copy()
+    history_sigs = seasonal_signatures[
+        (seasonal_signatures['year'] < query_year) &
+        (seasonal_signatures['state_fips'] == state_fips)
+    ].copy()
     if history_sigs.empty:
-        return f"No history (year < {query_year}) available."
+        return f"No history (year < {query_year}) available for state {state_fips}."
 
     # 6. Cosine similarity
     history_vectors = np.stack(history_sigs['embedding_vector'].values)

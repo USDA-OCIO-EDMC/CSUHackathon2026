@@ -23,11 +23,16 @@ import argparse
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv(usecwd=False), override=True)
 from tqdm import tqdm
 from datetime import datetime, timedelta
 import warnings
 warnings.filterwarnings('ignore')
 
+import io
+import boto3
 import torch
 import rasterio
 from rasterio.features import geometry_mask
@@ -137,6 +142,27 @@ def get_granule_bbox(profile):
 
 
 # ---------------------------------------------------------------------------
+# Granule date parsing
+# ---------------------------------------------------------------------------
+
+# HLS GranuleUR format: HLS.{L30|S30}.T{tile}.{YYYY}{DDD}T{HHMMSS}.v2.0
+_GRANULE_DATE_RE = re.compile(r"\.(\d{4})(\d{3})T\d{6}\.")
+
+
+def _month_from_granule_id(granule_id: str, fallback: int) -> int:
+    """Extract acquisition month from HLS GranuleUR. Returns fallback on parse failure."""
+    m = _GRANULE_DATE_RE.search(granule_id or "")
+    if not m:
+        return fallback
+    try:
+        year = int(m.group(1))
+        doy = int(m.group(2))
+        return (datetime(year, 1, 1) + timedelta(days=doy - 1)).month
+    except (ValueError, OverflowError):
+        return fallback
+
+
+# ---------------------------------------------------------------------------
 # Main Pipeline
 # ---------------------------------------------------------------------------
 
@@ -202,24 +228,6 @@ def extract_monthly_embeddings(
     
     # Extract embeddings from each granule
     print(f"\n[2/3] Extracting embeddings from granules...")
-# HLS GranuleUR format: HLS.{L30|S30}.T{tile}.{YYYY}{DDD}T{HHMMSS}.v2.0
-_GRANULE_DATE_RE = re.compile(r"\.(\d{4})(\d{3})T\d{6}\.")
-
-
-def _month_from_granule_id(granule_id: str, fallback: int) -> int:
-    """Extract acquisition month from HLS GranuleUR. Returns fallback on parse failure."""
-    m = _GRANULE_DATE_RE.search(granule_id or "")
-    if not m:
-        return fallback
-    try:
-        year = int(m.group(1))
-        doy = int(m.group(2))
-        return (datetime(year, 1, 1) + timedelta(days=doy - 1)).month
-    except (ValueError, OverflowError):
-        return fallback
-
-
-    
     for stacked, profile, granule_id in iter_granules_cloud(
         state_abbr, year, forecast_date, max_granules=None
     ):
@@ -242,7 +250,7 @@ def _month_from_granule_id(granule_id: str, fallback: int) -> int:
             
             # Extract Prithvi embedding
             try:
-                embedding = extract_features_from_array(model, stacked, max_tiles=4)
+                embedding = extract_features_from_array(model, stacked, max_tiles=1)
             except Exception as e:
                 print(f"    ⚠ Could not extract features from {granule_id}: {e}")
                 continue
@@ -276,6 +284,7 @@ def build_prithvi_embeddings(
     forecast_date: str = "final",
     device: str = "cpu",
     output_dir: str = None,
+    bucket: str = None,
 ) -> pd.DataFrame:
     """
     Build a complete Prithvi embeddings DataFrame for a state/year.
@@ -356,13 +365,22 @@ def build_prithvi_embeddings(
         print(f"  Embedding dimension: {df['prithvi_embedding'].iloc[0].shape}")
     print(f"{'='*70}")
     
-    # Save if requested
+    # Save locally if requested
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
         output_path = f"{output_dir}/prithvi_embeddings_{state_abbr}_{year}.parquet"
         df.to_parquet(output_path, index=False)
-        print(f"\n✓ Saved to: {output_path}")
-    
+        print(f"\n✓ Saved locally: {output_path}")
+
+    # Upload to S3 if bucket provided
+    if bucket and not df.empty:
+        s3_key = f"processed/prithvi_embeddings/{state_abbr}/{year}/{forecast_date}/embeddings.parquet"
+        buf = io.BytesIO()
+        df.to_parquet(buf, index=False)
+        buf.seek(0)
+        boto3.client("s3").put_object(Bucket=bucket, Key=s3_key, Body=buf.read())
+        print(f"✓ Uploaded to s3://{bucket}/{s3_key}")
+
     return df
 
 
@@ -371,29 +389,31 @@ def build_all_states(
     forecast_date: str = "final",
     device: str = "cpu",
     output_dir: str = DEFAULT_OUTPUT_DIR,
+    bucket: str = None,
 ) -> pd.DataFrame:
     """
     Build Prithvi embeddings for all 5 target states, then combine.
-    
+
     Parameters
     ----------
     year : int
     forecast_date : str
     device : str
     output_dir : str
-    
+    bucket : optional S3 bucket name to upload each state's parquet
+
     Returns
     -------
     pd.DataFrame : combined embeddings for all states
     """
-    
+
     all_dfs = []
-    
+
     for state_abbr in STATES.keys():
         print(f"\n\n{'*'*70}")
         print(f"PROCESSING STATE: {state_abbr}")
         print(f"{'*'*70}")
-        
+
         try:
             df = build_prithvi_embeddings(
                 state_abbr=state_abbr,
@@ -401,6 +421,7 @@ def build_all_states(
                 forecast_date=forecast_date,
                 device=device,
                 output_dir=output_dir,
+                bucket=bucket,
             )
             if not df.empty:
                 all_dfs.append(df)
@@ -459,6 +480,12 @@ if __name__ == "__main__":
         help="Output directory for parquet files",
     )
     parser.add_argument(
+        "--bucket",
+        type=str,
+        default=None,
+        help="S3 bucket to upload parquet results (e.g. cornsight-data)",
+    )
+    parser.add_argument(
         "--all-states",
         action="store_true",
         help="Process all 5 states and combine",
@@ -472,6 +499,7 @@ if __name__ == "__main__":
             forecast_date=args.forecast_date,
             device=args.device,
             output_dir=args.output_dir,
+            bucket=args.bucket,
         )
     else:
         df = build_prithvi_embeddings(
@@ -480,4 +508,5 @@ if __name__ == "__main__":
             forecast_date=args.forecast_date,
             device=args.device,
             output_dir=args.output_dir,
+            bucket=args.bucket,
         )
