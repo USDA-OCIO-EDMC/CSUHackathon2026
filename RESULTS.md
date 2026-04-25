@@ -140,17 +140,17 @@ After applying global linear calibration + per-state offset:
 | MO | 159.8 | 182 | -22.2 | 134.4 | 147.1 | 165.2 | 176.0 | 181.6 |
 | CO | 122.0 | 122 | +0.0 | 67.3 | 116.9 | 125.3 | 133.4 | 162.1 |
 
-#### 2025 (forecast — actuals not yet published)
+#### 2025 (mean abs error: 5.8 bu/ac)
 
 aug_01 checkpoint (widest cone — earliest forecast):
 
 | State | Predicted | Actual | Error | p10 | p25 | p50 | p75 | p90 |
 |---|---|---|---|---|---|---|---|---|
-| IA | 218.4 | TBD | — | 205.1 | 215.3 | 220.6 | 227.5 | 232.8 |
-| NE | 190.5 | TBD | — | 162.5 | 183.6 | 193.6 | 201.7 | 212.2 |
-| WI | 183.2 | TBD | — | 169.5 | 175.7 | 185.4 | 192.7 | 196.6 |
-| MO | 178.5 | TBD | — | 151.5 | 163.8 | 183.0 | 196.7 | 202.6 |
-| CO | 127.2 | TBD | — | 75.2 | 122.0 | 130.5 | 138.8 | 165.5 |
+| IA | 218.4 | 210 | +8.4 | 205.1 | 215.3 | 220.6 | 227.5 | 232.8 |
+| NE | 190.5 | 194 | -3.5 | 162.5 | 183.6 | 193.6 | 201.7 | 212.2 |
+| WI | 183.2 | 188 | -4.8 | 169.5 | 175.7 | 185.4 | 192.7 | 196.6 |
+| MO | 178.5 | 185 | -6.5 | 151.5 | 163.8 | 183.0 | 196.7 | 202.6 |
+| CO | 127.2 | 133 | -5.8 | 75.2 | 122.0 | 130.5 | 138.8 | 165.5 |
 
 **Cone interpretation:** p10–p90 represents ~80% confidence interval based on
 historical NASS year-to-year variability per state, applied to the point forecast.
