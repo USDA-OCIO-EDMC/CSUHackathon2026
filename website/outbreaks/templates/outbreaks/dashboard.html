@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fly Spy: Fruit Fly Origin & Seasonal Hotspot Explorer</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/static/outbreaks/styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <h1>Fly Spy</h1>
+      <p class="subhead">
+        Fruit Fly Origin & Seasonal Hotspot Explorer For Mexican Fruit Flies, Oriental Fruit Flies and Mediterrenean Fruit Flies. Ranking possible countries of origin, compararing monthly traffic with detection counts, and visualizing seasonal airport/county hotspots.</p>
+    </div>
+    <div class="summary" id="summaryCards"></div>
+  </header>
+
+  <main>
+    <section class="panel controls">
+      <label>Traffic metric
+        <select id="metric">
+          <option value="freight" selected>Air freight</option>
+          <option value="passengers">Passengers</option>
+          <option value="flights">Performed flights</option>
+          <option value="mail">Mail</option>
+          <option value="payload">Payload</option>
+        </select>
+      </label>
+      <label>Lag months
+        <select id="lag">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </label>
+      <label>State
+        <select id="state"><option value="all">All states</option></select>
+      </label>
+      <label>Season
+        <select id="season">
+          <option value="all">All</option>
+          <option value="winter">Winter</option>
+          <option value="spring">Spring</option>
+          <option value="summer">Summer</option>
+          <option value="fall">Fall</option>
+        </select>
+      </label>
+      <label>Year
+        <select id="year"><option value="">All years</option></select>
+      </label>
+      <button id="refresh">Refresh analysis</button>
+    </section>
+
+    <section class="grid two">
+      <article class="panel">
+        <div class="panel-title">
+          <h2>Likely origin countries</h2>
+          <p>Only inbound airport records within 60 miles of a county centroid are included. Risk score combines positive lagged correlation, traffic volume, and detection volume. A 2.5 country of origin scalar is applied if the flies are native to the country importing. </p>
+        </div>
+        <canvas id="countryChart" height="150"></canvas>
+        <div class="table-wrap">
+          <table id="countryTable">
+            <thead><tr><th>Country</th><th>Corr.</th><th>Traffic</th><th>Counties</th><th>Risk</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </article>
+      <article class="panel">
+        <div class="panel-title">
+          <h2>Fruit Fly Outbreak Compared to International Inbound Flights From 2020-2025 </h2>
+          <p>Click a country row to plot inbound flight counts against fruit fly detections (shipment volume excluded).</p>
+        </div>
+        <canvas id="timeChart" height="230"></canvas>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title">
+        <h2>Monthly Relative Fruit Fly Outbreak Risk</h2>
+        <p>Relative risk index based on ratio of monthly detection totals over max monthly total.</p>
+      </div>
+      <canvas id="monthlyRiskChart" height="170"></canvas>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title">
+        <h2>Seasonal hotspot map</h2>
+        <p>Orange circles are detections by county centroid. Gold circles are inbound destination airports sized by the selected traffic metric. Port totals are listed below the map.</p>
+      </div>
+      <div id="map"></div>
+      <h3>Container freight context by port</h3>
+      <div class="table-wrap small">
+        <table id="portsTable"><thead><tr><th>Year</th><th>Port</th><th>State</th><th>Total foreign loaded</th></tr></thead><tbody></tbody></table>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="/static/outbreaks/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+PORT NAME,STATE,DOMESTIC,,,,,FOREIGN,,,Grand
+,,InBound ,,OutBound ,,Total Domestic,InBound ,OutBound ,Total Foreign,Total
+,,Loaded,Empty,Loaded,Empty,,Loaded,Loaded,Loaded,Loaded
+"Port of Los Angeles, CA",CA,0,0,0,0,0,"5,770,038","1,267,948","7,037,986","7,037,986"
+"Port of Long Beach, CA",CA,"44,883","19,515","336,118","2,036","402,551","4,938,264","1,079,641","6,017,905","6,398,905"
+"Port Authority of New York and New Jersey, NY & NJ","NY,NJ","13,836","1,366","14,448","1,366","31,016","4,956,071","1,319,723","6,275,794","6,304,078"
+"Port of Savannah, GA",GA,0,0,0,0,0,"2,881,608","1,354,292","4,235,900","4,235,900"
+"Port of Virginia, VA",VA,"19,983",0,"26,685",0,"46,668","1,733,202","990,095","2,723,297","2,769,965"
+"Port of Houston Authority of Harris County, TX",TX,0,0,0,0,0,"1,751,880","1,015,963","2,767,842","2,767,842"
+"Port of Charleston, SC",SC,0,0,0,0,0,"1,375,112","797,082","2,172,194","2,172,194"
+"Port of Oakland, CA",CA,"18,912","46,883","89,084",979,"155,858","1,080,202","721,102","1,801,304","1,909,299"
+"Tacoma, WA",WA,"108,559","163,424","364,107","1,461","637,551","846,695","364,251","1,210,946","1,683,612"
+"Port of Seattle, WA",WA,"55,115","111,170","102,711","17,658","286,653","653,474","317,600","971,074","1,128,900"
+"Jacksonville, FL",FL,"117,642","169,300","518,112","4,169","809,224","208,748","113,620","322,368","958,123"
+"PortMiami, FL",FL,0,0,0,0,0,"580,571","339,803","920,374","920,374"
+"San Juan, PR",PR,"455,741","4,666","162,137","193,253","815,797","216,484","61,790","278,274","896,152"
+"Honolulu, O'ahu, HI",HI,"509,164","152,884","306,063","133,928","1,102,038","26,180","21,337","47,517","862,743"
+"Baltimore, MD",MD,"26,483",0,"18,239",0,"44,722","486,108","231,061","717,169","761,891"
+"Port Everglades, FL",FL,0,0,0,0,0,"377,500","349,372","726,871","726,871"
+"Philadelphia Regional Port Authority, PA",PA,"17,657",0,"18,589",0,"36,246","503,740","122,138","625,878","662,124"
+"Mobile, AL",AL,0,0,0,0,0,"269,857","149,576","419,433","419,433"
+"Port of Alaska, AK",AK,"314,496","1,288","99,965","129,127","544,876",63,"1,138","1,200","415,661"
+"Port of New Orleans, LA",LA,0,0,0,0,0,"133,755","243,759","377,514","377,514"
+"Wilmington, NC",NC,0,0,0,0,0,"121,728","129,421","251,149","251,149"
+"Wilmington, DE",DE,0,0,0,0,0,"186,510","12,826","199,337","199,337"
+"Port of Palm Beach District, FL",FL,0,0,0,0,0,"25,310","171,233","196,544","196,544"
+"South Jersey Port Corporation, NJ",NJ,"44,495","23,953","54,239",497,"123,184","66,382","6,227","72,608","171,343"
+"Boston, MA",MA,0,0,0,0,0,"99,990","61,172","161,162","161,162"
+"Oxnard Harbor District, CA",CA,0,0,0,0,0,"114,205","26,608","140,812","140,812"
+"Port of Gulfport, MS",MS,0,0,0,0,0,"84,828","50,058","134,887","134,887"
+"Guaynabo, PR",PR,"116,611",0,0,0,"116,611",0,0,0,"116,611"
+"Juneau, AK",AK,"81,814","13,197","24,244","39,130","158,384",0,0,0,"106,058"
+"Tampa Port Authority, FL",FL,0,0,0,0,0,"84,687","15,349","100,036","100,036"
+"Ketchikan, AK",AK,"22,628","7,932","67,459","44,683","142,702",0,0,0,"90,087"
+"Kahului, Maui, HI",HI,"74,074","2,886","11,453","56,351","144,764",1,0,1,"85,528"
+"Kawaihae, Hawai'i, HI",HI,"68,937","1,646","15,547","46,342","132,472",0,0,0,"84,484"
+"Port of Portland, OR",OR,0,0,0,0,0,"49,618","33,577","83,196","83,196"
+"San Diego Unified Port District, CA",CA,0,0,0,0,0,"78,376","4,735","83,111","83,111"
+"Petersburg, AK",AK,"26,343","9,577","51,307","24,160","111,387",0,0,0,"77,650"
+"Manatee County Port Authority, FL",FL,0,0,0,0,0,"69,801","1,074","70,875","70,875"
+"Port Freeport, TX",TX,0,0,0,0,0,"34,554","28,744","63,297","63,297"
+"Unalaska Island, AK",AK,"21,378","13,664","14,886","11,185","61,113",113,"26,238","26,351","62,616"
+"Port of Everett, WA",WA,0,0,0,0,0,"32,589","8,633","41,221","41,221"
+"Nawiliwili, Kaua'i, HI",HI,"33,950","1,829","6,668","25,742","68,188",0,0,0,"40,618"
+"Hilo, Hawai'i, HI",HI,"24,855","3,485","8,915","14,533","51,788",0,0,0,"33,770"
+"Whittier, AK",AK,"29,342","3,649","3,678","3,822","40,491",47,0,47,"33,067"
+"Panama City Port Authority, FL",FL,0,0,0,0,0,"26,043","6,367","32,409","32,409"
+"Galveston, TX",TX,0,0,0,0,0,"18,241","10,560","28,801","28,801"
+"Port of Vancouver USA, WA",WA,0,"24,604","24,438",0,"49,042",524,0,524,"24,962"
+"Portland, ME",ME,0,0,0,0,0,"18,654",0,"18,654","18,654"
+"Kodiak, AK",AK,"10,144","2,533","7,542","5,117","25,337",0,296,296,"17,983"
+"Haines Borough, AK",AK,"8,417",672,"3,392","2,561","15,041",0,0,0,"11,809"
+"Skagway, AK",AK,"8,283","1,858","1,945","3,224","15,309",0,0,0,"10,228"
+"Old Harbor, AK",AK,0,0,0,0,0,33,"7,181","7,214","7,214"
+"Cordova, AK",AK,"2,018","2,322","3,501",881,"8,722",0,0,0,"5,519"
+"Nome, AK",AK,"3,826",960,694,970,"6,451",0,0,0,"4,521"
+"Kake, AK",AK,782,103,"3,657","1,629","6,171",0,0,0,"4,439"
+"Wrangell, AK",AK,"2,331",341,"2,049","1,352","6,074",0,0,0,"4,380"
+"False Pass, AK",AK,285,"2,190","3,072",481,"6,028",0,0,0,"3,357"
+"Yakutat, AK",AK,"2,498",290,514,"1,685","4,986",0,0,0,"3,012"
+"Kaumalapau, Lana'i, HI",HI,"2,185",236,605,"1,025","4,050",0,0,0,"2,789"
+"Dillingham, AK",AK,"1,671",632,724,491,"3,518",0,0,0,"2,395"
+"Bethel, AK",AK,"1,384",274,571,425,"2,653",0,0,0,"1,954"
+"Ocean Highway and Port Authority, FL",FL,0,0,0,0,0,623,"1,094","1,717","1,717"
+"Hoonah, AK",AK,"1,116",274,233,320,"1,943",0,0,0,"1,349"
+"Utqiagvik (Barrow), AK",AK,992,221,67,171,"1,451",0,0,0,"1,058"
+"Valdez, AK",AK,11,482,"1,025",839,"2,357",0,0,0,"1,036"
+"Cleveland-Cuyahoga County, OH",OH,0,0,0,0,0,976,0,976,976
+"Kaunakakai, Moloka'i, HI",HI,710,86,151,347,"1,294",0,0,0,860
+"Clallam County Port District, WA",WA,0,0,0,0,0,775,0,775,775
+"Canaveral Port District, FL",FL,0,0,0,0,0,533,237,770,770
+"San Francisco Port Commission, CA",CA,0,0,0,0,0,86,603,689,689
+"Bellingham, WA",WA,0,0,0,0,0,606,0,606,606
+"Corpus Christi, TX",TX,0,0,0,0,0,594,0,594,594
+"Texas City, TX",TX,0,0,0,0,0,374,203,576,576
+"Kivalina, AK",AK,130,37,166,817,"1,150",192,0,192,488
+"King Cove, AK",AK,123,0,179,0,302,0,0,0,302
+"Wainwright, AK",AK,118,13,182,101,413,0,0,0,299
+"Port of Longview, WA",WA,0,0,0,0,0,273,0,273,273
+"Port of Pensacola, FL",FL,0,0,0,0,0,211,0,211,211
+"Metlakatla, AK",AK,1,781,140,592,"1,514",0,0,0,141
+"Searsport, ME",ME,0,0,0,0,0,101,0,101,101
+"Port Arthur, TX",TX,0,0,0,0,0,85,1,86,86
+"Shishmaref, AK",AK,32,7,44,18,101,0,0,0,76
+"Fall River Port Authority, MA",MA,0,0,0,0,0,74,0,74,74
+"Point Hope, AK",AK,66,0,6,86,159,0,0,0,72
+"Port of South Louisiana, LA",LA,0,0,0,0,0,21,31,52,52
+"Port of Green Bay, WI",WI,0,0,0,0,0,35,0,35,35
+"Greater Lafourche Port Commission, LA",LA,0,0,0,0,0,32,0,32,32
+"Morehead City, NC",NC,0,0,0,0,0,20,11,31,31
+"Duluth-Superior, MN and WI",WI,0,0,0,0,0,30,0,30,30
+"Brevig Mission, AK",AK,0,0,28,9,37,0,0,0,28
+"Stockton Port District, CA",CA,0,0,0,0,0,24,0,24,24
+"Port Moller, AK",AK,23,13,0,34,70,0,0,0,23
+"Kaktovik, AK",AK,23,2,0,0,25,0,0,0,23
+"Beaumont, TX",TX,0,0,0,0,0,14,8,22,22
+"Rogers City, MI",MI,0,0,0,0,0,19,0,19,19
+"Richmond, CA",CA,0,0,0,0,0,16,0,16,16
+"Kalaeloa Barbers Point, O'ahu, HI",HI,0,0,0,0,0,12,0,12,12
+"Plaquemines Port, Harbor and Terminal District, LA",LA,0,0,0,0,0,10,0,10,10
+"Port of Brunswick, GA",GA,0,0,0,0,0,9,0,9,9
+"Lake Charles Harbor and Terminal District, LA",LA,0,0,0,0,0,9,0,9,9
+"Cheboygan, MI",MI,0,0,0,0,0,7,0,7,7
+"Richmond, VA",VA,0,0,0,0,0,7,0,7,7
+"Port of Providence, RI",RI,0,0,0,0,0,7,0,7,7
+"Illinois International Port District, IL",IL,0,0,0,0,0,6,0,6,6
+"Humboldt Bay Harbor, Recreation and Conservation District, CA",CA,0,0,0,0,0,4,0,4,4
+"Port Milwaukee, WI",WI,0,0,0,0,0,4,0,4,4
+"Yabucoa, PR",PR,0,0,0,0,0,2,0,2,2
+"Rochester, NY",NY,0,0,0,0,0,2,0,2,2
+"Oregon International Port of Coos Bay, OR",OR,0,0,0,0,0,2,0,2,2
+"Albany Port District, NY",NY,0,0,0,0,0,2,0,2,2
+"Port of Anacortes, WA",WA,0,0,0,0,0,2,0,2,2
+"Detroit/Wayne County Port Authority, MI",MI,0,0,0,0,0,2,0,2,2
+"Brownsville Navigation District of Cameron County, TX",TX,0,0,0,0,0,2,0,2,2
+"Port of Davisville, RI",RI,0,0,0,0,0,0,2,2,2
+"Port of Pascagoula, MS",MS,0,0,0,0,0,2,0,2,2
+"Ponce Port Authority, PR",PR,0,0,0,0,0,2,0,2,2
+"Port Huron, MI",MI,0,0,0,0,0,2,0,2,2
+"Buffalo, NY",NY,0,0,0,0,0,0,1,1,1
+"Homer, AK",AK,0,0,0,27,27,0,0,0,0
+,,,,,,,,,,
+Total ,,"2,294,064","791,243","2,369,579","773,622","6,228,507","29,907,593","11,463,780","41,371,373","46,035,016"
+,,,,,,,,,,
+*Totals may not equal sum due to rounding. ,,,,,,,,,,

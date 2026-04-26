@@ -1,0 +1,12 @@
+numpy
+matplotlib
+geopandas
+arcgis
+rasterio
+rioxarray
+pystac-client
+planetary-computer
+pyproj
+pynhd
+jupyter
+ipykernel
