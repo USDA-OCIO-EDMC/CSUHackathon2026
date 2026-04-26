@@ -1,5 +1,7 @@
 # CSU Hackathon 2026 — Geospatial AI Crop Yield Forecasting
 
+**NOTE:** the branch was initially occupied by the code of another team. I manually deleted all of the existing files within the branch, and transferred in the contents of my repository manually. For ease of use, please visit my repository [directly.](https://github.com/dlucas489/Hackathon-Sp26-Team9.git)
+
 **Team:** Dev Lucas, Juan, Haven, Sophia
 
 ---
